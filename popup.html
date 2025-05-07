@@ -266,12 +266,6 @@
              padding-bottom: 0;
         }
 
-        /* Specific adjustment for labels that are followed by an input or textarea, to remove extra padding */
-        .setting-group > label[for] + input,
-        .setting-group > label[for] + .input-container,
-        .setting-group > label[for] + textarea {
-            /* This sibling selector implies the label is for an input field, not a checkbox standalone */
-        }
         /* Re-apply default margin for labels that are for inputs/textareas */
         .setting-group > label:has(+ input[type="text"]),
         .setting-group > label:has(+ input[type="number"]),
@@ -652,8 +646,7 @@
         </div>
 
         <div class="settings-actions">
-            <button id="saveSettings">__MSG_saveSettingsButton__</button>
-            <button id="resetSettings" class="secondary">__MSG_resetSettingsButton__</button>
+            <button id="resetSettings" class="secondary" style="flex-grow: 1;">__MSG_resetSettingsButton__</button>
         </div>
     </div>
 

@@ -75,7 +75,8 @@ function getHostnameFromUrl(url) {
 // 辅助函数：将域名模式转换为正则表达式
 // 支持 *.example.com, example.com, www.example.com
 function domainPatternToRegex(pattern) {
-    if (!pattern || typeof pattern !== 'string') {
+    if (typeof pattern !== 'string' || !pattern.trim()) { // 更严格的检查，确保pattern是有效字符串
+        console.warn('Invalid domain pattern provided:', pattern);
         return null;
     }
     let regexString = pattern.trim();

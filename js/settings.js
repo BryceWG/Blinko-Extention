@@ -165,78 +165,6 @@ async function loadSettings() {
     }
 }
 
-// 保存设置
-async function saveSettings() {
-    try {
-        // 从UI读取基本设置，promptTemplates 和 activePromptTemplateId 应由 popup.js 更新到内存中的 settings 对象
-        // 然后在调用 saveSettings 之前，popup.js 会将内存中的 settings 对象传递过来或settings.js能访问到它
-        // 这里我们假设 settings 对象已经包含了最新的 promptTemplates 和 activePromptTemplateId
-        // 因此，我们只需要读取其他表单元素的值并合并到传入的或已加载的 settings 对象上
-
-        // 重新加载一次内存中的settings，确保拿到最新的（包含popup.js中对promptTemplates的修改）
-        // 这一步通常由调用者（如popup.js）在调用saveSettings前完成，
-        // 此处为了模块独立性，再次获取或依赖 popup.js 更新 settings 对象。
-        // 更好的做法是 saveSettings 接收一个 settings 对象作为参数。
-        // 为简化，此处假设 settings 变量已在 loadSettings 后被 popup.js 更新。
-        // 或者，我们直接从 storage 加载最新的，然后合并 UI 的改动。
-
-        // 此处的 settings 应该是 loadSettings 返回并可能被 popup.js 修改过的版本
-        // 我们只更新那些直接从UI元素读取的字段
-        const currentSettings = await loadSettings(); // 获取包含最新模板数据的设置
-
-        const updatedSettings = {
-            ...currentSettings, // 保留已有的 promptTemplates 和 activePromptTemplateId
-            targetUrl: document.getElementById('targetUrl').value.trim(),
-            authKey: document.getElementById('authKey').value.trim(),
-            modelUrl: document.getElementById('modelUrl').value.trim(),
-            apiKey: document.getElementById('apiKey').value.trim(),
-            modelName: document.getElementById('modelName').value.trim() || defaultSettings.modelName,
-            temperature: parseFloat(document.getElementById('temperature').value) || defaultSettings.temperature,
-            // promptTemplate 字段不再直接保存，其内容已合并到 currentSettings.promptTemplates 中
-            includeSummaryUrl: document.getElementById('includeSummaryUrl').checked,
-            includeSelectionUrl: document.getElementById('includeSelectionUrl').checked,
-            includeImageUrl: document.getElementById('includeImageUrl').checked,
-            includeQuickNoteUrl: document.getElementById('includeQuickNoteUrl').checked,
-            summaryTag: document.getElementById('summaryTag').value,
-            selectionTag: document.getElementById('selectionTag').value,
-            imageTag: document.getElementById('imageTag').value,
-            enableFloatingBall: document.getElementById('enableFloatingBall').checked,
-            jinaApiKey: document.getElementById('jinaApiKey').value.trim(),
-            useJinaApiKey: document.getElementById('useJinaApiKey').checked,
-            saveWebImages: document.getElementById('saveWebImages').checked,
-            extractTag: document.getElementById('extractTag').value
-        };
-        
-        // 确保 promptTemplate 字段被移除（如果存在于旧结构中）
-        delete updatedSettings.promptTemplate;
-
-        // 保存到chrome.storage
-        await chrome.storage.sync.set({ settings: updatedSettings });
-        
-        // 通知所有标签页更新悬浮球状态
-        const tabs = await chrome.tabs.query({});
-        for (const tab of tabs) {
-            try {
-                await chrome.tabs.sendMessage(tab.id, {
-                    action: 'updateFloatingBallState',
-                    enabled: updatedSettings.enableFloatingBall
-                });
-            } catch (error) {
-                console.log('Tab not ready:', tab.id);
-            }
-        }
-
-        console.log('设置已保存:', updatedSettings);
-        showStatus('设置已保存', 'success');
-        return updatedSettings;
-
-    } catch (error) {
-        console.error('保存设置时出错:', error);
-        showStatus('保存设置失败: ' + error.message, 'error');
-        throw error;
-    }
-}
-
 // 重置设置
 async function resetSettings() {
     try {
@@ -337,7 +265,6 @@ async function fetchAiConfig() {
 export {
     defaultSettings,
     loadSettings,
-    saveSettings,
     resetSettings,
     fetchAiConfig
-}; 
+};

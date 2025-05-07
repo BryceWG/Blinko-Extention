@@ -1,9 +1,104 @@
-import { loadSettings, saveSettings, resetSettings, fetchAiConfig } from './settings.js';
+import { loadSettings, resetSettings, fetchAiConfig, defaultSettings } from './settings.js';
 import { initializeUIListeners, showStatus, hideStatus } from './ui.js';
 import { loadQuickNote, initializeQuickNoteListeners } from './quickNote.js';
 import { checkSummaryState, initializeSummaryListeners, handleSummaryResponse } from './summary.js';
 
 let currentLoadedSettings = {}; // 用于存储加载的设置，方便在事件监听中修改
+let debouncedRealtimeSave;
+const DEBOUNCE_DELAY = 750; // ms
+
+// 防抖函数
+function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+async function realtimeSaveSettings() {
+    try {
+        if (!currentLoadedSettings || Object.keys(currentLoadedSettings).length === 0) {
+            console.warn('Attempted to save empty or uninitialized settings. Aborting.');
+            return;
+        }
+
+        await chrome.storage.sync.set({ settings: currentLoadedSettings });
+        showStatus(chrome.i18n.getMessage('settingsSaved'), 'success');
+        setTimeout(hideStatus, 1500); // Shorter duration for auto-save
+
+        // 如果悬浮球设置有变化，通知所有标签页
+        if (currentLoadedSettings.hasOwnProperty('enableFloatingBall')) {
+            const tabs = await chrome.tabs.query({});
+            for (const tab of tabs) {
+                try {
+                    // 确保 tab.id 是有效的
+                    if (tab.id) {
+                         await chrome.tabs.sendMessage(tab.id, {
+                            action: 'updateFloatingBallState',
+                            enabled: currentLoadedSettings.enableFloatingBall
+                        });
+                    }
+                } catch (error) {
+                    // console.log('Tab not ready for floating ball update or other error:', tab.id, error.message);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error during real-time save:', error);
+        showStatus(chrome.i18n.getMessage('settingsSaveError', [error.message]), 'error');
+    }
+}
+
+function handleSettingChange(event) {
+    if (!currentLoadedSettings || Object.keys(currentLoadedSettings).length === 0) {
+        // console.warn('currentLoadedSettings not ready, skipping update.');
+        return;
+    }
+    const element = event.target;
+    const key = element.id;
+    let value;
+
+    if (element.type === 'checkbox') {
+        value = element.checked;
+        currentLoadedSettings[key] = value;
+    } else if (element.type === 'number') {
+        const valStr = element.value;
+        let numVal = parseFloat(valStr);
+        if (valStr.trim() === '' || isNaN(numVal)) {
+            if (defaultSettings.hasOwnProperty(key) && typeof defaultSettings[key] === 'number') {
+                numVal = defaultSettings[key];
+            } else {
+                numVal = currentLoadedSettings[key]; // Revert to previous value if default is not applicable
+            }
+        }
+        currentLoadedSettings[key] = numVal;
+    } else if (key === 'promptTemplateSelector') {
+        value = element.value;
+        currentLoadedSettings.activePromptTemplateId = value;
+        const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === value);
+        const promptTemplateTextarea = document.getElementById('promptTemplate');
+        if (activeTemplate && promptTemplateTextarea) {
+            promptTemplateTextarea.value = activeTemplate.content;
+        }
+        // No direct assignment to currentLoadedSettings[key] here, activePromptTemplateId is the primary store
+    } else if (key === 'promptTemplate') { // This is the textarea
+        value = element.value; // textarea value, no trim for templates
+        if (currentLoadedSettings.promptTemplates && currentLoadedSettings.activePromptTemplateId) {
+            const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === currentLoadedSettings.activePromptTemplateId);
+            if (activeTemplate) {
+                activeTemplate.content = value;
+            }
+        }
+    } else { // General text inputs
+        value = element.value.trim();
+        currentLoadedSettings[key] = value;
+    }
+
+    if(debouncedRealtimeSave) {
+        debouncedRealtimeSave();
+    }
+}
 
 // 初始化国际化文本
 function initializeI18n() {
@@ -199,29 +294,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         initializeQuickNoteListeners();
         initializeSummaryListeners();
 
-        // 绑定模板选择器和文本域事件
-        const promptTemplateSelector = document.getElementById('promptTemplateSelector');
-        const promptTemplateTextarea = document.getElementById('promptTemplate');
+        debouncedRealtimeSave = debounce(realtimeSaveSettings, DEBOUNCE_DELAY);
 
-        if (promptTemplateSelector) {
-            promptTemplateSelector.addEventListener('change', () => {
-                const selectedId = promptTemplateSelector.value;
-                currentLoadedSettings.activePromptTemplateId = selectedId;
-                const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === selectedId);
-                if (activeTemplate && promptTemplateTextarea) {
-                    promptTemplateTextarea.value = activeTemplate.content;
-                }
+        // 绑定设置页面所有相关控件的事件，以实现实时保存
+        const settingsContainer = document.getElementById('settings');
+        if (settingsContainer) {
+            const inputs = settingsContainer.querySelectorAll('input[type="text"], input[type="number"], textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', handleSettingChange);
             });
-        }
 
-        if (promptTemplateTextarea) {
-            promptTemplateTextarea.addEventListener('input', () => {
-                if (currentLoadedSettings && currentLoadedSettings.promptTemplates && currentLoadedSettings.activePromptTemplateId) {
-                    const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === currentLoadedSettings.activePromptTemplateId);
-                    if (activeTemplate) {
-                        activeTemplate.content = promptTemplateTextarea.value;
-                    }
-                }
+            const checkboxes = settingsContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', handleSettingChange);
+            });
+
+            const selects = settingsContainer.querySelectorAll('select');
+            selects.forEach(select => {
+                select.addEventListener('change', handleSettingChange);
             });
         }
 
@@ -258,26 +348,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         });
 
-        // 绑定设置相关事件
-        document.getElementById('saveSettings').addEventListener('click', async () => {
-            try {
-
-                if (currentLoadedSettings && currentLoadedSettings.promptTemplates && currentLoadedSettings.activePromptTemplateId) {
-                    const activeTpl = currentLoadedSettings.promptTemplates.find(t => t.id === currentLoadedSettings.activePromptTemplateId);
-                    if (activeTpl && document.getElementById('promptTemplate')) {
-                        activeTpl.content = document.getElementById('promptTemplate').value;
-                    }
-                }
-                await chrome.storage.sync.set({ settings: currentLoadedSettings }); // 确保内存中的修改写入存储
-                await saveSettings(); // settings.js 的 saveSettings 会从存储加载，所以能拿到最新版
-
-                showStatus(chrome.i18n.getMessage('settingsSaved'), 'success');
-                setTimeout(hideStatus, 2000);
-            } catch (error) {
-                showStatus(chrome.i18n.getMessage('settingsSaveError', [error.message]), 'error');
-            }
-        });
-
+ 
         document.getElementById('resetSettings').addEventListener('click', async () => {
             try {
                 await resetSettings(); // settings.js 中的 resetSettings 会更新UI并保存到storage
@@ -355,7 +426,37 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         // 绑定获取AI配置按钮事件
-        document.getElementById('fetchAiConfig').addEventListener('click', fetchAiConfig);
+        document.getElementById('fetchAiConfig').addEventListener('click', async () => {
+            try {
+                // 调用 settings.js 中的 fetchAiConfig 来更新UI
+                await fetchAiConfig();
+                
+                // fetchAiConfig 成功后，UI 上的 modelUrl, apiKey, modelName 会被更新
+                // 现在我们需要将这些更新同步到 currentLoadedSettings 并触发保存
+                if (currentLoadedSettings && Object.keys(currentLoadedSettings).length > 0) {
+                    const modelUrlInput = document.getElementById('modelUrl');
+                    const apiKeyInput = document.getElementById('apiKey');
+                    const modelNameInput = document.getElementById('modelName');
+
+                    if (modelUrlInput) {
+                        currentLoadedSettings.modelUrl = modelUrlInput.value.trim();
+                    }
+                    if (apiKeyInput) {
+                        currentLoadedSettings.apiKey = apiKeyInput.value.trim(); // API Key 通常不需要 trim，但保持一致
+                    }
+                    if (modelNameInput) {
+                        currentLoadedSettings.modelName = modelNameInput.value.trim();
+                    }
+
+                    if (debouncedRealtimeSave) {
+                        debouncedRealtimeSave();
+                    }
+                }
+            } catch (error) {
+                // fetchAiConfig 内部已经处理了错误显示，这里可以不用重复显示
+                console.error('Error in fetchAiConfig wrapper or subsequent save:', error);
+            }
+        });
 
         // 域名特定模板规则管理UI事件
         const addDomainRuleBtn = document.getElementById('addDomainRuleBtn');

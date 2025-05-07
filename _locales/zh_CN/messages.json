@@ -40,19 +40,19 @@
     "description": "通知标题，内容总结成功"
   },
   "notificationExtractSuccessMessage": {
-    "message": "已成功提取 \"%s\" 的内容并保存到Blinko",
+    "message": "已成功提取 \"$1\" 的内容并保存到Blinko",
     "description": "通知消息，内容提取成功"
   },
   "notificationSummarySuccessMessage": {
-    "message": "已成功总结 \"%s\" 的内容并保存到Blinko",
+    "message": "已成功总结 \"$1\" 的内容并保存到Blinko",
     "description": "通知消息，内容总结成功"
   },
   "notificationExtractSuccessMessagePopup": {
-    "message": "提取 \"%s\" 完成，点击扩展图标查看。",
+    "message": "提取 \"$1\" 完成，点击扩展图标查看。",
     "description": "通知消息，提取成功且popup已关闭时"
   },
   "notificationSummarySuccessMessagePopup": {
-    "message": "总结 \"%s\" 完成，点击扩展图标查看。",
+    "message": "总结 \"$1\" 完成，点击扩展图标查看。",
     "description": "通知消息，总结成功且popup已关闭时"
   },
   "notificationExtractErrorTitle": {
@@ -64,7 +64,7 @@
     "description": "通知标题，内容总结失败"
   },
   "notificationErrorMessage": {
-    "message": "%s \"%s\" 时出错: %s",
+    "message": "$1 \"$2\" 时出错: $3",
     "description": "通知错误信息"
   },
   "extractAction": {
@@ -276,7 +276,7 @@
     "description": "设置保存成功时的消息"
   },
   "settingsSaveError": {
-    "message": "保存设置失败: %s",
+    "message": "保存设置失败: $1",
     "description": "设置保存失败时的错误消息"
   },
   "settingsReset": {
@@ -284,11 +284,11 @@
     "description": "设置重置成功时的消息"
   },
   "settingsResetError": {
-    "message": "重置设置失败: %s",
+    "message": "重置设置失败: $1",
     "description": "设置重置失败时的错误消息"
   },
   "initializationError": {
-    "message": "初始化失败: %s",
+    "message": "初始化失败: $1",
     "description": "初始化失败时的错误消息"
   },
   "summaryTagPlaceholder": {
