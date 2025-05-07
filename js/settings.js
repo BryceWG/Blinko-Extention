@@ -1,5 +1,5 @@
 import { showStatus } from './ui.js';
-import { normalizeAuthToken } from './api.js';
+import { normalizeAuthToken, normalizeBlinkoApiBaseUrl } from './api.js';
 
 // 默认设置
 const defaultSettings = {
@@ -207,9 +207,9 @@ async function fetchAiConfig() {
             return;
         }
 
-        // 构建请求URL，确保不重复添加v1
-        const baseUrl = targetUrl.replace(/\/+$/, ''); // 移除尾的斜杠
-        const configUrl = `${baseUrl}/config/list`;
+        // 构建请求URL，确保包含/api/v1
+        const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(targetUrl);
+        const configUrl = `${normalizedBaseUrl}/config/list`;
 
         showStatus('正在获取配置...', 'loading');
         

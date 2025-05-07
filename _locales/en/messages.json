@@ -168,7 +168,7 @@
     "description": "Label for Blinko API URL input"
   },
   "blinkoApiUrlHelp": {
-    "message": "Fill in up to /v1, no need for the complete path",
+    "message": "Enter your Blinko domain (e.g., https://blinko.example.com)",
     "description": "Help text for API URL input"
   },
   "blinkoAuthKeyLabel": {

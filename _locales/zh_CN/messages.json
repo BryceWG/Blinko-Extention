@@ -156,7 +156,7 @@
     "description": "Blinko API URL 输入框标签"
   },
   "blinkoApiUrlHelp": {
-    "message": "填写到/v1即可，无需填写完整路径",
+    "message": "请输入您的 Blinko 域名 (例如: https://blinko.example.com)",
     "description": "API URL 输入框帮助文本"
   },
   "blinkoAuthKeyLabel": {

@@ -1,4 +1,5 @@
 import { showStatus } from './ui.js';
+import { getCleanDomainUrl } from './api.js';
 
 // 保存快捷记录内容
 function saveQuickNote() {
@@ -77,9 +78,9 @@ async function updateAttachmentList(attachments) {
             img.src = attachment.localUrl;
         } else if (attachment.path) {
             // 使用Blinko URL作为后备
-            const baseUrl = settings.targetUrl.replace(/\/v1\/*$/, '').replace(/\/+$/, '');
+            const cleanDomain = getCleanDomainUrl(settings.targetUrl);
             const path = attachment.path.startsWith('/') ? attachment.path : '/' + attachment.path;
-            img.src = baseUrl + path;
+            img.src = cleanDomain + path;
         }
         
         img.alt = attachment.name || '附件图片';

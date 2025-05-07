@@ -15,6 +15,33 @@ function normalizeAuthToken(tokenString) {
    return `Bearer ${trimmedToken}`;
 }
 
+// 规范化Blinko API基础URL，确保以 "/api/v1" 结尾
+function normalizeBlinkoApiBaseUrl(userInputUrl) {
+   if (!userInputUrl) {
+       return '';
+   }
+   
+   const trimmedUrl = userInputUrl.trim().replace(/\/+$/, '');
+   if (trimmedUrl.includes('/api/v1')) {
+       return trimmedUrl.split('/api/v1')[0] + '/api/v1';
+   }
+   
+   return `${trimmedUrl}/api/v1`;
+}
+
+// 获取纯净的域名URL，移除末尾的/api/v1路径和所有末尾斜杠
+function getCleanDomainUrl(userInputUrl) {
+   if (!userInputUrl) {
+       return '';
+   }
+   
+   const trimmedUrl = userInputUrl.trim();
+   const apiV1Index = trimmedUrl.indexOf('/api/v1');
+   let cleanUrl = apiV1Index !== -1 ? trimmedUrl.substring(0, apiV1Index) : trimmedUrl;
+   cleanUrl = cleanUrl.replace(/\/+$/, '');
+   return cleanUrl;
+}
+
 // 获取完整的API URL
 function getFullApiUrl(baseUrl, endpoint) {
     try {
@@ -84,8 +111,8 @@ async function uploadFile(file, settings) {
         }
 
         // 构建上传URL
-        const baseUrl = settings.targetUrl.replace(/\/v1\/*$/, '');
-        const uploadUrl = `${baseUrl}/file/upload`;
+        const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(settings.targetUrl);
+        const uploadUrl = `${normalizedBaseUrl}/file/upload`;
 
         // 创建FormData对象
         const formData = new FormData();
@@ -132,8 +159,8 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
         }
 
         // 构建请求URL，确保不重复添加v1
-        const baseUrl = settings.targetUrl.replace(/\/+$/, '');
-        const requestUrl = `${baseUrl}/note/upsert`;
+        const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(settings.targetUrl);
+        const requestUrl = `${normalizedBaseUrl}/note/upsert`;
 
         // 根据不同类型添加不同的标签和URL
         let finalContent = content;
@@ -211,5 +238,7 @@ export {
     getSummaryFromModel,
     sendToBlinko,
     uploadFile,
-    normalizeAuthToken
+    normalizeAuthToken,
+    normalizeBlinkoApiBaseUrl,
+    getCleanDomainUrl
 };
