@@ -49,7 +49,8 @@ const defaultSettings = {
     enableFloatingBall: true,   // 是否启用悬浮球
     jinaApiKey: '',            // Jina Reader API Key
     useJinaApiKey: false,      // 是否使用API Key加速
-    saveWebImages: false       // 是否保存网页图片链接
+    saveWebImages: false,       // 是否保存网页图片链接
+    domainPromptMappings: []   // 域名特定模板映射
 };
 
 // 加载设置
@@ -108,6 +109,11 @@ async function loadSettings() {
             settings.useJinaApiKey = settings.useJinaApiKey !== undefined ? settings.useJinaApiKey : defaultSettings.useJinaApiKey;
             settings.saveWebImages = settings.saveWebImages !== undefined ? settings.saveWebImages : defaultSettings.saveWebImages;
             settings.extractTag = settings.extractTag !== undefined ? settings.extractTag : defaultSettings.extractTag;
+
+            // 确保 domainPromptMappings 是一个数组
+            if (!Array.isArray(settings.domainPromptMappings)) {
+                settings.domainPromptMappings = JSON.parse(JSON.stringify(defaultSettings.domainPromptMappings));
+            }
         }
 
         console.log('加载的设置:', settings);

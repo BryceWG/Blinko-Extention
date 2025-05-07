@@ -376,5 +376,105 @@
         "example": "未知错误"
       }
     }
+  },
+  "domainSpecificTemplatesTitle": {
+    "message": "域名特定模板",
+    "description": "Title for the domain-specific templates section"
+  },
+  "addDomainRuleButton": {
+    "message": "添加域名规则",
+    "description": "Button text to add a new domain-specific rule"
+  },
+  "domainPatternLabel": {
+    "message": "域名/模式:",
+    "description": "Label for the domain pattern input field"
+  },
+  "domainPatternPlaceholder": {
+    "message": "例如: example.com, *.example.com, localhost:3000",
+    "description": "Placeholder text for the domain pattern input"
+  },
+  "selectTemplateForDomainLabel": {
+    "message": "选择模板:",
+    "description": "Label for the template selector dropdown for a domain rule"
+  },
+  "deleteDomainRuleButtonTooltip": {
+    "message": "删除此规则",
+    "description": "Tooltip for the delete button of a domain rule"
+  },
+  "confirmDeleteDomainRule": {
+    "message": "确定要删除域名 \"{domainPattern}\" 的模板规则吗？",
+    "description": "Confirmation message before deleting a domain rule. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorDomainPatternEmpty": {
+    "message": "域名模式不能为空。",
+    "description": "Error message if the domain pattern is empty"
+  },
+  "errorTemplateNotSelected": {
+    "message": "请为此域名规则选择一个模板。",
+    "description": "Error message if no template is selected for a domain rule"
+  },
+  "domainRuleAddedSuccess": {
+    "message": "已为 \"{domainPattern}\" 添加模板规则。",
+    "description": "Success message when a domain rule is added. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "domainRuleDeletedSuccess": {
+    "message": "已删除 \"{domainPattern}\" 的模板规则。",
+    "description": "Success message when a domain rule is deleted. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorSavingDomainRule": {
+    "message": "保存域名规则失败: {error}",
+    "description": "Error message when saving a domain rule fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "存储错误"
+      }
+    }
+  },
+  "columnDomainPattern": {
+    "message": "域名模式",
+    "description": "Table header for domain pattern column"
+  },
+  "columnAssignedTemplate": {
+    "message": "指定模板",
+    "description": "Table header for assigned template column"
+  },
+  "columnActions": {
+    "message": "操作",
+    "description": "Table header for actions column"
+  },
+  "noDomainRulesDefined": {
+    "message": "尚未配置任何域名特定模板规则。",
+    "description": "Message shown when no domain-specific rules are defined"
+  },
+  "saveRuleButton": {
+    "message": "保存规则",
+    "description": "Button text to save a domain rule"
+  },
+  "cancelRuleButton": {
+    "message": "取消",
+    "description": "Button text to cancel editing/adding a domain rule"
+  },
+  "errorNoTemplatesAvailableForDomainRule": {
+    "message": "没有可用的模板来创建域名规则。请先添加一些提示词模板。",
+    "description": "Error message shown in domain rule template selector if no prompt templates exist."
   }
 }

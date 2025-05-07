@@ -388,5 +388,105 @@
         "example": "Unknown error"
       }
     }
+  },
+  "domainSpecificTemplatesTitle": {
+    "message": "Domain-Specific Templates",
+    "description": "Title for the domain-specific templates section"
+  },
+  "addDomainRuleButton": {
+    "message": "Add Domain Rule",
+    "description": "Button text to add a new domain-specific rule"
+  },
+  "domainPatternLabel": {
+    "message": "Domain/Pattern:",
+    "description": "Label for the domain pattern input field"
+  },
+  "domainPatternPlaceholder": {
+    "message": "e.g., example.com, *.example.com, localhost:3000",
+    "description": "Placeholder text for the domain pattern input"
+  },
+  "selectTemplateForDomainLabel": {
+    "message": "Select Template:",
+    "description": "Label for the template selector dropdown for a domain rule"
+  },
+  "deleteDomainRuleButtonTooltip": {
+    "message": "Delete this rule",
+    "description": "Tooltip for the delete button of a domain rule"
+  },
+  "confirmDeleteDomainRule": {
+    "message": "Are you sure you want to delete the template rule for domain \"{domainPattern}\"?",
+    "description": "Confirmation message before deleting a domain rule. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorDomainPatternEmpty": {
+    "message": "Domain pattern cannot be empty.",
+    "description": "Error message if the domain pattern is empty"
+  },
+  "errorTemplateNotSelected": {
+    "message": "Please select a template for this domain rule.",
+    "description": "Error message if no template is selected for a domain rule"
+  },
+  "domainRuleAddedSuccess": {
+    "message": "Template rule added for \"{domainPattern}\".",
+    "description": "Success message when a domain rule is added. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "domainRuleDeletedSuccess": {
+    "message": "Template rule for \"{domainPattern}\" deleted.",
+    "description": "Success message when a domain rule is deleted. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorSavingDomainRule": {
+    "message": "Failed to save domain rule: {error}",
+    "description": "Error message when saving a domain rule fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Storage error"
+      }
+    }
+  },
+  "columnDomainPattern": {
+    "message": "Domain Pattern",
+    "description": "Table header for domain pattern column"
+  },
+  "columnAssignedTemplate": {
+    "message": "Assigned Template",
+    "description": "Table header for assigned template column"
+  },
+  "columnActions": {
+    "message": "Actions",
+    "description": "Table header for actions column"
+  },
+  "noDomainRulesDefined": {
+    "message": "No domain-specific template rules have been configured yet.",
+    "description": "Message shown when no domain-specific rules are defined"
+  },
+  "saveRuleButton": {
+    "message": "Save Rule",
+    "description": "Button text to save a domain rule"
+  },
+  "cancelRuleButton": {
+    "message": "Cancel",
+    "description": "Button text to cancel editing/adding a domain rule"
+  },
+  "errorNoTemplatesAvailableForDomainRule": {
+    "message": "No templates available to create a domain rule. Please add some prompt templates first.",
+    "description": "Error message shown in domain rule template selector if no prompt templates exist."
   }
 }

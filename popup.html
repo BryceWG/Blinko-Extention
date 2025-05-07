@@ -553,6 +553,27 @@
         </div>
 
         <div class="setting-group">
+            <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">__MSG_domainSpecificTemplatesTitle__</h3>
+            <div id="domainMappingsListContainer" style="margin-bottom: 10px; max-height: 150px; overflow-y: auto; border: 1px solid #eee; padding: 8px; border-radius: 8px; background-color: #f9f9f9;">
+                <!-- 域名规则列表将动态填充到这里 -->
+            </div>
+            <!-- Form for adding/editing a new rule (initially hidden) -->
+            <div id="addDomainRuleFormContainer" style="display: none; margin-top: 10px; padding: 12px; border: 1px dashed #ccc; border-radius: 8px;">
+                <label for="newDomainPatternInput" style="display: block; margin-bottom: 4px;">__MSG_domainPatternLabel__</label>
+                <input type="text" id="newDomainPatternInput" class="text-input" placeholder="__MSG_domainPatternPlaceholder__" style="margin-bottom: 10px; padding: 8px;">
+                
+                <label for="domainRuleTemplateSelector" style="display: block; margin-bottom: 4px;">__MSG_selectTemplateForDomainLabel__</label>
+                <select id="domainRuleTemplateSelector" class="text-input" style="margin-bottom: 12px; padding: 8px;"></select>
+                
+                <div style="display: flex; gap: 8px;">
+                    <button id="saveDomainRuleBtn" class="fetch-button" style="flex:1;">__MSG_saveRuleButton__</button>
+                    <button type="button" id="cancelDomainRuleBtn" class="fetch-button secondary" style="flex:1;">__MSG_cancelRuleButton__</button>
+                </div>
+            </div>
+            <button id="addDomainRuleBtn" class="fetch-button" style="margin-top: 10px; width: auto; padding: 8px 16px;">__MSG_addDomainRuleButton__</button>
+        </div>
+
+        <div class="setting-group">
             <label for="includeSummaryUrl">
                 <input type="checkbox" id="includeSummaryUrl">
                 <span>__MSG_includeSummaryUrlLabel__</span>

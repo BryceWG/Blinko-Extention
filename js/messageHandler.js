@@ -39,7 +39,7 @@ async function handleContentRequest(request) {
                 throw new Error('请先完成API设置');
             }
             // 生成总结
-            summary = await getSummaryFromModel(request.content, settings);
+            summary = await getSummaryFromModel(request.content, request.url, settings);
         }
 
         // 如果是直接保存模式
@@ -295,7 +295,7 @@ async function handleFloatingBallRequest(request) {
                 throw new Error('请先完成API设置');
             }
             // 生成总结
-            summary = await getSummaryFromModel(request.content, settings);
+            summary = await getSummaryFromModel(request.content, request.url, settings);
         }
 
         // 准备最终内容

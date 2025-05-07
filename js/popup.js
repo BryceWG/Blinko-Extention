@@ -68,9 +68,81 @@ function populatePromptTemplateSelector(settings) {
     }
 }
 
+// 函数：填充域名规则列表
+function populateDomainMappingsList(settings) {
+    const container = document.getElementById('domainMappingsListContainer');
+    if (!container || !settings || !settings.domainPromptMappings || !settings.promptTemplates) return;
+
+    container.innerHTML = ''; // 清空现有列表
+
+    if (settings.domainPromptMappings.length === 0) {
+        const noRulesMsg = document.createElement('p');
+        noRulesMsg.textContent = chrome.i18n.getMessage('noDomainRulesDefined');
+        noRulesMsg.style.textAlign = 'center';
+        noRulesMsg.style.color = '#777';
+        container.appendChild(noRulesMsg);
+        return;
+    }
+
+    const ul = document.createElement('ul');
+    ul.style.listStyleType = 'none';
+    ul.style.paddingLeft = '0';
+    ul.style.margin = '0';
+
+    settings.domainPromptMappings.forEach(mapping => {
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+        li.style.padding = '6px 0';
+        li.style.borderBottom = '1px solid #f0f0f0';
+
+        const template = settings.promptTemplates.find(t => t.id === mapping.templateId);
+        const templateName = template ? template.name : '[模板已删除]'; // Handle case where template might be deleted
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = `${mapping.domainPattern} → ${templateName}`;
+        textSpan.title = `域名模式: ${mapping.domainPattern}\n指定模板: ${templateName}`;
+        textSpan.style.overflow = 'hidden';
+        textSpan.style.textOverflow = 'ellipsis';
+        textSpan.style.whiteSpace = 'nowrap';
+        textSpan.style.flexGrow = '1';
+        textSpan.style.marginRight = '8px';
+
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '×'; // Simple delete symbol
+        deleteBtn.title = chrome.i18n.getMessage('deleteDomainRuleButtonTooltip');
+        deleteBtn.classList.add('fetch-button', 'secondary'); // Re-use existing styles
+        deleteBtn.style.padding = '4px 8px';
+        deleteBtn.style.minWidth = 'auto';
+        deleteBtn.style.lineHeight = '1';
+
+
+        deleteBtn.addEventListener('click', () => {
+            if (window.confirm(chrome.i18n.getMessage('confirmDeleteDomainRule', mapping.domainPattern))) {
+                currentLoadedSettings.domainPromptMappings = currentLoadedSettings.domainPromptMappings.filter(m => m.id !== mapping.id);
+                populateDomainMappingsList(currentLoadedSettings);
+                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(chrome.i18n.getMessage('domainRuleDeletedSuccess', mapping.domainPattern), 'success');
+                    setTimeout(hideStatus, 2000);
+                }).catch(err => {
+                    showStatus(chrome.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
+                });
+            }
+        });
+
+        li.appendChild(textSpan);
+        li.appendChild(deleteBtn);
+        ul.appendChild(li);
+    });
+    container.appendChild(ul);
+}
+
+
 // 生成唯一ID的简单方法
-function generateUniqueId() {
-    return `tpl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+function generateUniqueId(prefix = 'id_') { // Added prefix option
+    return `${prefix}${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -83,7 +155,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         // 加载设置
         currentLoadedSettings = await loadSettings();
-        populatePromptTemplateSelector(currentLoadedSettings); // 填充选择器
+        populatePromptTemplateSelector(currentLoadedSettings); // 填充模板选择器
+        populateDomainMappingsList(currentLoadedSettings); // 填充域名规则列表
         
         // 检查总结状态
         await checkSummaryState();
@@ -210,6 +283,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 await resetSettings(); // settings.js 中的 resetSettings 会更新UI并保存到storage
                 currentLoadedSettings = await loadSettings(); // 重新加载到内存
                 populatePromptTemplateSelector(currentLoadedSettings); // 重新填充选择器
+                populateDomainMappingsList(currentLoadedSettings); // 重新填充域名规则列表
                 showStatus(chrome.i18n.getMessage('settingsReset'), 'success');
                 setTimeout(hideStatus, 2000);
             } catch (error) {
@@ -282,6 +356,90 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // 绑定获取AI配置按钮事件
         document.getElementById('fetchAiConfig').addEventListener('click', fetchAiConfig);
+
+        // 域名特定模板规则管理UI事件
+        const addDomainRuleBtn = document.getElementById('addDomainRuleBtn');
+        const addDomainRuleFormContainer = document.getElementById('addDomainRuleFormContainer');
+        const newDomainPatternInput = document.getElementById('newDomainPatternInput');
+        const domainRuleTemplateSelector = document.getElementById('domainRuleTemplateSelector');
+        const saveDomainRuleBtn = document.getElementById('saveDomainRuleBtn');
+        const cancelDomainRuleBtn = document.getElementById('cancelDomainRuleBtn');
+
+        if (addDomainRuleBtn) {
+            addDomainRuleBtn.addEventListener('click', () => {
+                newDomainPatternInput.value = ''; // 清空输入
+                // 填充模板选择器
+                domainRuleTemplateSelector.innerHTML = '';
+                if (currentLoadedSettings.promptTemplates && currentLoadedSettings.promptTemplates.length > 0) {
+                    currentLoadedSettings.promptTemplates.forEach(template => {
+                        const option = document.createElement('option');
+                        option.value = template.id;
+                        option.textContent = template.name;
+                        domainRuleTemplateSelector.appendChild(option);
+                    });
+                    if (domainRuleTemplateSelector.options.length > 0) {
+                        domainRuleTemplateSelector.selectedIndex = 0;
+                    }
+                } else {
+                     // 如果没有模板可选，可以禁用或提示
+                    const option = document.createElement('option');
+                    option.textContent = chrome.i18n.getMessage('errorNoTemplatesAvailableForDomainRule');
+                    option.disabled = true;
+                    domainRuleTemplateSelector.appendChild(option);
+                }
+                addDomainRuleFormContainer.style.display = 'block';
+                addDomainRuleBtn.style.display = 'none'; // 隐藏添加按钮，防止重复打开
+            });
+        }
+
+        if (cancelDomainRuleBtn) {
+            cancelDomainRuleBtn.addEventListener('click', () => {
+                addDomainRuleFormContainer.style.display = 'none';
+                if(addDomainRuleBtn) addDomainRuleBtn.style.display = 'inline-block'; //恢复添加按钮
+            });
+        }
+
+        if (saveDomainRuleBtn) {
+            saveDomainRuleBtn.addEventListener('click', () => {
+                const domainPattern = newDomainPatternInput.value.trim();
+                const templateId = domainRuleTemplateSelector.value;
+
+                if (!domainPattern) {
+                    window.alert(chrome.i18n.getMessage('errorDomainPatternEmpty'));
+                    newDomainPatternInput.focus();
+                    return;
+                }
+                if (!templateId || (domainRuleTemplateSelector.options[domainRuleTemplateSelector.selectedIndex] && domainRuleTemplateSelector.options[domainRuleTemplateSelector.selectedIndex].disabled)) {
+                    window.alert(chrome.i18n.getMessage('errorTemplateNotSelected'));
+                    return;
+                }
+
+                const newRule = {
+                    id: generateUniqueId('dm_'), // 使用前缀区分
+                    domainPattern: domainPattern,
+                    templateId: templateId
+                };
+
+                if (!currentLoadedSettings.domainPromptMappings) {
+                    currentLoadedSettings.domainPromptMappings = [];
+                }
+                currentLoadedSettings.domainPromptMappings.push(newRule);
+                
+                populateDomainMappingsList(currentLoadedSettings);
+                addDomainRuleFormContainer.style.display = 'none';
+                if(addDomainRuleBtn) addDomainRuleBtn.style.display = 'inline-block';
+
+                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(chrome.i18n.getMessage('domainRuleAddedSuccess', domainPattern), 'success');
+                    setTimeout(hideStatus, 2000);
+                }).catch(err => {
+                    showStatus(chrome.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
+                     // 如果保存失败，可能需要从 currentLoadedSettings 中移除刚添加的规则
+                    currentLoadedSettings.domainPromptMappings.pop();
+                    populateDomainMappingsList(currentLoadedSettings);
+                });
+            });
+        }
 
     } catch (error) {
         console.error('初始化失败:', error);

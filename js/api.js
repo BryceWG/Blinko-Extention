@@ -62,10 +62,104 @@ function getFullApiUrl(baseUrl, endpoint) {
     }
 }
 
-// 从模型获取总结
-async function getSummaryFromModel(content, settings) {
+// 辅助函数：从URL中提取主机名
+function getHostnameFromUrl(url) {
     try {
-        const prompt = settings.promptTemplate.replace('{content}', content);
+        return new URL(url).hostname;
+    } catch (e) {
+        console.warn('无法从URL解析主机名:', url, e);
+        return null;
+    }
+}
+
+// 辅助函数：将域名模式转换为正则表达式
+// 支持 *.example.com, example.com, www.example.com
+function domainPatternToRegex(pattern) {
+    if (!pattern || typeof pattern !== 'string') {
+        return null;
+    }
+    let regexString = pattern.trim();
+    // 转义点号
+    regexString = regexString.replace(/\./g, '\\.');
+    // 处理通配符 *.
+    if (regexString.startsWith('*\\.')) {
+        // *.example.com 应该匹配 sub.example.com 或 example.com (如果允许)
+        // 为了匹配 sub.example.com 但不匹配 example.com: ^[^.]+(\.[^.]+)*\.(domain\.com)$
+        // 为了匹配 sub.example.com 以及 example.com (如果 *.example.com 意味着 example.com 或其任何子域)
+        // regexString = `^([^.]+\\.)*?` + regexString.substring(2) + `$`;
+        // 更严格的 *.example.com (必须有子域)
+        regexString = `^(.+)\\.` + regexString.substring(3) + `$`; // *.example.com -> ^(.+)\.example\.com$
+                                                                // 也允许 example.com 匹配 *.example.com (如果子域是可选的)
+                                                                // 计划中是 ^.+\.example\.com$ (必须有子域)
+                                                                // 我们采用 ^(.+\.)?example\.com$ 这种更灵活的，能匹配 example.com 和 sub.example.com
+    } else if (!regexString.startsWith('www\\.')) {
+        // example.com 应该匹配 example.com 和 www.example.com
+        regexString = `^(www\\.)?` + regexString + `$`;
+    } else {
+        // www.example.com
+        regexString = `^` + regexString + `$`;
+    }
+    try {
+        return new RegExp(regexString, 'i'); // i 表示不区分大小写
+    } catch (e) {
+        console.error('创建正则表达式失败:', pattern, e);
+        return null;
+    }
+}
+
+
+// 获取有效的提示词内容，考虑域名特定规则
+function getEffectivePromptContent(pageUrl, settings) {
+    const fallbackPromptContent = "请总结以下内容：{content}"; // 系统级最终回退
+
+    if (!settings || !settings.promptTemplates || settings.promptTemplates.length === 0) {
+        console.warn('未找到提示词模板设置或模板列表为空，使用最终回退提示词。');
+        return fallbackPromptContent;
+    }
+
+    const hostname = getHostnameFromUrl(pageUrl);
+    let effectiveTemplateId = settings.activePromptTemplateId; // 默认为全局设置的激活模板
+
+    if (hostname && settings.domainPromptMappings && settings.domainPromptMappings.length > 0) {
+        for (const mapping of settings.domainPromptMappings) {
+            if (mapping.domainPattern && mapping.templateId) {
+                const regex = domainPatternToRegex(mapping.domainPattern);
+                if (regex && regex.test(hostname)) {
+                    // 检查此 templateId 是否仍然有效
+                    const mappedTemplate = settings.promptTemplates.find(t => t.id === mapping.templateId);
+                    if (mappedTemplate) {
+                        effectiveTemplateId = mapping.templateId;
+                        console.log(`域名规则匹配: ${hostname} 使用模板ID ${effectiveTemplateId} (来自规则 ${mapping.domainPattern})`);
+                        break; // 找到第一个匹配的规则即停止
+                    } else {
+                        console.warn(`域名规则 ${mapping.domainPattern} 指向的模板ID ${mapping.templateId} 不存在，继续查找。`);
+                    }
+                }
+            }
+        }
+    }
+
+    const finalTemplate = settings.promptTemplates.find(t => t.id === effectiveTemplateId);
+    if (finalTemplate && finalTemplate.content) {
+        return finalTemplate.content;
+    } else {
+        // 如果选中的模板（无论是域名特定还是全局默认）无效或内容为空，尝试用列表中的第一个有效模板
+        if (settings.promptTemplates.length > 0 && settings.promptTemplates[0].content) {
+            console.warn(`选定的模板ID ${effectiveTemplateId} 无效或内容为空，回退到第一个可用模板。`);
+            return settings.promptTemplates[0].content;
+        }
+    }
+    
+    console.warn('所有模板均无效或内容为空，使用最终回退提示词。');
+    return fallbackPromptContent;
+}
+
+
+// 从模型获取总结
+async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageUrl 参数
+    try {
+        const effectivePromptString = getEffectivePromptContent(pageUrl, settings);
+        const prompt = effectivePromptString.replace('{content}', content);
         
         // 获取完整的API URL
         const fullUrl = getFullApiUrl(settings.modelUrl, '/chat/completions');
