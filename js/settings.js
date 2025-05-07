@@ -1,4 +1,5 @@
 import { showStatus } from './ui.js';
+import { normalizeAuthToken } from './api.js';
 
 // 默认设置
 const defaultSettings = {
@@ -215,7 +216,7 @@ async function fetchAiConfig() {
         const response = await fetch(configUrl, {
             method: 'GET',
             headers: {
-                'Authorization': authKey
+                'Authorization': normalizeAuthToken(authKey)
             }
         });
 

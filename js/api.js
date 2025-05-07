@@ -1,3 +1,20 @@
+// 规范化认证令牌，确保以 "Bearer " 开头且只有一个前缀
+function normalizeAuthToken(tokenString) {
+   if (!tokenString) {
+       return '';
+   }
+   
+   const trimmedToken = tokenString.trim();
+   const bearerRegex = /^bearer\s+/i;
+   
+   if (bearerRegex.test(trimmedToken)) {
+       const baseToken = trimmedToken.replace(bearerRegex, '').trim();
+       return `Bearer ${baseToken}`;
+   }
+   
+   return `Bearer ${trimmedToken}`;
+}
+
 // 获取完整的API URL
 function getFullApiUrl(baseUrl, endpoint) {
     try {
@@ -30,7 +47,7 @@ async function getSummaryFromModel(content, settings) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${settings.apiKey}`
+                'Authorization': normalizeAuthToken(settings.apiKey)
             },
             body: JSON.stringify({
                 model: settings.modelName,
@@ -77,7 +94,7 @@ async function uploadFile(file, settings) {
         const response = await fetch(uploadUrl, {
             method: 'POST',
             headers: {
-                'Authorization': settings.authKey
+                'Authorization': normalizeAuthToken(settings.authKey)
             },
             body: formData
         });
@@ -168,7 +185,7 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': settings.authKey
+                'Authorization': normalizeAuthToken(settings.authKey)
             },
             body: JSON.stringify(requestBody)
         });
@@ -193,5 +210,6 @@ export {
     getFullApiUrl,
     getSummaryFromModel,
     sendToBlinko,
-    uploadFile
+    uploadFile,
+    normalizeAuthToken
 };
