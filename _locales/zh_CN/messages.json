@@ -187,6 +187,14 @@
     "message": "提示词模板:",
     "description": "提示词模板输入框标签"
   },
+  "promptTemplateSelectorLabel": {
+    "message": "选择提示词模板:",
+    "description": "提示词模板选择器标签"
+  },
+  "promptTemplateContentLabel": {
+    "message": "模板内容:",
+    "description": "提示词模板内容输入框标签"
+  },
   "promptTemplatePlaceholder": {
     "message": "请用简洁的语言总结以下内容，突出重点：{content}",
     "description": "提示词模板输入框占位文本"
@@ -298,5 +306,75 @@
   "extractTagPlaceholder": {
     "message": "#网页/剪藏",
     "description": "网页剪藏标签输入框占位符"
+  },
+  "addTemplateButtonTooltip": {
+    "message": "添加新的提示词模板",
+    "description": "Tooltip for the add new prompt template button"
+  },
+  "deleteTemplateButtonTooltip": {
+    "message": "删除当前选中的提示词模板",
+    "description": "Tooltip for the delete current prompt template button"
+  },
+  "promptForTemplateName": {
+    "message": "请输入新模板的名称:",
+    "description": "Prompt message when asking for new template name"
+  },
+  "confirmDeleteTemplate": {
+    "message": "确定要删除模板 \"{templateName}\" 吗？此操作无法撤销。",
+    "description": "Confirmation message before deleting a template. {templateName} is a placeholder for the template name.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "我的摘要模板"
+      }
+    }
+  },
+  "errorMinOneTemplate": {
+    "message": "操作失败：至少需要保留一个提示词模板。",
+    "description": "Error message when trying to delete the last template"
+  },
+  "errorTemplateNameEmpty": {
+    "message": "模板名称不能为空。",
+    "description": "Error message when template name is empty during creation"
+  },
+  "templateAddedSuccess": {
+    "message": "新模板 \"{templateName}\" 已添加并设为当前模板。",
+    "description": "Success message when a new template is added. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "我的模板"
+      }
+    }
+  },
+  "templateDeleteSuccess": {
+    "message": "模板 \"{templateName}\" 已删除。",
+    "description": "Success message when a template is deleted. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "旧模板"
+      }
+    }
+  },
+  "templateAddError": {
+    "message": "添加新模板失败: {error}",
+    "description": "Error message when adding a new template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "存储错误"
+      }
+    }
+  },
+  "templateDeleteError": {
+    "message": "删除模板失败: {error}",
+    "description": "Error message when deleting a template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "未知错误"
+      }
+    }
   }
-} 
+}

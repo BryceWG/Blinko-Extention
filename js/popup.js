@@ -3,6 +3,8 @@ import { initializeUIListeners, showStatus, hideStatus } from './ui.js';
 import { loadQuickNote, initializeQuickNoteListeners } from './quickNote.js';
 import { checkSummaryState, initializeSummaryListeners, handleSummaryResponse } from './summary.js';
 
+let currentLoadedSettings = {}; // 用于存储加载的设置，方便在事件监听中修改
+
 // 初始化国际化文本
 function initializeI18n() {
     // 替换所有带有 __MSG_ 前缀的文本
@@ -37,6 +39,40 @@ function initializeI18n() {
 }
 
 // 初始化事件监听器
+
+// 函数：填充模板选择器并设置活动模板内容
+function populatePromptTemplateSelector(settings) {
+    const selector = document.getElementById('promptTemplateSelector');
+    const templateContentTextarea = document.getElementById('promptTemplate');
+    if (!selector || !templateContentTextarea || !settings || !settings.promptTemplates) return;
+
+    selector.innerHTML = ''; // 清空现有选项
+
+    settings.promptTemplates.forEach(template => {
+        const option = document.createElement('option');
+        option.value = template.id;
+        option.textContent = template.name;
+        if (template.id === settings.activePromptTemplateId) {
+            option.selected = true;
+        }
+        selector.appendChild(option);
+    });
+
+    const activeTemplate = settings.promptTemplates.find(t => t.id === settings.activePromptTemplateId);
+    templateContentTextarea.value = activeTemplate ? activeTemplate.content : (settings.promptTemplates.length > 0 ? settings.promptTemplates[0].content : '');
+    
+    // 控制删除按钮的可用性
+    const deleteBtn = document.getElementById('deletePromptTemplateBtn');
+    if (deleteBtn) {
+        deleteBtn.disabled = settings.promptTemplates.length <= 1;
+    }
+}
+
+// 生成唯一ID的简单方法
+function generateUniqueId() {
+    return `tpl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     try {
         // 初始化国际化文本
@@ -46,7 +82,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         const result = await chrome.storage.local.get(['notificationClicked', 'notificationTabId', 'quickNote', 'quickNoteAttachments']);
         
         // 加载设置
-        await loadSettings();
+        currentLoadedSettings = await loadSettings();
+        populatePromptTemplateSelector(currentLoadedSettings); // 填充选择器
         
         // 检查总结状态
         await checkSummaryState();
@@ -89,6 +126,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         initializeQuickNoteListeners();
         initializeSummaryListeners();
 
+        // 绑定模板选择器和文本域事件
+        const promptTemplateSelector = document.getElementById('promptTemplateSelector');
+        const promptTemplateTextarea = document.getElementById('promptTemplate');
+
+        if (promptTemplateSelector) {
+            promptTemplateSelector.addEventListener('change', () => {
+                const selectedId = promptTemplateSelector.value;
+                currentLoadedSettings.activePromptTemplateId = selectedId;
+                const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === selectedId);
+                if (activeTemplate && promptTemplateTextarea) {
+                    promptTemplateTextarea.value = activeTemplate.content;
+                }
+            });
+        }
+
+        if (promptTemplateTextarea) {
+            promptTemplateTextarea.addEventListener('input', () => {
+                if (currentLoadedSettings && currentLoadedSettings.promptTemplates && currentLoadedSettings.activePromptTemplateId) {
+                    const activeTemplate = currentLoadedSettings.promptTemplates.find(t => t.id === currentLoadedSettings.activePromptTemplateId);
+                    if (activeTemplate) {
+                        activeTemplate.content = promptTemplateTextarea.value;
+                    }
+                }
+            });
+        }
+
         // 绑定提取网页正文按钮事件
         document.getElementById('extractContent').addEventListener('click', async () => {
             try {
@@ -125,7 +188,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         // 绑定设置相关事件
         document.getElementById('saveSettings').addEventListener('click', async () => {
             try {
-                await saveSettings();
+
+                if (currentLoadedSettings && currentLoadedSettings.promptTemplates && currentLoadedSettings.activePromptTemplateId) {
+                    const activeTpl = currentLoadedSettings.promptTemplates.find(t => t.id === currentLoadedSettings.activePromptTemplateId);
+                    if (activeTpl && document.getElementById('promptTemplate')) {
+                        activeTpl.content = document.getElementById('promptTemplate').value;
+                    }
+                }
+                await chrome.storage.sync.set({ settings: currentLoadedSettings }); // 确保内存中的修改写入存储
+                await saveSettings(); // settings.js 的 saveSettings 会从存储加载，所以能拿到最新版
+
                 showStatus(chrome.i18n.getMessage('settingsSaved'), 'success');
                 setTimeout(hideStatus, 2000);
             } catch (error) {
@@ -135,13 +207,78 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         document.getElementById('resetSettings').addEventListener('click', async () => {
             try {
-                await resetSettings();
+                await resetSettings(); // settings.js 中的 resetSettings 会更新UI并保存到storage
+                currentLoadedSettings = await loadSettings(); // 重新加载到内存
+                populatePromptTemplateSelector(currentLoadedSettings); // 重新填充选择器
                 showStatus(chrome.i18n.getMessage('settingsReset'), 'success');
                 setTimeout(hideStatus, 2000);
             } catch (error) {
                 showStatus(chrome.i18n.getMessage('settingsResetError', [error.message]), 'error');
             }
         });
+        
+        // 绑定添加和删除模板按钮事件
+        const addPromptTemplateBtn = document.getElementById('addPromptTemplateBtn');
+        const deletePromptTemplateBtn = document.getElementById('deletePromptTemplateBtn');
+
+        if (addPromptTemplateBtn) {
+            addPromptTemplateBtn.addEventListener('click', () => {
+                const templateName = window.prompt(chrome.i18n.getMessage('promptForTemplateName'));
+                if (templateName === null) return; // 用户取消
+                if (!templateName.trim()) {
+                    window.alert(chrome.i18n.getMessage('errorTemplateNameEmpty'));
+                    return;
+                }
+
+                const newTemplate = {
+                    id: generateUniqueId(),
+                    name: templateName.trim(),
+                    content: '' // 新模板内容默认为空
+                };
+
+                currentLoadedSettings.promptTemplates.push(newTemplate);
+                currentLoadedSettings.activePromptTemplateId = newTemplate.id;
+                populatePromptTemplateSelector(currentLoadedSettings);
+                // 更改后立即保存，以便用户不点击主保存按钮也能保留新模板结构
+                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(chrome.i18n.getMessage('templateAddedSuccess', newTemplate.name), 'success');
+                    setTimeout(hideStatus, 2000);
+                }).catch(err => {
+                    showStatus(chrome.i18n.getMessage('templateAddError', err.message), 'error');
+                });
+            });
+        }
+
+        if (deletePromptTemplateBtn) {
+            deletePromptTemplateBtn.addEventListener('click', () => {
+                if (!currentLoadedSettings.promptTemplates || currentLoadedSettings.promptTemplates.length <= 1) {
+                    window.alert(chrome.i18n.getMessage('errorMinOneTemplate'));
+                    return;
+                }
+
+                const selectedOption = promptTemplateSelector.options[promptTemplateSelector.selectedIndex];
+                const templateIdToDelete = selectedOption.value;
+                const templateNameToDelete = selectedOption.textContent;
+
+                if (window.confirm(chrome.i18n.getMessage('confirmDeleteTemplate', templateNameToDelete))) {
+                    currentLoadedSettings.promptTemplates = currentLoadedSettings.promptTemplates.filter(t => t.id !== templateIdToDelete);
+                    
+                    // 如果删除的是当前激活的模板，则选择列表中的第一个作为新的激活模板
+                    if (currentLoadedSettings.activePromptTemplateId === templateIdToDelete) {
+                        currentLoadedSettings.activePromptTemplateId = currentLoadedSettings.promptTemplates.length > 0 ? currentLoadedSettings.promptTemplates[0].id : null;
+                    }
+                    
+                    populatePromptTemplateSelector(currentLoadedSettings);
+                     // 更改后立即保存
+                    chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                        showStatus(chrome.i18n.getMessage('templateDeleteSuccess', templateNameToDelete), 'success');
+                         setTimeout(hideStatus, 2000);
+                    }).catch(err => {
+                        showStatus(chrome.i18n.getMessage('templateDeleteError', err.message), 'error');
+                    });
+                }
+            });
+        }
 
         // 绑定获取AI配置按钮事件
         document.getElementById('fetchAiConfig').addEventListener('click', fetchAiConfig);

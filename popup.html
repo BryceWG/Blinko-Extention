@@ -69,16 +69,16 @@
             display: none;
             padding: 20px;
             background: #fff;
-            height: 500px;
+            height: 505px;
             overflow-y: auto;
             box-sizing: border-box;
         }
 
         h2 {
             margin: 0 0 16px 0;
-            font-size: 16px;
+            font-size: 18px; /* Increased font size */
             color: #212529;
-            font-weight: 500;
+            font-weight: 600; /* Increased font weight */
         }
 
         .function-section {
@@ -86,10 +86,10 @@
         }
 
         .function-title {
-            font-size: 14px;
+            font-size: 16px; /* Increased font size */
             color: #495057;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 500; /* Kept font weight */
         }
 
         .extract-button {
@@ -539,7 +539,16 @@
         </div>
 
         <div class="setting-group">
-            <label>__MSG_promptTemplateLabel__</label>
+            <label for="promptTemplateSelector">__MSG_promptTemplateSelectorLabel__</label>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <select id="promptTemplateSelector" class="text-input" style="flex-grow: 1; margin-bottom: 0;"></select>
+                <button id="addPromptTemplateBtn" class="fetch-button" title="__MSG_addTemplateButtonTooltip__" style="padding: 8px 12px; min-width: auto;">+</button>
+                <button id="deletePromptTemplateBtn" class="fetch-button secondary" title="__MSG_deleteTemplateButtonTooltip__" style="padding: 8px 12px; min-width: auto;">-</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <label for="promptTemplate">__MSG_promptTemplateContentLabel__</label> <!-- 修改了这里的Label Message Key -->
             <textarea id="promptTemplate" class="text-input" placeholder="__MSG_promptTemplatePlaceholder__"></textarea>
         </div>
 

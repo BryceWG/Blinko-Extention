@@ -199,6 +199,14 @@
     "message": "Prompt Template:",
     "description": "Label for prompt template input"
   },
+  "promptTemplateSelectorLabel": {
+    "message": "Select Prompt Template:",
+    "description": "Label for the prompt template selector dropdown"
+  },
+  "promptTemplateContentLabel": {
+    "message": "Template Content:",
+    "description": "Label for the prompt template content input field"
+  },
   "promptTemplatePlaceholder": {
     "message": "Please summarize the following content in concise language, highlighting the key points: {content}",
     "description": "Placeholder for prompt template input"
@@ -310,5 +318,75 @@
   "extractTagPlaceholder": {
     "message": "#web/clipping",
     "description": "Placeholder for extract tag input"
+  },
+  "addTemplateButtonTooltip": {
+    "message": "Add a new prompt template",
+    "description": "Tooltip for the add new prompt template button"
+  },
+  "deleteTemplateButtonTooltip": {
+    "message": "Delete the currently selected prompt template",
+    "description": "Tooltip for the delete current prompt template button"
+  },
+  "promptForTemplateName": {
+    "message": "Please enter the name for the new template:",
+    "description": "Prompt message when asking for new template name"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Are you sure you want to delete the template \"{templateName}\"? This action cannot be undone.",
+    "description": "Confirmation message before deleting a template. {templateName} is a placeholder for the template name.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "My Summary Template"
+      }
+    }
+  },
+  "errorMinOneTemplate": {
+    "message": "Operation failed: At least one prompt template must be kept.",
+    "description": "Error message when trying to delete the last template"
+  },
+  "errorTemplateNameEmpty": {
+    "message": "Template name cannot be empty.",
+    "description": "Error message when template name is empty during creation"
+  },
+  "templateAddedSuccess": {
+    "message": "New template \"{templateName}\" added and set as current.",
+    "description": "Success message when a new template is added. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "My Template"
+      }
+    }
+  },
+  "templateDeleteSuccess": {
+    "message": "Template \"{templateName}\" deleted.",
+    "description": "Success message when a template is deleted. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "Old Template"
+      }
+    }
+  },
+  "templateAddError": {
+    "message": "Failed to add new template: {error}",
+    "description": "Error message when adding a new template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Storage error"
+      }
+    }
+  },
+  "templateDeleteError": {
+    "message": "Failed to delete template: {error}",
+    "description": "Error message when deleting a template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Unknown error"
+      }
+    }
   }
-} 
+}
