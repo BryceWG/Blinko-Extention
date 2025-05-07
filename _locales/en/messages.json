@@ -488,5 +488,21 @@
   "errorNoTemplatesAvailableForDomainRule": {
     "message": "No templates available to create a domain rule. Please add some prompt templates first.",
     "description": "Error message shown in domain rule template selector if no prompt templates exist."
+  },
+  "themeSettingsLabel": {
+    "message": "Theme Settings",
+    "description": "Label for the theme selection group in settings"
+  },
+  "themeLight": {
+    "message": "Light",
+    "description": "Label for the light theme option"
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Label for the dark theme option"
+  },
+  "themeSystem": {
+    "message": "System Default",
+    "description": "Label for the system default theme option"
   }
 }

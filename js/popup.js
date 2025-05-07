@@ -16,6 +16,45 @@ function debounce(func, delay) {
     };
 }
 
+let prefersColorSchemeWatcher = null;
+
+// Function to apply the selected theme
+function applyTheme(theme) {
+    document.body.classList.remove('dark-theme', 'light-theme'); // Remove any existing theme class
+    const themeRadios = document.querySelectorAll('input[name="theme"]');
+    let selectedRadioValue = theme;
+
+    if (theme === 'system') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark-theme');
+            selectedRadioValue = 'system'; // Keep it as system for the radio button
+        } else {
+            document.body.classList.add('light-theme');
+            selectedRadioValue = 'system';
+        }
+    } else if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else { // 'light' or any other fallback
+        document.body.classList.add('light-theme');
+    }
+
+    // Update radio buttons state
+    themeRadios.forEach(radio => {
+        if (radio.value === theme) { // Check against the original theme value from settings
+            radio.checked = true;
+        } else {
+            radio.checked = false;
+        }
+    });
+}
+
+// Handler for system theme changes
+function handleSystemThemeChange(event) {
+    if (currentLoadedSettings && currentLoadedSettings.theme === 'system') {
+        applyTheme('system');
+    }
+}
+
 async function realtimeSaveSettings() {
     try {
         if (!currentLoadedSettings || Object.keys(currentLoadedSettings).length === 0) {
@@ -57,9 +96,16 @@ function handleSettingChange(event) {
     }
     const element = event.target;
     const key = element.id;
+    const name = element.name;
     let value;
 
-    if (element.type === 'checkbox') {
+    if (name === 'theme') {
+        value = element.value; // 'light', 'dark', or 'system'
+        if (currentLoadedSettings.theme !== value) {
+            currentLoadedSettings.theme = value;
+            applyTheme(value);
+        }
+    } else if (element.type === 'checkbox') {
         value = element.checked;
         currentLoadedSettings[key] = value;
     } else if (element.type === 'number') {
@@ -250,8 +296,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         // 加载设置
         currentLoadedSettings = await loadSettings();
+        applyTheme(currentLoadedSettings.theme || 'system'); // Apply initial theme
         populatePromptTemplateSelector(currentLoadedSettings); // 填充模板选择器
         populateDomainMappingsList(currentLoadedSettings); // 填充域名规则列表
+        
+        // Setup prefers-color-scheme watcher
+        if (window.matchMedia) {
+            prefersColorSchemeWatcher = window.matchMedia('(prefers-color-scheme: dark)');
+            prefersColorSchemeWatcher.addEventListener('change', handleSystemThemeChange);
+        }
         
         // 检查总结状态
         await checkSummaryState();
@@ -313,8 +366,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             selects.forEach(select => {
                 select.addEventListener('change', handleSettingChange);
             });
-        }
 
+            // Add event listeners for theme radio buttons
+            const themeRadios = settingsContainer.querySelectorAll('input[name="theme"]');
+            themeRadios.forEach(radio => {
+                radio.addEventListener('change', handleSettingChange);
+            });
+        }
+ 
         // 绑定提取网页正文按钮事件
         document.getElementById('extractContent').addEventListener('click', async () => {
             try {
@@ -355,6 +414,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 currentLoadedSettings = await loadSettings(); // 重新加载到内存
                 populatePromptTemplateSelector(currentLoadedSettings); // 重新填充选择器
                 populateDomainMappingsList(currentLoadedSettings); // 重新填充域名规则列表
+                applyTheme(currentLoadedSettings.theme || 'system'); // Apply theme after reset
                 showStatus(chrome.i18n.getMessage('settingsReset'), 'success');
                 setTimeout(hideStatus, 2000);
             } catch (error) {
@@ -591,7 +651,12 @@ window.addEventListener('unload', async () => {
         chrome.runtime.sendMessage({ action: "popupClosed" }).catch(() => {
             // 忽略错误，popup关闭时可能会出现连接错误
         });
+
+        // Clean up prefers-color-scheme watcher
+        if (prefersColorSchemeWatcher) {
+            prefersColorSchemeWatcher.removeEventListener('change', handleSystemThemeChange);
+        }
     } catch (error) {
         // 忽略错误
     }
-}); 
+});

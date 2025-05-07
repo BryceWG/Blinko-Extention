@@ -476,5 +476,21 @@
   "errorNoTemplatesAvailableForDomainRule": {
     "message": "没有可用的模板来创建域名规则。请先添加一些提示词模板。",
     "description": "Error message shown in domain rule template selector if no prompt templates exist."
+  },
+  "themeSettingsLabel": {
+    "message": "主题设置",
+    "description": "设置中主题选择区域的标签"
+  },
+  "themeLight": {
+    "message": "浅色模式",
+    "description": "浅色模式选项标签"
+  },
+  "themeDark": {
+    "message": "深色模式",
+    "description": "深色模式选项标签"
+  },
+  "themeSystem": {
+    "message": "跟随系统",
+    "description": "跟随系统主题选项标签"
   }
 }

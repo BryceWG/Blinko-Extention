@@ -50,7 +50,8 @@ const defaultSettings = {
     jinaApiKey: '',            // Jina Reader API Key
     useJinaApiKey: false,      // 是否使用API Key加速
     saveWebImages: false,       // 是否保存网页图片链接
-    domainPromptMappings: []   // 域名特定模板映射
+    domainPromptMappings: [],   // 域名特定模板映射
+    theme: 'system'             // 主题设置: 'light', 'dark', 'system'
 };
 
 // 加载设置
@@ -109,7 +110,8 @@ async function loadSettings() {
             settings.useJinaApiKey = settings.useJinaApiKey !== undefined ? settings.useJinaApiKey : defaultSettings.useJinaApiKey;
             settings.saveWebImages = settings.saveWebImages !== undefined ? settings.saveWebImages : defaultSettings.saveWebImages;
             settings.extractTag = settings.extractTag !== undefined ? settings.extractTag : defaultSettings.extractTag;
-
+            settings.theme = settings.theme || defaultSettings.theme; // 确保 theme 有默认值
+ 
             // 确保 domainPromptMappings 是一个数组
             if (!Array.isArray(settings.domainPromptMappings)) {
                 settings.domainPromptMappings = JSON.parse(JSON.stringify(defaultSettings.domainPromptMappings));
@@ -142,9 +144,10 @@ async function loadSettings() {
             'jinaApiKey': settings.jinaApiKey || '',
             'useJinaApiKey': settings.useJinaApiKey !== false,
             'saveWebImages': settings.saveWebImages !== false,
-            'extractTag': settings.extractTag || ''
+            'extractTag': settings.extractTag || '',
+            // 'theme' 设置的UI更新主要在popup.js中通过applyTheme处理，这里仅为完整性
         };
-
+ 
         // 安全地更新每个元素
         Object.entries(elements).forEach(([id, value]) => {
             const element = document.getElementById(id);
@@ -207,6 +210,7 @@ async function resetSettings() {
         document.getElementById('useJinaApiKey').checked = settings.useJinaApiKey;
         document.getElementById('saveWebImages').checked = settings.saveWebImages;
         document.getElementById('extractTag').value = settings.extractTag;
+        // 'theme' 设置的UI更新主要在popup.js中通过applyTheme处理
         
         console.log('设置已重置为默认值:', settings);
         showStatus('设置已重置为默认值', 'success');

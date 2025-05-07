@@ -1,0 +1,639 @@
+:root {
+    --body-bg: #f8f9fa;
+    --text-color-primary: #212529;
+    --text-color-secondary: #495057;
+    --text-color-tertiary: #6c757d;
+    --text-color-inverted: #FFFFFF;
+    --text-color-placeholder: #6c757d; /* For input placeholders */
+    --banner-bg: white;
+    --tab-bg: #fff;
+    --tab-border-color: #e9ecef;
+    --tab-button-bg: #E6E6FA; /* Lavender */
+    --tab-button-text: #495057;
+    --tab-button-hover-bg: #D8BFD8; /* Thistle */
+    --tab-button-hover-text: #333333;
+    --tab-button-active-bg: #C35AF7; /* Theme purple */
+    --tab-button-active-text: #FFFFFF;
+    --tab-content-bg: #fff;
+    --button-primary-bg: #FFCC00;
+    --button-primary-text: #000000;
+    --button-primary-hover-bg: #E6B800;
+    --button-secondary-bg: #f1f3f5;
+    --button-secondary-text: #495057;
+    --button-secondary-hover-bg: #e9ecef;
+    --input-bg: #fff;
+    --input-text-color: #495057;
+    --input-border-color: #dee2e6;
+    --input-focus-border-color: #C35AF7;
+    --input-focus-shadow: rgba(195, 90, 247, 0.1);
+    --setting-group-bg: #fff;
+    --setting-group-border-color: #dee2e6;
+    --status-success-bg: #FFF3CC;
+    --status-success-text: #806600;
+    --status-success-border: #FFE680;
+    --status-error-bg: #FCE8FF;
+    --status-error-text: #61157B;
+    --status-error-border: #E9B3F9;
+    --link-color: #C35AF7;
+    --attachment-list-bg: #f8f9fa;
+    --attachment-list-border: #dee2e6;
+    --attachment-item-bg: #fff;
+    --attachment-item-border: #dee2e6;
+    --help-text-color: #6c757d;
+    --domain-rule-list-bg: #f9f9f9;
+    --domain-rule-list-border: #eee;
+    --domain-rule-item-border: #f0f0f0;
+    --domain-rule-form-border: #ccc;
+    --scrollbar-thumb-bg: #c1c1c1;
+    --scrollbar-track-bg: #f1f1f1;
+}
+
+body.dark-theme {
+    --body-bg: #1e1e1e;
+    --text-color-primary: #e0e0e0;
+    --text-color-secondary: #b0b0b0;
+    --text-color-tertiary: #888888;
+    --text-color-inverted: #121212;
+    --text-color-placeholder: #888888;
+    --banner-bg: #2c2c2c;
+    --tab-bg: #2c2c2c;
+    --tab-border-color: #3a3a3a;
+    --tab-button-bg: #3a3a3a;
+    --tab-button-text: #e0e0e0;
+    --tab-button-hover-bg: #4a4a4a;
+    --tab-button-hover-text: #f0f0f0;
+    --tab-button-active-bg: #A040D0;
+    --tab-button-active-text: #FFFFFF;
+    --tab-content-bg: #2c2c2c;
+    --button-primary-bg: #E6B800;
+    --button-primary-text: #000000;
+    --button-primary-hover-bg: #FFCC00;
+    --button-secondary-bg: #3a3a3a;
+    --button-secondary-text: #e0e0e0;
+    --button-secondary-hover-bg: #4a4a4a;
+    --input-bg: #3a3a3a;
+    --input-text-color: #e0e0e0;
+    --input-border-color: #555555;
+    --input-focus-border-color: #A040D0;
+    --input-focus-shadow: rgba(160, 64, 208, 0.25);
+    --setting-group-bg: #2c2c2c;
+    --setting-group-border-color: #3a3a3a;
+    --status-success-bg: #302b00;
+    --status-success-text: #FFF3CC;
+    --status-success-border: #806600;
+    --status-error-bg: #2c0a36;
+    --status-error-text: #FCE8FF;
+    --status-error-border: #61157B;
+    --link-color: #C390F0;
+    --attachment-list-bg: #1e1e1e;
+    --attachment-list-border: #3a3a3a;
+    --attachment-item-bg: #2c2c2c;
+    --attachment-item-border: #3a3a3a;
+    --help-text-color: #888888;
+    --domain-rule-list-bg: #252525;
+    --domain-rule-list-border: #333;
+    --domain-rule-item-border: #383838;
+    --domain-rule-form-border: #444;
+    --scrollbar-thumb-bg: #555;
+    --scrollbar-track-bg: #333;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+}
+body {
+    width: 480px;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-color-primary);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-bg);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #777; /* Slightly darker on hover for light, adjust for dark */
+}
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}
+
+.banner {
+    width: 100%;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+    background-color: var(--banner-bg);
+    padding: 8px 0;
+}
+
+.tab {
+    display: flex;
+    background-color: var(--tab-bg);
+    border-bottom: 1px solid var(--tab-border-color);
+    padding: 8px 20px; /* Adjusted side padding to match .tabcontent */
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* May need adjustment for dark theme */
+    gap: 8px; /* Added gap for button spacing */
+}
+body.dark-theme .tab {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Darker shadow for dark theme */
+}
+
+.tab button {
+    flex: 1;
+    background-color: var(--tab-button-bg);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px 16px; /* Adjusted padding */
+    font-size: 14px;
+    color: var(--tab-button-text);
+    /* position: relative; -- Removed as ::after is removed */
+    transition: all 0.2s ease;
+    border-radius: 8px; /* Added border-radius */
+    /* margin: 0 4px; -- Removed, using gap on parent now */
+}
+
+.tab button:hover {
+    background-color: var(--tab-button-hover-bg);
+    color: var(--tab-button-hover-text);
+}
+
+.tab button.active {
+    background-color: var(--tab-button-active-bg);
+    color: var(--tab-button-active-text);
+    font-weight: 500;
+}
+
+/* Removed .tab button.active::after rule */
+
+.tabcontent {
+    display: none;
+    padding: 20px;
+    background: var(--tab-content-bg);
+    height: 505px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px; /* Increased font size */
+    color: var(--text-color-primary);
+    font-weight: 600; /* Increased font weight */
+}
+
+.function-section {
+    margin-bottom: 24px;
+}
+
+.function-title {
+    font-size: 16px; /* Increased font size */
+    color: var(--text-color-secondary);
+    margin-bottom: 8px;
+    font-weight: 500; /* Kept font weight */
+}
+
+.extract-button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.extract-button:hover {
+    background-color: var(--button-primary-hover-bg);
+}
+
+.text-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 10px;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--input-text-color);
+    background-color: var(--input-bg);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow transition */
+    margin-bottom: 8px; /* Reduced margin-bottom */
+    box-sizing: border-box;
+}
+
+.text-input::placeholder { /* Styling for placeholder text */
+    color: var(--text-color-placeholder);
+    opacity: 1; /* Firefox */
+}
+
+.text-input:focus {
+    border-color: var(--input-focus-border-color);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+#quickNoteInput {
+    height: 120px;
+}
+
+#summaryText, #promptTemplate {
+    height: 200px;
+}
+
+.button-group {
+    display: flex;
+    gap: 8px;
+}
+
+.send-button {
+    flex: 2;
+    padding: 8px 16px;
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.send-button:hover {
+    background-color: var(--button-primary-hover-bg);
+}
+
+.clear-button {
+    flex: 1;
+    padding: 8px 16px;
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+    background-color: var(--button-secondary-hover-bg);
+}
+
+#status {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    display: none;
+}
+
+.success {
+    background-color: var(--status-success-bg);
+    color: var(--status-success-text);
+    border: 1px solid var(--status-success-border);
+}
+
+.error {
+    background-color: var(--status-error-bg);
+    color: var(--status-error-text);
+    border: 1px solid var(--status-error-border);
+}
+
+/* 密钥输入框相关样式 */
+.input-container {
+    position: relative;
+    margin-bottom: 8px; /* Reduced margin-bottom */
+    display: flex;
+    align-items: center;
+}
+
+.toggle-visibility {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+    color: var(--text-color-secondary);
+    font-size: 16px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.sensitive-input {
+    -webkit-text-security: disc;
+    padding-right: 35px !important;
+    width: 100%;
+}
+
+.sensitive-input.visible {
+    -webkit-text-security: none;
+}
+
+/* 设置页面样式 */
+.setting-group {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: var(--setting-group-bg);
+    border-radius: 10px;
+    border: 1px solid var(--setting-group-border-color);
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+}
+
+/* New rule for checkbox labels within setting-group */
+.setting-group > label[for] {
+    display: flex;
+    align-items: center;
+    padding-top: 6px; /* Add padding to increase visual height */
+    padding-bottom: 6px; /* Add padding to increase visual height */
+    margin-bottom: 0; /* Reset bottom margin if it's the only direct child label */
+}
+
+/* Ensure labels for text inputs don't get the extra padding if they also have 'for' */
+.setting-group > label[for]:not(:only-child) {
+     padding-top: 0;
+     padding-bottom: 0;
+}
+
+/* Re-apply default margin for labels that are for inputs/textareas */
+.setting-group > label:has(+ input[type="text"]),
+.setting-group > label:has(+ input[type="number"]),
+.setting-group > label:has(+ .input-container),
+.setting-group > label:has(+ textarea) {
+    display: block; /* Override flex for these */
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 8px; /* Restore original margin */
+}
+
+
+
+.setting-group input[type="text"],
+.setting-group input[type="number"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--input-border-color);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--input-text-color);
+    background-color: var(--input-bg);
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.setting-group input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: var(--input-focus-border-color); /* Style checkbox color */
+}
+
+.setting-group input[type="text"]:focus,
+.setting-group input[type="number"]:focus {
+    border-color: var(--input-focus-border-color);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+.settings-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.settings-actions button {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.settings-actions button:first-child {
+    background-color: var(--button-primary-bg);
+    color: var(--button-primary-text);
+}
+
+.settings-actions button:first-child:hover {
+    background-color: var(--button-primary-hover-bg);
+}
+
+.settings-actions button.secondary {
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.settings-actions button.secondary:hover {
+    background-color: var(--button-secondary-hover-bg);
+}
+
+/* 链接颜色 */
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.fetch-button {
+    padding: 8px 16px;
+    background-color: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.fetch-button:hover {
+    background-color: var(--button-secondary-hover-bg);
+}
+
+.attachment-list {
+    margin: 12px 0;
+    border: 1px solid var(--attachment-list-border);
+    border-radius: 10px;
+    padding: 8px;
+    background-color: var(--attachment-list-bg);
+}
+
+.attachment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.attachment-title {
+    font-size: 14px;
+    color: var(--text-color-secondary);
+    font-weight: 500;
+}
+
+.attachment-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.attachment-item {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--attachment-item-border);
+    background-color: var(--attachment-item-bg);
+}
+
+.attachment-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.attachment-item .remove-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker for better visibility on potentially varied images */
+    color: var(--text-color-inverted);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+    line-height: 1;
+}
+
+.attachment-item .remove-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#clearAttachments { /* This is a .clear-button, should inherit its styles */
+    padding: 4px 8px;
+    font-size: 12px;
+    height: 24px;
+    line-height: 1;
+    margin: 0;
+}
+
+/* Styles for the new theme selector UI */
+.theme-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Increased gap for better spacing */
+}
+
+.theme-options-container > div {
+    display: flex;
+    align-items: center;
+}
+
+.theme-options-container input[type="radio"] {
+    margin-right: 8px; /* Increased margin */
+    vertical-align: middle;
+    accent-color: var(--input-focus-border-color); /* Style radio button color */
+}
+
+.theme-options-container label {
+    font-weight: normal;
+    margin-bottom: 0;
+    display: inline;
+    vertical-align: middle;
+    color: var(--text-color-secondary); /* Ensure label color adapts */
+}
+
+/* Help text styling */
+.help-text {
+    font-size: 12px;
+    color: var(--help-text-color);
+    margin-top: 4px;
+}
+
+/* Domain specific template list styling */
+#domainMappingsListContainer {
+    margin-bottom: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid var(--domain-rule-list-border);
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--domain-rule-list-bg);
+}
+
+#domainMappingsListContainer ul li {
+    border-bottom: 1px solid var(--domain-rule-item-border);
+}
+#domainMappingsListContainer ul li:last-child {
+    border-bottom: none;
+}
+#domainMappingsListContainer p { /* For "no rules defined" message */
+    color: var(--text-color-tertiary);
+}
+
+
+/* Domain rule form styling */
+#addDomainRuleFormContainer {
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px dashed var(--domain-rule-form-border);
+    border-radius: 8px;
+}
+
+/* Ensure setting group subheadings use theme colors */
+.setting-group h3 {
+    color: var(--text-color-primary);
+    /* Inherit font-size and margin from HTML or add specific rules if needed */
+    /* font-size: 16px; */ /* Already set inline, but could be moved here */
+    /* margin-bottom: 10px; */ /* Already set inline, but could be moved here */
+}
+
+/* Ensure domain mapping list items use theme colors */
+#domainMappingsListContainer ul li span {
+    color: var(--text-color-secondary);
+    /* Add other styles if needed, e.g., for alignment or spacing */
+}
