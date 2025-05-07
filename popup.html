@@ -4,12 +4,18 @@
     <title>__MSG_popupTitle__</title>
     <meta charset="UTF-8">
     <style>
+        html {
+            margin: 0;
+            padding: 0;
+        }
         body {
             width: 480px;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .banner {
@@ -67,7 +73,9 @@
             display: none;
             padding: 20px;
             background: #fff;
-            min-height: 300px;
+            height: 500px;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         h2 {
@@ -94,7 +102,7 @@
             background-color: #FFCC00;
             color: #000000;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -109,7 +117,7 @@
             width: 100%;
             padding: 12px;
             border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border-radius: 10px;
             resize: none;
             font-size: 14px;
             line-height: 1.5;
@@ -145,7 +153,7 @@
             background-color: #FFCC00;
             color: #000000;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -162,7 +170,7 @@
             background-color: #f1f3f5;
             color: #495057;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -176,7 +184,7 @@
         #status {
             margin-top: 12px;
             padding: 8px 12px;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 14px;
             display: none;
         }
@@ -235,7 +243,7 @@
             margin-bottom: 16px;
             padding: 12px;
             background-color: #fff;
-            border-radius: 4px;
+            border-radius: 10px;
             border: 1px solid #dee2e6;
         }
 
@@ -252,7 +260,7 @@
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 14px;
             color: #495057;
             background-color: #fff;
@@ -281,7 +289,7 @@
             flex: 1;
             padding: 8px 16px;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -321,7 +329,7 @@
             background-color: #f1f3f5;
             color: #495057;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
@@ -335,7 +343,7 @@
         .attachment-list {
             margin: 12px 0;
             border: 1px solid #dee2e6;
-            border-radius: 4px;
+            border-radius: 10px;
             padding: 8px;
             background-color: #f8f9fa;
         }
@@ -363,7 +371,7 @@
             position: relative;
             width: 80px;
             height: 80px;
-            border-radius: 4px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid #dee2e6;
             background-color: #fff;
@@ -429,15 +437,15 @@
         </div>
         
         <div id="summaryPreview">
-            <h3>__MSG_summaryPreviewTitle__</h3>
-            <textarea id="summaryText" class="text-input" placeholder="__MSG_summaryTextPlaceholder__"></textarea>
+            <h3 style="margin-top: 0; margin-bottom: 8px;">__MSG_summaryPreviewTitle__</h3>
+            <textarea id="summaryText" class="text-input" style="margin-bottom: 8px;" placeholder="__MSG_summaryTextPlaceholder__"></textarea>
             <div class="url-display">
                 <div id="pageTitle"></div>
                 <div id="pageUrl"></div>
             </div>
-            <div class="preview-actions">
-                <button id="cancelEdit" class="clear-button">__MSG_cancelButton__</button>
+            <div class="preview-actions button-group"> <!-- 使用 .button-group 来统一间距和对齐 -->
                 <button id="editSummary" class="send-button">__MSG_editAndSaveButton__</button>
+                <button id="cancelEdit" class="clear-button">__MSG_cancelButton__</button>
             </div>
         </div>
     </div>
