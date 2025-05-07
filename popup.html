@@ -120,7 +120,7 @@
             color: #495057;
             background-color: #fff;
             transition: border-color 0.2s ease;
-            margin-bottom: 12px;
+            margin-bottom: 8px; /* Reduced margin-bottom */
             box-sizing: border-box;
         }
 
@@ -200,7 +200,7 @@
         /* 密钥输入框相关样式 */
         .input-container {
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 8px; /* Reduced margin-bottom */
             display: flex;
             align-items: center;
         }
@@ -250,6 +250,40 @@
             color: #495057;
             font-weight: 500;
         }
+
+        /* New rule for checkbox labels within setting-group */
+        .setting-group > label[for] {
+            display: flex;
+            align-items: center;
+            padding-top: 6px; /* Add padding to increase visual height */
+            padding-bottom: 6px; /* Add padding to increase visual height */
+            margin-bottom: 0; /* Reset bottom margin if it's the only direct child label */
+        }
+        
+        /* Ensure labels for text inputs don't get the extra padding if they also have 'for' */
+        .setting-group > label[for]:not(:only-child) {
+             padding-top: 0;
+             padding-bottom: 0;
+        }
+
+        /* Specific adjustment for labels that are followed by an input or textarea, to remove extra padding */
+        .setting-group > label[for] + input,
+        .setting-group > label[for] + .input-container,
+        .setting-group > label[for] + textarea {
+            /* This sibling selector implies the label is for an input field, not a checkbox standalone */
+        }
+        /* Re-apply default margin for labels that are for inputs/textareas */
+        .setting-group > label:has(+ input[type="text"]),
+        .setting-group > label:has(+ input[type="number"]),
+        .setting-group > label:has(+ .input-container),
+        .setting-group > label:has(+ textarea) {
+            display: block; /* Override flex for these */
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: 8px; /* Restore original margin */
+        }
+
+
 
         .setting-group input[type="text"],
         .setting-group input[type="number"] {
