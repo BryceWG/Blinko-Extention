@@ -31,43 +31,39 @@
             display: flex;
             background-color: #fff;
             border-bottom: 1px solid #e9ecef;
-            padding: 0;
+            padding: 8px 20px; /* Adjusted side padding to match .tabcontent */
             margin: 0;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            gap: 8px; /* Added gap for button spacing */
         }
 
         .tab button {
             flex: 1;
-            background-color: transparent;
+            background-color: #E6E6FA; /* Lavender */
             border: none;
             outline: none;
             cursor: pointer;
-            padding: 12px 16px;
+            padding: 10px 16px; /* Adjusted padding */
             font-size: 14px;
             color: #495057;
-            position: relative;
+            /* position: relative; -- Removed as ::after is removed */
             transition: all 0.2s ease;
+            border-radius: 8px; /* Added border-radius */
+            /* margin: 0 4px; -- Removed, using gap on parent now */
         }
 
         .tab button:hover {
-            background-color: #f8f9fa;
-            color: #C35AF7;
+            background-color: #D8BFD8; /* Thistle */
+            color: #333333; /* Darker text on hover */
         }
 
         .tab button.active {
-            color: #C35AF7;
+            background-color: #C35AF7; /* Theme purple */
+            color: #FFFFFF; /* White text */
             font-weight: 500;
         }
 
-        .tab button.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: #C35AF7;
-        }
+        /* Removed .tab button.active::after rule */
 
         .tabcontent {
             display: none;
