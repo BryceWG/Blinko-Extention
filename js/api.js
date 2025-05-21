@@ -205,9 +205,9 @@ async function uploadFile(file, settings) {
             throw new Error('请先配置Blinko API URL和认证密钥');
         }
 
-        // 构建上传URL
-        const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(settings.targetUrl);
-        const uploadUrl = `${normalizedBaseUrl}/file/upload`;
+        // 构建上传URL - 文件上传接口使用 /api/file/upload 路径
+        const cleanBaseUrl = getCleanDomainUrl(settings.targetUrl);
+        const uploadUrl = `${cleanBaseUrl}/api/file/upload`;
 
         // 创建FormData对象
         const formData = new FormData();
