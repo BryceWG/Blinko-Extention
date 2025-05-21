@@ -4,9 +4,9 @@ import { handleContentRequest } from './messageHandler.js';
 
 // 初始化右键菜单
 function initializeContextMenu() {
-    browser.runtime.onInstalled.addListener(() => {
-        // 创建父级菜单
-        browser.contextMenus.create({
+    // 移除onInstalled事件监听，直接创建菜单
+    // 创建父级菜单
+    browser.contextMenus.create({
             id: "blinkoExtension",
             title: browser.i18n.getMessage("extensionName"),
             contexts: ["all"]
@@ -59,7 +59,6 @@ function initializeContextMenu() {
             contexts: ['page'],
             parentId: "blinkoExtension"
         });
-    });
 }
 
 // 处理右键菜单点击
