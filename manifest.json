@@ -14,8 +14,7 @@
     "<all_urls>"
   ],
   "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
-    "sandbox": "sandbox allow-scripts allow-forms allow-popups allow-modals; script-src 'self' 'unsafe-inline' 'unsafe-eval'; worker-src 'self'"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
   },
   "action": {
     "default_popup": "popup.html",
@@ -49,7 +48,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "your-addon-id@example.com",
+      "id": "blinko@extension.com",
       "strict_min_version": "91.1.0"
     }
   }
