@@ -19,7 +19,7 @@ function updateState(newState) {
 
 async function loadPosition() {
     try {
-        const result = await chrome.storage.local.get('floatingBallPosition');
+        const result = await browser.storage.local.get('floatingBallPosition');
         return result.floatingBallPosition || {
             right: '20px',
             bottom: '20px'
@@ -35,7 +35,7 @@ async function loadPosition() {
 
 async function savePosition(position) {
     try {
-        await chrome.storage.local.set({ floatingBallPosition: position });
+        await browser.storage.local.set({ floatingBallPosition: position });
     } catch (error) {
         console.error('保存悬浮球位置失败:', error);
     }
@@ -125,7 +125,7 @@ function createFloatingBallElement() {
     ball.id = 'blinko-floating-ball';
     ball.innerHTML = `
         <div class="ball-icon">
-            <img src="${chrome.runtime.getURL('images/icon128.png')}" alt="Blinko">
+            <img src="${browser.runtime.getURL('images/icon128.png')}" alt="Blinko">
         </div>
         <div class="loading-circle"></div>
     `;
@@ -156,13 +156,13 @@ function showSuccessState(ball) {
     ball.classList.remove('processing');
     ball.classList.add('success');
     const iconImg = ball.querySelector('img');
-    iconImg.src = chrome.runtime.getURL('images/icon128_success_reverse.png');
+    iconImg.src = browser.runtime.getURL('images/icon128_success_reverse.png');
 }
 
 function resetState(ball) {
     ball.classList.remove('success', 'processing');
     const iconImg = ball.querySelector('img');
-    iconImg.src = chrome.runtime.getURL('images/icon128.png');
+    iconImg.src = browser.runtime.getURL('images/icon128.png');
 }
 
 function removeFloatingBall() {
@@ -234,7 +234,7 @@ async function handleClick(ball, isRightClick = false) {
         const metadata = getPageMetadata();
 
         // 发送消息给background script处理
-        const response = await chrome.runtime.sendMessage({
+        const response = await browser.runtime.sendMessage({
             action: 'processAndSendContent',
             content: content,
             title: metadata.title,
@@ -253,7 +253,7 @@ async function handleClick(ball, isRightClick = false) {
         resetState(ball);
         updateState({ isProcessing: false });
         // 显示错误通知
-        chrome.runtime.sendMessage({
+        browser.runtime.sendMessage({
             action: 'showNotification',
             type: 'error',
             title: '操作失败',
@@ -284,7 +284,7 @@ function initializeEventListeners(ball) {
 async function createFloatingBall() {
     try {
         // 检查是否启用悬浮球
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings || {};
         if (settings.enableFloatingBall === false) {
             return;
@@ -312,7 +312,7 @@ async function createFloatingBall() {
 }
 
 function initializeMessageListener() {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === 'updateFloatingBallState') {
             const ball = document.getElementById('blinko-floating-ball');
             if (!ball) return;

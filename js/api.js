@@ -246,7 +246,7 @@ async function uploadFile(file, settings) {
 async function sendToBlinko(content, url, title, imageAttachment = null, type = 'summary') {
     try {
         // 获取设置
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings;
         
         if (!settings || !settings.targetUrl || !settings.authKey) {

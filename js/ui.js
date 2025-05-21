@@ -19,15 +19,15 @@ function hideStatus() {
 // 显示成功图标
 async function showSuccessIcon() {
     try {
-        await chrome.action.setIcon({
-            path: chrome.runtime.getURL("images/icon128_success.png")
+        await browser.action.setIcon({
+            path: browser.runtime.getURL("images/icon128_success.png")
         });
 
         // 3秒后恢复原始图标
         setTimeout(async () => {
             try {
-                await chrome.action.setIcon({
-                    path: chrome.runtime.getURL("images/icon128.png")
+                await browser.action.setIcon({
+                    path: browser.runtime.getURL("images/icon128.png")
                 });
             } catch (error) {
                 console.error('恢复图标失败:', error);

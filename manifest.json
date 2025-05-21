@@ -22,7 +22,7 @@
     "default_icon": "images/icon128.png"
   },
   "background": {
-    "service_worker": "js/background.js",
+    "scripts": ["js/background.js"],
     "type": "module"
   },
   "content_scripts": [
@@ -42,10 +42,15 @@
       "images/icon128_success.png",
       "images/icon128_success_reverse.png"
     ],
-    "matches": ["<all_urls>"],
-    "use_dynamic_url": true
+    "matches": ["<all_urls>"]
   }],
   "icons": {
     "128": "images/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "your-addon-id@example.com",
+      "strict_min_version": "91.1.0"
+    }
   }
 }

@@ -26,13 +26,13 @@ async function clearSummaryState() {
         title: null
     };
     // 同时清除存储的内容
-    await chrome.storage.local.remove('currentSummary');
+    await browser.storage.local.remove('currentSummary');
     return summaryState;
 }
 
 // 保存总结到存储
 async function saveSummaryToStorage(summary, url, title) {
-    await chrome.storage.local.set({
+    await browser.storage.local.set({
         currentSummary: {
             summary,
             url,
@@ -44,7 +44,7 @@ async function saveSummaryToStorage(summary, url, title) {
 
 // 从存储加载总结
 async function loadSummaryFromStorage() {
-    const result = await chrome.storage.local.get('currentSummary');
+    const result = await browser.storage.local.get('currentSummary');
     return result.currentSummary;
 }
 

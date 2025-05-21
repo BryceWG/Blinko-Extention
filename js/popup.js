@@ -62,18 +62,18 @@ async function realtimeSaveSettings() {
             return;
         }
 
-        await chrome.storage.sync.set({ settings: currentLoadedSettings });
-        showStatus(chrome.i18n.getMessage('settingsSaved'), 'success');
+        await browser.storage.sync.set({ settings: currentLoadedSettings });
+        showStatus(browser.i18n.getMessage('settingsSaved'), 'success');
         setTimeout(hideStatus, 1500); // Shorter duration for auto-save
 
         // 如果悬浮球设置有变化，通知所有标签页
         if (currentLoadedSettings.hasOwnProperty('enableFloatingBall')) {
-            const tabs = await chrome.tabs.query({});
+            const tabs = await browser.tabs.query({});
             for (const tab of tabs) {
                 try {
                     // 确保 tab.id 是有效的
                     if (tab.id) {
-                         await chrome.tabs.sendMessage(tab.id, {
+                         await browser.tabs.sendMessage(tab.id, {
                             action: 'updateFloatingBallState',
                             enabled: currentLoadedSettings.enableFloatingBall
                         });
@@ -85,7 +85,7 @@ async function realtimeSaveSettings() {
         }
     } catch (error) {
         console.error('Error during real-time save:', error);
-        showStatus(chrome.i18n.getMessage('settingsSaveError', [error.message]), 'error');
+        showStatus(browser.i18n.getMessage('settingsSaveError', [error.message]), 'error');
     }
 }
 
@@ -155,7 +155,7 @@ function initializeI18n() {
             const text = element.textContent;
             if (text.includes('__MSG_')) {
                 const msgName = text.match(/__MSG_(\w+)__/)[1];
-                element.textContent = chrome.i18n.getMessage(msgName);
+                element.textContent = browser.i18n.getMessage(msgName);
             }
         }
         
@@ -164,7 +164,7 @@ function initializeI18n() {
             const placeholder = element.getAttribute('placeholder');
             if (placeholder.includes('__MSG_')) {
                 const msgName = placeholder.match(/__MSG_(\w+)__/)[1];
-                element.setAttribute('placeholder', chrome.i18n.getMessage(msgName));
+                element.setAttribute('placeholder', browser.i18n.getMessage(msgName));
             }
         }
         
@@ -173,7 +173,7 @@ function initializeI18n() {
             const title = element.getAttribute('title');
             if (title.includes('__MSG_')) {
                 const msgName = title.match(/__MSG_(\w+)__/)[1];
-                element.setAttribute('title', chrome.i18n.getMessage(msgName));
+                element.setAttribute('title', browser.i18n.getMessage(msgName));
             }
         }
     });
@@ -218,7 +218,7 @@ function populateDomainMappingsList(settings) {
 
     if (settings.domainPromptMappings.length === 0) {
         const noRulesMsg = document.createElement('p');
-        noRulesMsg.textContent = chrome.i18n.getMessage('noDomainRulesDefined');
+        noRulesMsg.textContent = browser.i18n.getMessage('noDomainRulesDefined');
         noRulesMsg.style.textAlign = 'center';
         noRulesMsg.style.color = '#777';
         container.appendChild(noRulesMsg);
@@ -253,7 +253,7 @@ function populateDomainMappingsList(settings) {
 
         const deleteBtn = document.createElement('button');
         deleteBtn.textContent = '×'; // Simple delete symbol
-        deleteBtn.title = chrome.i18n.getMessage('deleteDomainRuleButtonTooltip');
+        deleteBtn.title = browser.i18n.getMessage('deleteDomainRuleButtonTooltip');
         deleteBtn.classList.add('fetch-button', 'secondary'); // Re-use existing styles
         deleteBtn.style.padding = '4px 8px';
         deleteBtn.style.minWidth = 'auto';
@@ -261,14 +261,14 @@ function populateDomainMappingsList(settings) {
 
 
         deleteBtn.addEventListener('click', () => {
-            if (window.confirm(chrome.i18n.getMessage('confirmDeleteDomainRule', mapping.domainPattern))) {
+            if (window.confirm(browser.i18n.getMessage('confirmDeleteDomainRule', mapping.domainPattern))) {
                 currentLoadedSettings.domainPromptMappings = currentLoadedSettings.domainPromptMappings.filter(m => m.id !== mapping.id);
                 populateDomainMappingsList(currentLoadedSettings);
-                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
-                    showStatus(chrome.i18n.getMessage('domainRuleDeletedSuccess', mapping.domainPattern), 'success');
+                browser.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(browser.i18n.getMessage('domainRuleDeletedSuccess', mapping.domainPattern), 'success');
                     setTimeout(hideStatus, 2000);
                 }).catch(err => {
-                    showStatus(chrome.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
+                    showStatus(browser.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
                 });
             }
         });
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         initializeI18n();
 
         // 检查是否是通过通知点击打开的
-        const result = await chrome.storage.local.get(['notificationClicked', 'notificationTabId', 'quickNote', 'quickNoteAttachments']);
+        const result = await browser.storage.local.get(['notificationClicked', 'notificationTabId', 'quickNote', 'quickNoteAttachments']);
         
         // 加载设置
         currentLoadedSettings = await loadSettings();
@@ -316,10 +316,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         let defaultTab = 'common';
         if (result.notificationClicked) {
             // 检查当前标签页是否匹配
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
             if (tab && tab.id === result.notificationTabId) {
                 // 清除标记
-                await chrome.storage.local.remove(['notificationClicked', 'notificationTabId']);
+                await browser.storage.local.remove(['notificationClicked', 'notificationTabId']);
                 defaultTab = 'quicknote';
             }
         } else if ((result.quickNote && result.quickNote.trim()) || 
@@ -377,14 +377,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         // 绑定提取网页正文按钮事件
         document.getElementById('extractContent').addEventListener('click', async () => {
             try {
-                showStatus(chrome.i18n.getMessage('extractingContent'), 'loading');
-                const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+                showStatus(browser.i18n.getMessage('extractingContent'), 'loading');
+                const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
                 if (!tab) {
-                    throw new Error(chrome.i18n.getMessage('cannotGetTab'));
+                    throw new Error(browser.i18n.getMessage('cannotGetTab'));
                 }
 
                 // 发送消息到content script获取内容
-                const response = await chrome.tabs.sendMessage(tab.id, {
+                const response = await browser.tabs.sendMessage(tab.id, {
                     action: 'getContent'
                 });
 
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
 
                 // 发送到background处理
-                await chrome.runtime.sendMessage({
+                await browser.runtime.sendMessage({
                     action: 'getContent',
                     content: response.content,
                     url: response.url,
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             } catch (error) {
                 console.error('提取网页内容失败:', error);
-                showStatus(chrome.i18n.getMessage('settingsSaveError', [error.message]), 'error');
+                showStatus(browser.i18n.getMessage('settingsSaveError', [error.message]), 'error');
             }
         });
 
@@ -415,10 +415,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 populatePromptTemplateSelector(currentLoadedSettings); // 重新填充选择器
                 populateDomainMappingsList(currentLoadedSettings); // 重新填充域名规则列表
                 applyTheme(currentLoadedSettings.theme || 'system'); // Apply theme after reset
-                showStatus(chrome.i18n.getMessage('settingsReset'), 'success');
+                showStatus(browser.i18n.getMessage('settingsReset'), 'success');
                 setTimeout(hideStatus, 2000);
             } catch (error) {
-                showStatus(chrome.i18n.getMessage('settingsResetError', [error.message]), 'error');
+                showStatus(browser.i18n.getMessage('settingsResetError', [error.message]), 'error');
             }
         });
         
@@ -428,10 +428,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (addPromptTemplateBtn) {
             addPromptTemplateBtn.addEventListener('click', () => {
-                const templateName = window.prompt(chrome.i18n.getMessage('promptForTemplateName'));
+                const templateName = window.prompt(browser.i18n.getMessage('promptForTemplateName'));
                 if (templateName === null) return; // 用户取消
                 if (!templateName.trim()) {
-                    window.alert(chrome.i18n.getMessage('errorTemplateNameEmpty'));
+                    window.alert(browser.i18n.getMessage('errorTemplateNameEmpty'));
                     return;
                 }
 
@@ -445,11 +445,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 currentLoadedSettings.activePromptTemplateId = newTemplate.id;
                 populatePromptTemplateSelector(currentLoadedSettings);
                 // 更改后立即保存，以便用户不点击主保存按钮也能保留新模板结构
-                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
-                    showStatus(chrome.i18n.getMessage('templateAddedSuccess', newTemplate.name), 'success');
+                browser.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(browser.i18n.getMessage('templateAddedSuccess', newTemplate.name), 'success');
                     setTimeout(hideStatus, 2000);
                 }).catch(err => {
-                    showStatus(chrome.i18n.getMessage('templateAddError', err.message), 'error');
+                    showStatus(browser.i18n.getMessage('templateAddError', err.message), 'error');
                 });
             });
         }
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (deletePromptTemplateBtn) {
             deletePromptTemplateBtn.addEventListener('click', () => {
                 if (!currentLoadedSettings.promptTemplates || currentLoadedSettings.promptTemplates.length <= 1) {
-                    window.alert(chrome.i18n.getMessage('errorMinOneTemplate'));
+                    window.alert(browser.i18n.getMessage('errorMinOneTemplate'));
                     return;
                 }
 
@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const templateIdToDelete = selectedOption.value;
                 const templateNameToDelete = selectedOption.textContent;
 
-                if (window.confirm(chrome.i18n.getMessage('confirmDeleteTemplate', templateNameToDelete))) {
+                if (window.confirm(browser.i18n.getMessage('confirmDeleteTemplate', templateNameToDelete))) {
                     currentLoadedSettings.promptTemplates = currentLoadedSettings.promptTemplates.filter(t => t.id !== templateIdToDelete);
                     
                     // 如果删除的是当前激活的模板，则选择列表中的第一个作为新的激活模板
@@ -475,11 +475,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                     
                     populatePromptTemplateSelector(currentLoadedSettings);
                      // 更改后立即保存
-                    chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
-                        showStatus(chrome.i18n.getMessage('templateDeleteSuccess', templateNameToDelete), 'success');
+                    browser.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                        showStatus(browser.i18n.getMessage('templateDeleteSuccess', templateNameToDelete), 'success');
                          setTimeout(hideStatus, 2000);
                     }).catch(err => {
-                        showStatus(chrome.i18n.getMessage('templateDeleteError', err.message), 'error');
+                        showStatus(browser.i18n.getMessage('templateDeleteError', err.message), 'error');
                     });
                 }
             });
@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 } else {
                      // 如果没有模板可选，可以禁用或提示
                     const option = document.createElement('option');
-                    option.textContent = chrome.i18n.getMessage('errorNoTemplatesAvailableForDomainRule');
+                    option.textContent = browser.i18n.getMessage('errorNoTemplatesAvailableForDomainRule');
                     option.disabled = true;
                     domainRuleTemplateSelector.appendChild(option);
                 }
@@ -566,12 +566,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const templateId = domainRuleTemplateSelector.value;
 
                 if (!domainPattern) {
-                    window.alert(chrome.i18n.getMessage('errorDomainPatternEmpty'));
+                    window.alert(browser.i18n.getMessage('errorDomainPatternEmpty'));
                     newDomainPatternInput.focus();
                     return;
                 }
                 if (!templateId || (domainRuleTemplateSelector.options[domainRuleTemplateSelector.selectedIndex] && domainRuleTemplateSelector.options[domainRuleTemplateSelector.selectedIndex].disabled)) {
-                    window.alert(chrome.i18n.getMessage('errorTemplateNotSelected'));
+                    window.alert(browser.i18n.getMessage('errorTemplateNotSelected'));
                     return;
                 }
 
@@ -590,11 +590,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 addDomainRuleFormContainer.style.display = 'none';
                 if(addDomainRuleBtn) addDomainRuleBtn.style.display = 'inline-block';
 
-                chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
-                    showStatus(chrome.i18n.getMessage('domainRuleAddedSuccess', domainPattern), 'success');
+                browser.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
+                    showStatus(browser.i18n.getMessage('domainRuleAddedSuccess', domainPattern), 'success');
                     setTimeout(hideStatus, 2000);
                 }).catch(err => {
-                    showStatus(chrome.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
+                    showStatus(browser.i18n.getMessage('errorSavingDomainRule', err.message), 'error');
                      // 如果保存失败，可能需要从 currentLoadedSettings 中移除刚添加的规则
                     currentLoadedSettings.domainPromptMappings.pop();
                     populateDomainMappingsList(currentLoadedSettings);
@@ -604,12 +604,12 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     } catch (error) {
         console.error('初始化失败:', error);
-        showStatus(chrome.i18n.getMessage('initializationError', [error.message]), 'error');
+        showStatus(browser.i18n.getMessage('initializationError', [error.message]), 'error');
     }
 });
 
 // 监听来自background的消息
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request && request.action === 'handleSummaryResponse') {
         handleSummaryResponse(request);
         sendResponse({ received: true });
@@ -645,10 +645,10 @@ window.addEventListener('unload', async () => {
         // 如果summaryPreview是隐藏的，说明用户已经取消或保存了内容，这时我们需要清理存储
         const summaryPreview = document.getElementById('summaryPreview');
         if (summaryPreview && summaryPreview.style.display === 'none') {
-            await chrome.storage.local.remove('currentSummary');
+            await browser.storage.local.remove('currentSummary');
         }
         
-        chrome.runtime.sendMessage({ action: "popupClosed" }).catch(() => {
+        browser.runtime.sendMessage({ action: "popupClosed" }).catch(() => {
             // 忽略错误，popup关闭时可能会出现连接错误
         });
 

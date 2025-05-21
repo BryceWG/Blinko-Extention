@@ -4,7 +4,7 @@ import { saveTempSummaryData, clearTempSummaryData } from './storage.js';
 // 检查总结状态
 async function checkSummaryState() {
     try {
-        const currentSummary = await chrome.storage.local.get('currentSummary');
+        const currentSummary = await browser.storage.local.get('currentSummary');
         if (currentSummary.currentSummary) {
             await showSummaryPreview(currentSummary.currentSummary);
         }
@@ -34,13 +34,13 @@ function initializeSummaryListeners() {
     document.getElementById('extract').addEventListener('click', async () => {
         try {
             showStatus('正在生成总结...', 'loading');
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
                 throw new Error('无法获取当前标签页');
             }
 
             // 发送消息到content script获取内容
-            const response = await chrome.tabs.sendMessage(tab.id, {
+            const response = await browser.tabs.sendMessage(tab.id, {
                 action: 'getContent'
             });
 
@@ -49,7 +49,7 @@ function initializeSummaryListeners() {
             }
 
             // 发送到background处理
-            await chrome.runtime.sendMessage({
+            await browser.runtime.sendMessage({
                 action: 'getContent',
                 content: response.content,
                 url: response.url,
@@ -67,7 +67,7 @@ function initializeSummaryListeners() {
     document.getElementById('cancelEdit').addEventListener('click', async () => {
         try {
             await clearTempSummaryData();
-            await chrome.storage.local.remove('currentSummary');
+            await browser.storage.local.remove('currentSummary');
             clearSummaryPreview();
             showStatus('已取消', 'success');
             setTimeout(hideStatus, 2000);
@@ -86,13 +86,13 @@ function initializeSummaryListeners() {
             }
 
             // 获取当前总结数据，判断是否是提取场景
-            const currentSummary = await chrome.storage.local.get('currentSummary');
+            const currentSummary = await browser.storage.local.get('currentSummary');
             const isExtractOnly = currentSummary.currentSummary?.isExtractOnly;
             const url = currentSummary.currentSummary?.url;
             const title = currentSummary.currentSummary?.title;
 
             // 发送到background处理
-            const response = await chrome.runtime.sendMessage({
+            const response = await browser.runtime.sendMessage({
                 action: 'saveSummary',
                 content: summaryText,
                 type: isExtractOnly ? 'extract' : 'summary',

@@ -31,9 +31,9 @@ function handleBackgroundMessages(request, sender, sendResponse) {
 
 // 初始化消息监听器
 function initializeMessageListeners() {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // 根据发送者处理不同的消息
-        if (sender.id === chrome.runtime.id) {
+        if (sender.id === browser.runtime.id) {
             if (sender.tab) {
                 // 来自其他content script的消息
                 handleContentScriptMessages(request, sender, sendResponse);

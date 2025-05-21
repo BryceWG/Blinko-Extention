@@ -17,7 +17,7 @@ async function handleContentRequest(request) {
         });
 
         // 获取存储的设置
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings;
         
         if (!settings) {
@@ -55,11 +55,11 @@ async function handleContentRequest(request) {
 
             if (response.success) {
                 // 显示成功通知
-                chrome.notifications.create({
+                browser.notifications.create({
                     type: 'basic',
-                    iconUrl: chrome.runtime.getURL('images/icon128.png'),
-                    title: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
-                    message: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessage" : "notificationSummarySuccessMessage", [request.title || chrome.i18n.getMessage("defaultPage")]),
+                    iconUrl: browser.runtime.getURL('images/icon128.png'),
+                    title: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
+                    message: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessage" : "notificationSummarySuccessMessage", [request.title || browser.i18n.getMessage("defaultPage")]),
                     priority: 2
                 });
             } else {
@@ -80,7 +80,7 @@ async function handleContentRequest(request) {
             await saveSummaryToStorage(summary, request.url, request.title);
 
             // 同时保存到临时存储，以便popup可以访问
-            await chrome.storage.local.set({
+            await browser.storage.local.set({
                 currentSummary: {
                     summary: summary,
                     url: request.url,
@@ -92,7 +92,7 @@ async function handleContentRequest(request) {
 
             // 发送总结结果回popup
             try {
-                await chrome.runtime.sendMessage({
+                await browser.runtime.sendMessage({
                     action: 'handleSummaryResponse',
                     success: true,
                     summary: summary,
@@ -102,22 +102,22 @@ async function handleContentRequest(request) {
                 }).catch(() => {
                     // 忽略错误，popup可能已关闭
                     // 如果popup已关闭，显示系统通知
-                    chrome.notifications.create({
+                    browser.notifications.create({
                         type: 'basic',
-                        iconUrl: chrome.runtime.getURL('images/icon128.png'),
-                        title: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
-                        message: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessagePopup" : "notificationSummarySuccessMessagePopup", [request.title || chrome.i18n.getMessage("defaultPage")]),
+                        iconUrl: browser.runtime.getURL('images/icon128.png'),
+                        title: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
+                        message: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessagePopup" : "notificationSummarySuccessMessagePopup", [request.title || browser.i18n.getMessage("defaultPage")]),
                         priority: 2
                     });
                 });
             } catch (error) {
                 console.log('Popup可能已关闭，发送消息失败');
                 // 显示系统通知
-                chrome.notifications.create({
+                browser.notifications.create({
                     type: 'basic',
-                    iconUrl: chrome.runtime.getURL('images/icon128.png'),
-                    title: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
-                    message: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessagePopup" : "notificationSummarySuccessMessagePopup", [request.title || chrome.i18n.getMessage("defaultPage")]),
+                    iconUrl: browser.runtime.getURL('images/icon128.png'),
+                    title: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessTitle" : "notificationSummarySuccessTitle"),
+                    message: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractSuccessMessagePopup" : "notificationSummarySuccessMessagePopup", [request.title || browser.i18n.getMessage("defaultPage")]),
                     priority: 2
                 });
             }
@@ -136,7 +136,7 @@ async function handleContentRequest(request) {
 
         // 尝试发送错误消息到popup
         try {
-            await chrome.runtime.sendMessage({
+            await browser.runtime.sendMessage({
                 action: 'handleSummaryResponse',
                 success: false,
                 error: error.message,
@@ -149,13 +149,13 @@ async function handleContentRequest(request) {
         }
 
         // 总是显示错误通知
-        chrome.notifications.create({
+        browser.notifications.create({
             type: 'basic',
-            iconUrl: chrome.runtime.getURL('images/icon128.png'),
-            title: chrome.i18n.getMessage(request.isExtractOnly ? "notificationExtractErrorTitle" : "notificationSummaryErrorTitle"),
-            message: chrome.i18n.getMessage("notificationErrorMessage", [
-                request.isExtractOnly ? chrome.i18n.getMessage("extractAction") : chrome.i18n.getMessage("summaryAction"),
-                request.title || chrome.i18n.getMessage("defaultPage"),
+            iconUrl: browser.runtime.getURL('images/icon128.png'),
+            title: browser.i18n.getMessage(request.isExtractOnly ? "notificationExtractErrorTitle" : "notificationSummaryErrorTitle"),
+            message: browser.i18n.getMessage("notificationErrorMessage", [
+                request.isExtractOnly ? browser.i18n.getMessage("extractAction") : browser.i18n.getMessage("summaryAction"),
+                request.title || browser.i18n.getMessage("defaultPage"),
                 error.message
             ])
         });
@@ -170,7 +170,7 @@ async function handleSaveSummary(request) {
         }
 
         // 获取存储的设置
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings;
         
         if (!settings) {
@@ -200,7 +200,7 @@ async function handleSaveSummary(request) {
                 if (response.success) {
                     // 如果是总结内容，清除存储
                     if (!request.type || request.type !== 'quickNote') {
-                        await chrome.storage.local.remove('currentSummary');
+                        await browser.storage.local.remove('currentSummary');
                         await clearSummaryState();
                     }
                     return { success: true };
@@ -219,7 +219,7 @@ async function handleSaveSummary(request) {
 
             // 如果没有提供URL和标题，尝试从currentSummary获取
             if (!url || !title) {
-                const currentSummary = await chrome.storage.local.get('currentSummary');
+                const currentSummary = await browser.storage.local.get('currentSummary');
                 if (currentSummary.currentSummary) {
                     url = url || currentSummary.currentSummary.url;
                     title = title || currentSummary.currentSummary.title;
@@ -239,7 +239,7 @@ async function handleSaveSummary(request) {
             if (response.success) {
                 // 如果是总结内容，清除存储
                 if (!request.type || request.type !== 'quickNote') {
-                    await chrome.storage.local.remove('currentSummary');
+                    await browser.storage.local.remove('currentSummary');
                     await clearSummaryState();
                 }
                 return { success: true };
@@ -273,7 +273,7 @@ async function handleFloatingBallRequest(request) {
         });
 
         // 获取存储的设置
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings;
         
         if (!settings) {
@@ -324,7 +324,7 @@ async function handleFloatingBallRequest(request) {
 
             // 发送成功响应
             try {
-                await chrome.runtime.sendMessage({
+                await browser.runtime.sendMessage({
                     action: 'floatingBallResponse',
                     response: { 
                         success: true,
@@ -352,7 +352,7 @@ async function handleFloatingBallRequest(request) {
 
         // 发送错误响应
         try {
-            await chrome.runtime.sendMessage({
+            await browser.runtime.sendMessage({
                 action: 'floatingBallResponse',
                 response: { 
                     success: false, 

@@ -73,7 +73,7 @@ function createFloatingBallElement() {
     ball.id = 'blinko-floating-ball';
     ball.innerHTML = `
         <div class="ball-icon">
-            <img src="${chrome.runtime.getURL('images/icon128.png')}" alt="Blinko">
+            <img src="${browser.runtime.getURL('images/icon128.png')}" alt="Blinko">
         </div>
         <div class="loading-circle"></div>
     `;
@@ -100,14 +100,14 @@ function showSuccessState(ball) {
     ball.classList.remove('processing');
     ball.classList.add('success');
     const iconImg = ball.querySelector('img');
-    iconImg.src = chrome.runtime.getURL('images/icon128_success_reverse.png');
+    iconImg.src = browser.runtime.getURL('images/icon128_success_reverse.png');
 }
 
 // 重置状态
 function resetState(ball) {
     ball.classList.remove('success', 'processing');
     const iconImg = ball.querySelector('img');
-    iconImg.src = chrome.runtime.getURL('images/icon128.png');
+    iconImg.src = browser.runtime.getURL('images/icon128.png');
 }
 
 // 移除悬浮球

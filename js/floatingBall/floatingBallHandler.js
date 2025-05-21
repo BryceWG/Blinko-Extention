@@ -67,7 +67,7 @@ async function handleClick(ball) {
         const metadata = getPageMetadata();
 
         // 发送消息给background script处理
-        const response = await chrome.runtime.sendMessage({
+        const response = await browser.runtime.sendMessage({
             action: 'processAndSendContent',
             content: content,
             title: metadata.title,

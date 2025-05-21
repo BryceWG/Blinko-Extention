@@ -57,7 +57,7 @@ const defaultSettings = {
 // 加载设置
 async function loadSettings() {
     try {
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         let settings = result.settings;
         
         // 如果没有保存的设置，使用默认值
@@ -171,7 +171,7 @@ async function loadSettings() {
 // 重置设置
 async function resetSettings() {
     try {
-        await chrome.storage.sync.remove('settings');
+        await browser.storage.sync.remove('settings');
         const settings = JSON.parse(JSON.stringify(defaultSettings)); // Deep copy
         
         // 更新UI

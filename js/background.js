@@ -6,7 +6,7 @@ import { getSummaryState, clearSummaryState } from './summaryState.js';
 initializeContextMenu();
 
 // 监听来自popup和content script的消息
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "getContent") {
         // 直接处理，不需要响应
         handleContentRequest(request);
@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // 立即处理并返回响应
         handleSaveSummary(request).then(response => {
             try {
-                chrome.runtime.sendMessage({
+                browser.runtime.sendMessage({
                     action: 'saveSummaryResponse',
                     response: response
                 }).catch(() => {
@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // 尝试更新悬浮球状态
             if (sender.tab && sender.tab.id) {
                 try {
-                    chrome.tabs.sendMessage(sender.tab.id, {
+                    browser.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
                         success: response.success,
                         error: response.error
@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             // 尝试更新悬浮球状态
             if (sender.tab && sender.tab.id) {
                 try {
-                    chrome.tabs.sendMessage(sender.tab.id, {
+                    browser.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
                         success: false,
                         error: error.message || '处理请求失败'
@@ -76,9 +76,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     if (request.action === "showNotification") {
         // 显示系统通知
-        chrome.notifications.create({
+        browser.notifications.create({
             type: 'basic',
-            iconUrl: chrome.runtime.getURL('images/icon128.png'),
+            iconUrl: browser.runtime.getURL('images/icon128.png'),
             title: request.title || '通知',
             message: request.message || '',
             priority: 2
@@ -97,7 +97,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // 立即发送响应，避免通道关闭
         clearSummaryState().then(() => {
             try {
-                chrome.runtime.sendMessage({
+                browser.runtime.sendMessage({
                     action: 'clearSummaryResponse',
                     success: true
                 }).catch(() => {
@@ -115,21 +115,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // 监听右键菜单点击
-chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
+browser.contextMenus.onClicked.addListener(handleContextMenuClick);
 
 // 监听通知点击
-chrome.notifications.onClicked.addListener(async (notificationId) => {
+browser.notifications.onClicked.addListener(async (notificationId) => {
     try {
         // 获取当前标签页
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
         if (tab) {
             // 设置标记
-            await chrome.storage.local.set({ 
+            await browser.storage.local.set({ 
                 notificationClicked: true,
                 notificationTabId: tab.id
             });
             // 清除通知
-            chrome.notifications.clear(notificationId);
+            browser.notifications.clear(notificationId);
         }
     } catch (error) {
         console.error('处理通知点击失败:', error);

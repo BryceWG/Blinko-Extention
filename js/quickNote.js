@@ -5,7 +5,7 @@ import { getCleanDomainUrl } from './api.js';
 function saveQuickNote() {
     const input = document.getElementById('quickNoteInput');
     if (input && input.value.trim()) {
-        chrome.storage.local.set({ 'quickNote': input.value });
+        browser.storage.local.set({ 'quickNote': input.value });
     }
 }
 
@@ -13,7 +13,7 @@ function saveQuickNote() {
 async function loadQuickNote() {
     try {
         // 加载文本内容
-        const result = await chrome.storage.local.get(['quickNote', 'quickNoteAttachments']);
+        const result = await browser.storage.local.get(['quickNote', 'quickNoteAttachments']);
         if (result.quickNote) {
             document.getElementById('quickNoteInput').value = result.quickNote;
         }
@@ -35,7 +35,7 @@ async function loadQuickNote() {
             }));
 
             // 更新存储中的附件信息
-            await chrome.storage.local.set({ 'quickNoteAttachments': attachments });
+            await browser.storage.local.set({ 'quickNoteAttachments': attachments });
             
             // 显示附件
             updateAttachmentList(attachments);
@@ -57,7 +57,7 @@ async function updateAttachmentList(attachments) {
     clearAttachmentsBtn.style.display = attachments.length > 0 ? 'block' : 'none';
 
     // 获取设置信息
-    const result = await chrome.storage.sync.get('settings');
+    const result = await browser.storage.sync.get('settings');
     const settings = result.settings;
     
     if (!settings || !settings.targetUrl) {
@@ -123,11 +123,11 @@ function clearImageCache(attachments) {
 async function clearAttachments() {
     try {
         // 获取当前附件列表以清理缓存
-        const result = await chrome.storage.local.get('quickNoteAttachments');
+        const result = await browser.storage.local.get('quickNoteAttachments');
         if (result.quickNoteAttachments) {
             clearImageCache(result.quickNoteAttachments);
         }
-        await chrome.storage.local.remove('quickNoteAttachments');
+        await browser.storage.local.remove('quickNoteAttachments');
         updateAttachmentList([]);
     } catch (error) {
         console.error('清除附件失败:', error);
@@ -138,7 +138,7 @@ async function clearAttachments() {
 // 移除单个附件
 async function removeAttachment(index) {
     try {
-        const result = await chrome.storage.local.get('quickNoteAttachments');
+        const result = await browser.storage.local.get('quickNoteAttachments');
         let attachments = result.quickNoteAttachments || [];
         
         // 清理要移除的附件的图片缓存
@@ -150,7 +150,7 @@ async function removeAttachment(index) {
         attachments.splice(index, 1);
         
         // 保存更新后的附件列表
-        await chrome.storage.local.set({ 'quickNoteAttachments': attachments });
+        await browser.storage.local.set({ 'quickNoteAttachments': attachments });
         
         // 更新显示
         updateAttachmentList(attachments);
@@ -166,12 +166,12 @@ function clearQuickNote() {
     if (input) {
         input.value = '';
         // 获取当前附件列表以清理缓存
-        chrome.storage.local.get(['quickNoteAttachments'], result => {
+        browser.storage.local.get(['quickNoteAttachments'], result => {
             if (result.quickNoteAttachments) {
                 clearImageCache(result.quickNoteAttachments);
             }
             // 清除storage中的数据
-            chrome.storage.local.remove(['quickNote', 'quickNoteAttachments']);
+            browser.storage.local.remove(['quickNote', 'quickNoteAttachments']);
             // 更新附件列表显示
             updateAttachmentList([]);
         });
@@ -188,7 +188,7 @@ async function sendQuickNote() {
             return;
         }
 
-        const result = await chrome.storage.sync.get('settings');
+        const result = await browser.storage.sync.get('settings');
         const settings = result.settings;
         
         if (!settings) {
@@ -201,7 +201,7 @@ async function sendQuickNote() {
         let url = '';
         let title = '';
         try {
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
             if (tab) {
                 url = tab.url;
                 title = tab.title;
@@ -211,21 +211,21 @@ async function sendQuickNote() {
         }
 
         // 获取附件列表
-        const attachmentsResult = await chrome.storage.local.get(['quickNoteAttachments']);
+        const attachmentsResult = await browser.storage.local.get(['quickNoteAttachments']);
         const attachments = attachmentsResult.quickNoteAttachments || [];
 
         // 发送消息并等待saveSummaryResponse
         const responsePromise = new Promise((resolve) => {
             const listener = (message) => {
                 if (message.action === 'saveSummaryResponse') {
-                    chrome.runtime.onMessage.removeListener(listener);
+                    browser.runtime.onMessage.removeListener(listener);
                     resolve(message.response);
                 }
             };
-            chrome.runtime.onMessage.addListener(listener);
+            browser.runtime.onMessage.addListener(listener);
             
             // 发送请求
-            chrome.runtime.sendMessage({
+            browser.runtime.sendMessage({
                 action: 'saveSummary',
                 type: 'quickNote',
                 content: content.trim(),
@@ -244,7 +244,7 @@ async function sendQuickNote() {
             clearImageCache(attachments);
             // 清除内容和存储
             input.value = '';
-            await chrome.storage.local.remove(['quickNote', 'quickNoteAttachments']);
+            await browser.storage.local.remove(['quickNote', 'quickNoteAttachments']);
             // 立即更新附件列表显示
             updateAttachmentList([]);
         } else {
