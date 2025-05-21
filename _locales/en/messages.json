@@ -504,5 +504,21 @@
   "themeSystem": {
     "message": "System Default",
     "description": "Label for the system default theme option"
+  },
+  "floatingBallSizeLabel": {
+    "message": "Floating Ball Size",
+    "description": "Label for the floating ball size selection group in settings"
+  },
+  "floatingBallSizeSmall": {
+    "message": "Small",
+    "description": "Label for the small floating ball size option"
+  },
+  "floatingBallSizeMedium": {
+    "message": "Medium",
+    "description": "Label for the medium floating ball size option"
+  },
+  "floatingBallSizeLarge": {
+    "message": "Large",
+    "description": "Label for the large floating ball size option"
   }
 }

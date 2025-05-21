@@ -492,5 +492,21 @@
   "themeSystem": {
     "message": "跟随系统",
     "description": "跟随系统主题选项标签"
+  },
+  "floatingBallSizeLabel": {
+    "message": "悬浮球大小",
+    "description": "设置中悬浮球大小选择区域的标签"
+  },
+  "floatingBallSizeSmall": {
+    "message": "小",
+    "description": "小号悬浮球选项标签"
+  },
+  "floatingBallSizeMedium": {
+    "message": "中",
+    "description": "中号悬浮球选项标签"
+  },
+  "floatingBallSizeLarge": {
+    "message": "大",
+    "description": "大号悬浮球选项标签"
   }
 }
