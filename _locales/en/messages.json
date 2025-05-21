@@ -52,11 +52,11 @@
     "description": "Notification title for successful content summarization"
   },
   "notificationExtractSuccessMessage": {
-    "message": "Successfully extracted content from \"%s\" and saved to Blinko",
+    "message": "Successfully extracted content from \"$1\" and saved to Blinko",
     "description": "Notification message for content extraction success"
   },
   "notificationSummarySuccessMessage": {
-    "message": "Successfully summarized content from \"%s\" and saved to Blinko",
+    "message": "Successfully summarized content from \"$1\" and saved to Blinko",
     "description": "Notification message for content summarization success"
   },
   "notificationExtractSuccessMessagePopup": {
