@@ -1,12 +1,12 @@
-# Blinko Chrome Extension 🚀
+# Blinko Firefox Extension 🚀
 
 [中文](README_CN.md)
 
-A Chrome extension for Blinko that uses AI to automatically extract and summarize web content. Supports custom summary templates and can save content to a specified Blinko server.
+A Firefox extension for Blinko that uses AI to automatically extract and summarize web content. Supports custom summary templates and can save content to a specified Blinko server.
 
 Original Project: [Blinko](https://github.com/blinko-space/blinko) 🔗
-[Chrome Store](https://chromewebstore.google.com/detail/blinko%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E6%8F%90%E5%8F%96%E6%80%BB%E7%BB%93/gpdobkhkjbgbgllpkhaomajicoaccjjo?hl=zh-CN&utm_source=ext_sidebar)
-[Firefox Version](https://github.com/BryceWG/Blinko-Firefox-Extension)
+[Firefox Store](https://addons.mozilla.org/addon/blinko-extension/)
+[Chrome Version](https://github.com/BryceWG/Blinko-Extention/tree/main)
 
 ## ✨ Features
 
