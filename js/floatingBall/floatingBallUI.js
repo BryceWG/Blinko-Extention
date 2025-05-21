@@ -71,12 +71,22 @@ function createFloatingBallStyle() {
 function createFloatingBallElement() {
     const ball = document.createElement('div');
     ball.id = 'blinko-floating-ball';
-    ball.innerHTML = `
-        <div class="ball-icon">
-            <img src="${browser.runtime.getURL('images/icon128.png')}" alt="Blinko">
-        </div>
-        <div class="loading-circle"></div>
-    `;
+
+    const ballIcon = document.createElement('div');
+    ballIcon.className = 'ball-icon';
+
+    const img = document.createElement('img');
+    img.src = browser.runtime.getURL('images/icon128.png');
+    img.alt = 'Blinko';
+
+    ballIcon.appendChild(img);
+
+    const loadingCircle = document.createElement('div');
+    loadingCircle.className = 'loading-circle';
+
+    ball.appendChild(ballIcon);
+    ball.appendChild(loadingCircle);
+
     return ball;
 }
 
