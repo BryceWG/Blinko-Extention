@@ -47,6 +47,7 @@ const defaultSettings = {
     imageTag: '#网页/图片',     // 图片保存的标签
     extractTag: '#网页/剪藏',   // 网页剪藏的标签
     enableFloatingBall: true,   // 是否启用悬浮球
+    floatingBallSize: 'medium', // 悬浮球大小: 'small', 'medium', 'large'
     jinaApiKey: '',            // Jina Reader API Key
     useJinaApiKey: false,      // 是否使用API Key加速
     saveWebImages: false,       // 是否保存网页图片链接
@@ -106,6 +107,7 @@ async function loadSettings() {
             settings.includeImageUrl = settings.includeImageUrl !== undefined ? settings.includeImageUrl : defaultSettings.includeImageUrl;
             settings.includeQuickNoteUrl = settings.includeQuickNoteUrl !== undefined ? settings.includeQuickNoteUrl : defaultSettings.includeQuickNoteUrl;
             settings.enableFloatingBall = settings.enableFloatingBall !== undefined ? settings.enableFloatingBall : defaultSettings.enableFloatingBall;
+            settings.floatingBallSize = settings.floatingBallSize || defaultSettings.floatingBallSize; // 确保 floatingBallSize 有默认值
             settings.jinaApiKey = settings.jinaApiKey || defaultSettings.jinaApiKey;
             settings.useJinaApiKey = settings.useJinaApiKey !== undefined ? settings.useJinaApiKey : defaultSettings.useJinaApiKey;
             settings.saveWebImages = settings.saveWebImages !== undefined ? settings.saveWebImages : defaultSettings.saveWebImages;
@@ -210,7 +212,6 @@ async function resetSettings() {
         document.getElementById('useJinaApiKey').checked = settings.useJinaApiKey;
         document.getElementById('saveWebImages').checked = settings.saveWebImages;
         document.getElementById('extractTag').value = settings.extractTag;
-        // 'theme' 设置的UI更新主要在popup.js中通过applyTheme处理
         
         console.log('设置已重置为默认值:', settings);
         showStatus('设置已重置为默认值', 'success');

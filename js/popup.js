@@ -67,19 +67,27 @@ async function realtimeSaveSettings() {
         setTimeout(hideStatus, 1500); // Shorter duration for auto-save
 
         // 如果悬浮球设置有变化，通知所有标签页
-        if (currentLoadedSettings.hasOwnProperty('enableFloatingBall')) {
+        if (currentLoadedSettings.hasOwnProperty('enableFloatingBall') || currentLoadedSettings.hasOwnProperty('floatingBallSize')) {
             const tabs = await browser.tabs.query({});
             for (const tab of tabs) {
                 try {
                     // 确保 tab.id 是有效的
                     if (tab.id) {
-                         await browser.tabs.sendMessage(tab.id, {
-                            action: 'updateFloatingBallState',
-                            enabled: currentLoadedSettings.enableFloatingBall
-                        });
+                        if (currentLoadedSettings.hasOwnProperty('enableFloatingBall')) {
+                            await browser.tabs.sendMessage(tab.id, {
+                                action: 'updateFloatingBallState',
+                                enabled: currentLoadedSettings.enableFloatingBall
+                            });
+                        }
+                        if (currentLoadedSettings.hasOwnProperty('floatingBallSize')) {
+                            await browser.tabs.sendMessage(tab.id, {
+                                action: 'updateFloatingBallSize',
+                                size: currentLoadedSettings.floatingBallSize
+                            });
+                        }
                     }
                 } catch (error) {
-                    // console.log('Tab not ready for floating ball update or other error:', tab.id, error.message);
+                    // console.warn('Could not send state/size update to tab:', tab.id, error.message);
                 }
             }
         }
@@ -104,6 +112,11 @@ function handleSettingChange(event) {
         if (currentLoadedSettings.theme !== value) {
             currentLoadedSettings.theme = value;
             applyTheme(value);
+        }
+    } else if (name === 'floatingBallSize') {
+        value = element.value; // 'small', 'medium', or 'large'
+        if (currentLoadedSettings.floatingBallSize !== value) {
+            currentLoadedSettings.floatingBallSize = value;
         }
     } else if (element.type === 'checkbox') {
         value = element.checked;
@@ -297,6 +310,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         // 加载设置
         currentLoadedSettings = await loadSettings();
         applyTheme(currentLoadedSettings.theme || 'system'); // Apply initial theme
+        
+        // 设置浮动球的初始状态
+        const ballSize = currentLoadedSettings.floatingBallSize || 'medium'; // Default to medium if not set
+        const selectedRadio = document.querySelector(`input[name="floatingBallSize"][value="${ballSize}"]`);
+        if (selectedRadio) {
+            selectedRadio.checked = true;
+        }
+
         populatePromptTemplateSelector(currentLoadedSettings); // 填充模板选择器
         populateDomainMappingsList(currentLoadedSettings); // 填充域名规则列表
         
@@ -370,6 +391,12 @@ document.addEventListener('DOMContentLoaded', async function() {
             // Add event listeners for theme radio buttons
             const themeRadios = settingsContainer.querySelectorAll('input[name="theme"]');
             themeRadios.forEach(radio => {
+                radio.addEventListener('change', handleSettingChange);
+            });
+
+            // Add event listeners for floating ball size radio buttons
+            const ballSizeRadios = settingsContainer.querySelectorAll('input[name="floatingBallSize"]');
+            ballSizeRadios.forEach(radio => {
                 radio.addEventListener('change', handleSettingChange);
             });
         }

@@ -1,11 +1,15 @@
 // floatingBallState.js 内容
 const ballState = {
     isDragging: false,
-    startX: 0,
-    startY: 0,
+    startX: 0, // For calculating delta in handleDragMove
+    startY: 0, // For calculating delta in handleDragMove
     startRight: 0,
     startBottom: 0,
-    isProcessing: false
+    isProcessing: false,
+    dragStartTime: 0,
+    dragStartMouseX: 0, // For differentiating click vs drag
+    dragStartMouseY: 0, // For differentiating click vs drag
+    wasDragging: false // Flag to indicate if a drag operation actually occurred
 };
 
 function getState() {
@@ -42,13 +46,24 @@ async function savePosition(position) {
 }
 
 // floatingBallUI.js 内容
-function createFloatingBallStyle() {
+async function createFloatingBallStyle() {
+    const settingsResult = await browser.storage.sync.get('settings');
+    const ballSizeValue = settingsResult.settings?.floatingBallSize || 'medium'; // Default to medium
+
+    let sizePx = '50px'; // Default medium
+    if (ballSizeValue === 'small') {
+        sizePx = '35px';
+    } else if (ballSizeValue === 'large') {
+        sizePx = '65px';
+    }
+
     const style = document.createElement('style');
+    style.id = 'blinko-floating-ball-style'; // Assign an ID to the style element
     style.textContent = `
         #blinko-floating-ball {
             position: fixed;
-            width: min(50px, 5vw);
-            height: min(50px, 5vw);
+            width: ${sizePx}; /* Apply dynamic size */
+            height: ${sizePx}; /* Apply dynamic size */
             cursor: move;
             z-index: 10000;
             user-select: none;
@@ -110,12 +125,7 @@ function createFloatingBallStyle() {
             transform: rotateY(180deg);
         }
 
-        @media (max-width: 768px) {
-            #blinko-floating-ball {
-                width: min(40px, 8vw);
-                height: min(40px, 8vw);
-            }
-        }
+        /* @media (max-width: 768px) block removed as fixed sizes are now used */
     `;
     return style;
 }
@@ -190,7 +200,11 @@ function handleDragStart(e, ball) {
     updateState({
         isDragging: true,
         startX: e.clientX,
-        startY: e.clientY
+        startY: e.clientY,
+        dragStartMouseX: e.clientX,
+        dragStartMouseY: e.clientY,
+        dragStartTime: Date.now(),
+        wasDragging: false,
     });
     
     const rect = ball.getBoundingClientRect();
@@ -208,19 +222,27 @@ function handleDragMove(e, ball) {
     
     const deltaX = state.startX - e.clientX;
     const deltaY = state.startY - e.clientY;
-    
     const newRight = state.startRight + deltaX;
     const newBottom = state.startBottom + deltaY;
-    
     ball.style.right = newRight + 'px';
     ball.style.bottom = newBottom + 'px';
+
+    const moveThreshold = 5; // 5 pixels
+    const movedX = Math.abs(e.clientX - state.dragStartMouseX);
+    const movedY = Math.abs(e.clientY - state.dragStartMouseY);
+
+    if (movedX > moveThreshold || movedY > moveThreshold) {
+        if (!state.wasDragging) { // Only update if not already set to true
+            updateState({ wasDragging: true });
+        }
+    }
 }
 
 function handleDragEnd(ball) {
     const state = getState();
     if (!state.isDragging) return;
     
-    updateState({ isDragging: false });
+    updateState({ isDragging: false }); 
     ball.style.transition = 'transform 0.5s ease';
     
     // 保存新位置
@@ -233,6 +255,11 @@ function handleDragEnd(ball) {
 
 async function handleClick(ball, isRightClick = false) {
     const state = getState();
+    if (state.wasDragging) {
+        updateState({ wasDragging: false }); // Reset the flag for the next interaction
+        return; // Skip click action because a drag just ended
+        }
+
     if (state.isDragging || state.isProcessing) return;
     
     updateState({ isProcessing: true });
@@ -301,7 +328,7 @@ async function createFloatingBall() {
         }
 
         // 添加样式
-        const style = createFloatingBallStyle();
+        const style = await createFloatingBallStyle(); // Await the async function
         document.head.appendChild(style);
 
         // 创建悬浮球元素
@@ -325,10 +352,19 @@ function initializeMessageListener() {
     browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === 'updateFloatingBallState') {
             const ball = document.getElementById('blinko-floating-ball');
-            if (!ball) return;
+            if (!ball && request.enabled !== false && request.success === undefined) { 
+                if(request.enabled === true) createFloatingBall();
+                return;
+            } else if (!ball) {
+                return;
+            }
 
             if (request.enabled === false) {
                 removeFloatingBall();
+                const styleElement = document.getElementById('blinko-floating-ball-style');
+                if (styleElement) {
+                    styleElement.remove();
+                }
             } else if (request.success !== undefined) {
                 // 处理总结结果
                 if (request.success) {
@@ -344,9 +380,32 @@ function initializeMessageListener() {
                     // 可以考虑显示错误提示
                     console.error('总结失败:', request.error);
                 }
-            } else if (!document.getElementById('blinko-floating-ball')) {
+            } else if (request.enabled === true && !document.getElementById('blinko-floating-ball')) {
                 createFloatingBall();
             }
+        } else if (request.action === 'updateFloatingBallSize') {
+            const ball = document.getElementById('blinko-floating-ball');
+            if (!ball) return;
+
+            const newSizeValue = request.size || 'medium';
+            let newSizePx = '50px';
+            if (newSizeValue === 'small') newSizePx = '40px';
+            else if (newSizeValue === 'large') newSizePx = '60px';
+
+            ball.style.width = newSizePx;
+            ball.style.height = newSizePx;
+
+            const oldStyle = document.getElementById('blinko-floating-ball-style');
+            if (oldStyle) oldStyle.remove();
+            
+            (async () => {
+                try {
+                    const newStyleElement = await createFloatingBallStyle();
+                    document.head.appendChild(newStyleElement);
+                } catch (error) {
+                    console.error('Error updating floating ball style:', error);
+                }
+            })();
         }
     });
 }
