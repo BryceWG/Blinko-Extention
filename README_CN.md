@@ -5,8 +5,8 @@
 一个Blinko配套Chrome扩展，使用AI自动提取和总结网页内容。支持自定义总结模板，可以将总结内容保存到指定Blinko服务器。
 
 原项目地址: [Blinko](https://github.com/blinko-space/blinko) 🔗
-[Chrome 商店链接](https://chromewebstore.google.com/detail/blinko%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E6%8F%90%E5%8F%96%E6%80%BB%E7%BB%93/gpdobkhkjbgbgllpkhaomajicoaccjjo?hl=zh-CN&utm_source=ext_sidebar)
-[Firefox Version](https://github.com/BryceWG/Blinko-Firefox-Extension)
+[Chrome 商店链接](https://chromewebstore.google.com/detail/gpdobkhkjbgbgllpkhaomajicoaccjjo)
+[Firefox 版本](https://github.com/BryceWG/Blinko-Extention/tree/firefox)
 
 ## ✨ 功能特点
 
