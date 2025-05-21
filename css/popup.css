@@ -103,7 +103,9 @@ html {
     padding: 0;
 }
 body {
-    width: 480px;
+    width: 100%;
+    min-width: 300px;
+    max-width: 500px;
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -186,7 +188,8 @@ body.dark-theme .tab {
     display: none;
     padding: 20px;
     background: var(--tab-content-bg);
-    height: 505px;
+    min-height: 300px;
+    max-height: 90vh;
     overflow-y: auto;
     box-sizing: border-box;
 }
@@ -636,4 +639,25 @@ a:hover {
 #domainMappingsListContainer ul li span {
     color: var(--text-color-secondary);
     /* Add other styles if needed, e.g., for alignment or spacing */
+}
+
+/* --- Mobile Specific Styles --- */
+/* .mobile-view body {
+    font-size: 14px; /* Adjust base font size if needed */
+}
+
+.mobile-view .tab button {
+    /* Example: Adjust padding for smaller tap targets if necessary */
+    /* padding: 8px 10px; */
+    /* font-size: 13px; */
+}
+
+.mobile-view .text-input {
+    /* Example: Ensure text inputs are easily usable */
+    /* font-size: 14px; */
+}
+
+.mobile-view .setting-group { /* Corrected class name from .settings-group to .setting-group */
+    /* Example: Reduce margin if space is very tight */
+    /* margin-bottom: 12px; */
 }

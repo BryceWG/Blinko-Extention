@@ -48,6 +48,14 @@ function applyTheme(theme) {
     });
 }
 
+// Function to check and apply mobile-specific class
+function checkAndApplyMobileView() {
+    const mobileRegex = /Mobi|Android|iPhone/i;
+    if (mobileRegex.test(navigator.userAgent)) {
+        document.body.classList.add('mobile-view');
+    }
+}
+
 // Handler for system theme changes
 function handleSystemThemeChange(event) {
     if (currentLoadedSettings && currentLoadedSettings.theme === 'system') {
@@ -301,6 +309,9 @@ function generateUniqueId(prefix = 'id_') { // Added prefix option
 
 document.addEventListener('DOMContentLoaded', async function() {
     try {
+        // Apply mobile view adjustments first
+        checkAndApplyMobileView();
+
         // 初始化国际化文本
         initializeI18n();
 
