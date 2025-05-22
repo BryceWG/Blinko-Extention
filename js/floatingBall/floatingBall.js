@@ -29,7 +29,7 @@ async function loadPosition() {
             bottom: '20px'
         };
     } catch (error) {
-        console.error('加载悬浮球位置失败:', error);
+        console.error(chrome.i18n.getMessage('floatingBallCreateError'), error);
         return {
             right: '20px',
             bottom: '20px'
@@ -41,7 +41,7 @@ async function savePosition(position) {
     try {
         await browser.storage.local.set({ floatingBallPosition: position });
     } catch (error) {
-        console.error('保存悬浮球位置失败:', error);
+        console.error(chrome.i18n.getMessage('floatingBallCreateError'), error);
     }
 }
 
@@ -283,17 +283,17 @@ async function handleClick(ball, isRightClick = false) {
             // 等待实际的响应
             return;  // background会处理剩余的流程
         } else {
-            throw new Error('请求处理失败');
+            throw new Error(chrome.i18n.getMessage('requestProcessError'));
         }
     } catch (error) {
-        console.error('处理内容时出错:', error);
+        console.error(chrome.i18n.getMessage('contentProcessError'), error);
         resetState(ball);
         updateState({ isProcessing: false });
         // 显示错误通知
         browser.runtime.sendMessage({
             action: 'showNotification',
             type: 'error',
-            title: '操作失败',
+            title: chrome.i18n.getMessage('operationFailed'),
             message: error.message
         });
     }
@@ -344,7 +344,7 @@ async function createFloatingBall() {
         // 初始化事件监听器
         initializeEventListeners(ball);
     } catch (error) {
-        console.error('创建悬浮球时出错:', error);
+        console.error(chrome.i18n.getMessage('floatingBallCreateError'), error);
     }
 }
 
@@ -378,7 +378,7 @@ function initializeMessageListener() {
                     resetState(ball);
                     updateState({ isProcessing: false });
                     // 可以考虑显示错误提示
-                    console.error('总结失败:', request.error);
+                    console.error(chrome.i18n.getMessage('summaryFailedError'), request.error);
                 }
             } else if (request.enabled === true && !document.getElementById('blinko-floating-ball')) {
                 createFloatingBall();
@@ -403,7 +403,7 @@ function initializeMessageListener() {
                     const newStyleElement = await createFloatingBallStyle();
                     document.head.appendChild(newStyleElement);
                 } catch (error) {
-                    console.error('Error updating floating ball style:', error);
+                    console.error(chrome.i18n.getMessage('floatingBallStyleError'), error);
                 }
             })();
         }
