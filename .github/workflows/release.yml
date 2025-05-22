@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # 允许手动触发
   push:
     branches:
-      - action_dev # 如果您的默认分支不是 main，请修改这里
+      - main # 如果您的默认分支不是 main，请修改这里
     paths:
       - 'manifest.json' # 仅当 manifest.json 文件发生更改时触发
 
@@ -85,7 +85,6 @@ jobs:
           tag_name: v${{ steps.get_info.outputs.VERSION }}
           body: |
             自动发布版本 ${{ steps.get_info.outputs.VERSION }}.
-            插件清单名称: ${{ steps.get_info.outputs.MANIFEST_NAME }}
           draft: false
           prerelease: false
         env:
