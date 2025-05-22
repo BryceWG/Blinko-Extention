@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     // 忽略错误，popup可能已关闭
                 });
             } catch (error) {
-                console.log('Popup可能已关闭');
+                console.log(chrome.i18n.getMessage('popupClosedMessage'));
             }
         });
         // 返回一个初始响应
@@ -47,26 +47,26 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         success: response.success,
                         error: response.error
                     }).catch(() => {
-                        console.log('无法更新悬浮球状态');
+                        console.log(chrome.i18n.getMessage('updateBallStateError'));
                     });
                 } catch (error) {
-                    console.log('发送状态更新消息失败');
+                    console.log(chrome.i18n.getMessage('sendStatusUpdateError'));
                 }
             }
         }).catch(error => {
-            console.error('处理悬浮球请求失败:', error);
+            console.error(chrome.i18n.getMessage('floatingBallRequestError'), error);
             // 尝试更新悬浮球状态
             if (sender.tab && sender.tab.id) {
                 try {
                     chrome.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
                         success: false,
-                        error: error.message || '处理请求失败'
+                        error: error.message || chrome.i18n.getMessage('processingRequestError')
                     }).catch(() => {
-                        console.log('无法更新悬浮球状态');
+                        console.log(chrome.i18n.getMessage('updateBallStateError'));
                     });
                 } catch (error) {
-                    console.log('发送状态更新消息失败');
+                    console.log(chrome.i18n.getMessage('sendStatusUpdateError'));
                 }
             }
         });
@@ -79,7 +79,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         chrome.notifications.create({
             type: 'basic',
             iconUrl: chrome.runtime.getURL('images/icon128.png'),
-            title: request.title || '通知',
+            title: request.title || chrome.i18n.getMessage('notification'),
             message: request.message || '',
             priority: 2
         });
@@ -104,7 +104,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     // 忽略错误，popup可能已关闭
                 });
             } catch (error) {
-                console.log('Popup可能已关闭');
+                console.log(chrome.i18n.getMessage('popupClosedMessage'));
             }
         });
         sendResponse({ processing: true });
@@ -132,6 +132,6 @@ chrome.notifications.onClicked.addListener(async (notificationId) => {
             chrome.notifications.clear(notificationId);
         }
     } catch (error) {
-        console.error('处理通知点击失败:', error);
+        console.error(chrome.i18n.getMessage('notificationClickError'), error);
     }
 }); 

@@ -520,5 +520,61 @@
   "floatingBallSizeLarge": {
     "message": "Large",
     "description": "Label for the large floating ball size option"
+  },
+  "requestProcessError": {
+    "message": "Request processing failed",
+    "description": "Error message when request processing fails"
+  },
+  "operationFailed": {
+    "message": "Operation Failed",
+    "description": "Title for operation failed notification"
+  },
+  "floatingBallCreateError": {
+    "message": "Error creating floating ball:",
+    "description": "Error message when creating floating ball"
+  },
+  "contentProcessError": {
+    "message": "Error processing content:",
+    "description": "Error message when processing content"
+  },
+  "updateBallStateError": {
+    "message": "Unable to update floating ball state",
+    "description": "Error message when unable to update floating ball state"
+  },
+  "sendStatusUpdateError": {
+    "message": "Failed to send status update message",
+    "description": "Error message when sending status update fails"
+  },
+  "processingRequestError": {
+    "message": "Failed to process request",
+    "description": "Error message when processing request fails"
+  },
+  "popupClosedMessage": {
+    "message": "Popup may be closed",
+    "description": "Message when popup is likely closed"
+  },
+  "summaryFailedError": {
+    "message": "Summary failed:",
+    "description": "Error message when summary fails"
+  },
+  "floatingBallStyleError": {
+    "message": "Error updating floating ball style:",
+    "description": "Error message when updating floating ball style"
+  },
+  "extensionDescription": {
+    "message": "Save selected text, extract web content and generate summaries",
+    "description": "Extension description for manifest"
+  },
+  "notification": {
+    "message": "Notification",
+    "description": "Generic notification title"
+  },
+  "floatingBallRequestError": {
+    "message": "Error processing floating ball request:",
+    "description": "Error message when processing floating ball request"
+  },
+  "notificationClickError": {
+    "message": "Error handling notification click:",
+    "description": "Error message when handling notification click"
   }
 }

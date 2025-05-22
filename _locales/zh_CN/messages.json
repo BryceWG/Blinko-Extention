@@ -508,5 +508,61 @@
   "floatingBallSizeLarge": {
     "message": "大",
     "description": "大号悬浮球选项标签"
+  },
+  "requestProcessError": {
+    "message": "请求处理失败",
+    "description": "请求处理失败时的错误消息"
+  },
+  "operationFailed": {
+    "message": "操作失败",
+    "description": "操作失败的通知标题"
+  },
+  "floatingBallCreateError": {
+    "message": "创建悬浮球时出错:",
+    "description": "创建悬浮球时的错误消息"
+  },
+  "contentProcessError": {
+    "message": "处理内容时出错:",
+    "description": "处理内容时的错误消息"
+  },
+  "updateBallStateError": {
+    "message": "无法更新悬浮球状态",
+    "description": "无法更新悬浮球状态时的错误消息"
+  },
+  "sendStatusUpdateError": {
+    "message": "发送状态更新消息失败",
+    "description": "发送状态更新消息失败时的错误消息"
+  },
+  "processingRequestError": {
+    "message": "处理请求失败",
+    "description": "处理请求失败时的错误消息"
+  },
+  "popupClosedMessage": {
+    "message": "Popup可能已关闭",
+    "description": "当弹出窗口可能已关闭的消息"
+  },
+  "summaryFailedError": {
+    "message": "总结失败:",
+    "description": "总结失败时的错误消息"
+  },
+  "floatingBallStyleError": {
+    "message": "更新悬浮球样式时出错:",
+    "description": "更新悬浮球样式时的错误消息"
+  },
+  "extensionDescription": {
+    "message": "划词保存、提取网页内容并生成总结",
+    "description": "扩展描述，用于manifest"
+  },
+  "notification": {
+    "message": "通知",
+    "description": "通用通知标题"
+  },
+  "floatingBallRequestError": {
+    "message": "处理悬浮球请求失败:",
+    "description": "处理悬浮球请求失败时的错误消息"
+  },
+  "notificationClickError": {
+    "message": "处理通知点击失败:",
+    "description": "处理通知点击失败时的错误消息"
   }
 }
