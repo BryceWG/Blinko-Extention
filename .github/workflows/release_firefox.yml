@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整的git历史记录用于生成changelog
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -126,6 +128,56 @@ jobs:
             echo "ARTIFACT_PATH=${{ steps.build_ext.outputs.UNSIGNED_ARTIFACT_PATH }}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          # 获取最近的两个tag，特别是关注firefox相关的标签
+          LATEST_TAG=$(git describe --tags --abbrev=0 --match "*firefox*" 2>/dev/null || echo "")
+          
+          # 如果没有找到firefox特定的标签，尝试获取任何标签
+          if [ -z "$LATEST_TAG" ]; then
+            LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          fi
+          
+          # 尝试获取上一个标签
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 $LATEST_TAG^ 2>/dev/null || echo "")
+          
+          # 如果没有找到标签，则使用一些合理的默认值
+          if [ -z "$LATEST_TAG" ]; then
+            # 如果没有任何标签，使用当前提交作为最新标签
+            LATEST_TAG=$(git rev-parse --short HEAD)
+            echo "未找到标签，使用当前提交 $LATEST_TAG 作为参考点"
+          fi
+          
+          if [ -z "$PREVIOUS_TAG" ]; then
+            # 如果只有一个标签，获取从第一个提交到该标签的范围
+            PREVIOUS_TAG=$(git rev-list --max-parents=0 HEAD | head -n 1)
+            echo "未找到上一个标签，使用首次提交 $PREVIOUS_TAG 作为参考点"
+          fi
+          
+          echo "最新标签: $LATEST_TAG"
+          echo "上一个标签: $PREVIOUS_TAG"
+          
+          # 生成格式化的changelog
+          echo "## 更新内容" > changelog.md
+          echo "" >> changelog.md
+          
+          # 获取两个标签之间的所有提交
+          git log --pretty=format:"* %s (by @%an in %h)" $PREVIOUS_TAG..$LATEST_TAG | grep -v "Merge" >> changelog.md
+          
+          echo "" >> changelog.md
+          echo "## 完整更新日志" >> changelog.md
+          echo "[${PREVIOUS_TAG}...${LATEST_TAG}](https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${LATEST_TAG})" >> changelog.md
+          
+          CHANGELOG=$(cat changelog.md)
+          # 将多行字符串转换为GitHub Actions可以处理的格式
+          CHANGELOG="${CHANGELOG//%/%25}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          
+          echo "CHANGELOG=${CHANGELOG}" >> $GITHUB_OUTPUT
+          cat changelog.md
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -134,9 +186,12 @@ jobs:
           # 为 Firefox 版本的标签添加 -firefox 后缀以区分
           tag_name: v${{ steps.get_info.outputs.VERSION }}-firefox 
           body: |
-            Firefox extension automatic release for version ${{ steps.get_info.outputs.VERSION }}.
+            # Blinko Firefox 扩展 v${{ steps.get_info.outputs.VERSION }}
+            
             签名状态: ${{ steps.sign_ext.outputs.SIGNED == 'true' && '已签名 (.xpi)' || '未签名 (.zip)' }}
-            Artifact: ${{ steps.sign_ext.outputs.ARTIFACT_PATH }}
+            文件: ${{ steps.sign_ext.outputs.ARTIFACT_PATH }}
+            
+            ${{ steps.changelog.outputs.CHANGELOG }}
           draft: false
           prerelease: false
         env:
