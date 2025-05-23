@@ -102,7 +102,7 @@ jobs:
           echo "最新标签: $LATEST_TAG"
           echo "上一个标签: $PREVIOUS_TAG"
           
-          # 生成格式化的changelog
+          # 生成格式化的changelog并保存到文件
           echo "## 更新内容" > changelog.md
           echo "" >> changelog.md
           
@@ -113,13 +113,6 @@ jobs:
           echo "## 完整更新日志" >> changelog.md
           echo "[${PREVIOUS_TAG}...${LATEST_TAG}](https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${LATEST_TAG})" >> changelog.md
           
-          CHANGELOG=$(cat changelog.md)
-          # 将多行字符串转换为GitHub Actions可以处理的格式
-          CHANGELOG="${CHANGELOG//%/%25}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          
-          echo "CHANGELOG=${CHANGELOG}" >> $GITHUB_OUTPUT
           cat changelog.md
 
       - name: Create GitHub Release
@@ -128,10 +121,7 @@ jobs:
           files: ${{ steps.package.outputs.CRX_FILE_PATH }}
           name: Release v${{ steps.get_info.outputs.VERSION }}
           tag_name: v${{ steps.get_info.outputs.VERSION }}
-          body: |
-            # Blinko Extension v${{ steps.get_info.outputs.VERSION }}
-            
-            ${{ steps.changelog.outputs.CHANGELOG }}
+          body_path: changelog.md
           draft: false
           prerelease: false
         env:
