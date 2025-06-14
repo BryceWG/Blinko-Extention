@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.4.8",
+  "version": "2.5.0",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "permissions": [
@@ -10,6 +10,20 @@
     "contextMenus",
     "notifications"
   ],
+  "commands": {
+    "summarize-page": {
+      "suggested_key": {
+        "default": "Alt+B"
+      },
+      "description": "__MSG_summarizePageContent__"
+    },
+    "extract-page": {
+      "suggested_key": {
+        "default": "Alt+E"
+      },
+      "description": "__MSG_extractPageContent__"
+    }
+  },
   "host_permissions": [
     "<all_urls>"
   ],

@@ -25,7 +25,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     // 忽略错误，popup可能已关闭
                 });
             } catch (error) {
-                console.log(chrome.i18n.getMessage('popupClosedMessage'));
+                console.log(browser.i18n.getMessage('popupClosedMessage'));
             }
         });
         // 返回一个初始响应
@@ -47,26 +47,26 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                         success: response.success,
                         error: response.error
                     }).catch(() => {
-                        console.log(chrome.i18n.getMessage('updateBallStateError'));
+                        console.log(browser.i18n.getMessage('updateBallStateError'));
                     });
                 } catch (error) {
-                    console.log(chrome.i18n.getMessage('sendStatusUpdateError'));
+                    console.log(browser.i18n.getMessage('sendStatusUpdateError'));
                 }
             }
         }).catch(error => {
-            console.error(chrome.i18n.getMessage('floatingBallRequestError'), error);
+            console.error(browser.i18n.getMessage('floatingBallRequestError'), error);
             // 尝试更新悬浮球状态
             if (sender.tab && sender.tab.id) {
                 try {
                     browser.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
                         success: false,
-                        error: error.message || chrome.i18n.getMessage('processingRequestError')
+                        error: error.message || browser.i18n.getMessage('processingRequestError')
                     }).catch(() => {
-                        console.log(chrome.i18n.getMessage('updateBallStateError'));
+                        console.log(browser.i18n.getMessage('updateBallStateError'));
                     });
                 } catch (error) {
-                    console.log(chrome.i18n.getMessage('sendStatusUpdateError'));
+                    console.log(browser.i18n.getMessage('sendStatusUpdateError'));
                 }
             }
         });
@@ -104,7 +104,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     // 忽略错误，popup可能已关闭
                 });
             } catch (error) {
-                console.log(chrome.i18n.getMessage('popupClosedMessage'));
+                console.log(browser.i18n.getMessage('popupClosedMessage'));
             }
         });
         sendResponse({ processing: true });
@@ -116,6 +116,33 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // 监听右键菜单点击
 browser.contextMenus.onClicked.addListener(handleContextMenuClick);
+
+// 监听快捷键命令
+browser.commands.onCommand.addListener(async (command) => {
+    try {
+        // 获取当前活动标签页
+        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+        if (!tab) {
+            console.error('无法获取当前标签页');
+            return;
+        }
+
+        // 根据命令类型模拟右键菜单点击
+        const menuItemId = command === 'summarize-page' ? 'summarizePageContent' : 'extractPageContent';
+        
+        // 复用右键菜单的处理逻辑
+        await handleContextMenuClick({ menuItemId }, tab);
+        
+    } catch (error) {
+        console.error('快捷键处理失败:', error);
+        browser.notifications.create({
+            type: 'basic',
+            iconUrl: 'images/icon128.png',
+            title: '快捷键执行失败',
+            message: error.message
+        });
+    }
+});
 
 // 监听通知点击
 browser.notifications.onClicked.addListener(async (notificationId) => {
@@ -132,6 +159,6 @@ browser.notifications.onClicked.addListener(async (notificationId) => {
             browser.notifications.clear(notificationId);
         }
     } catch (error) {
-        console.error(chrome.i18n.getMessage('notificationClickError'), error);
+        console.error(browser.i18n.getMessage('notificationClickError'), error);
     }
-}); 
+});
