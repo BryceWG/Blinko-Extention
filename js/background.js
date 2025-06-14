@@ -117,6 +117,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 // 监听右键菜单点击
 chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
 
+// 监听快捷键命令
+chrome.commands.onCommand.addListener(async (command) => {
+    try {
+        // 获取当前活动标签页
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        
+        if (!tab) {
+            console.error('无法获取当前标签页');
+            return;
+        }
+
+        // 根据命令类型模拟右键菜单点击
+        const menuItemId = command === 'summarize-page' ? 'summarizePageContent' : 'extractPageContent';
+        
+        // 复用右键菜单的处理逻辑
+        await handleContextMenuClick({ menuItemId }, tab);
+        
+    } catch (error) {
+        console.error('快捷键处理失败:', error);
+        chrome.notifications.create({
+            type: 'basic',
+            iconUrl: 'images/icon128.png',
+            title: '快捷键执行失败',
+            message: error.message
+        });
+    }
+});
+
 // 监听通知点击
 chrome.notifications.onClicked.addListener(async (notificationId) => {
     try {
@@ -134,4 +162,4 @@ chrome.notifications.onClicked.addListener(async (notificationId) => {
     } catch (error) {
         console.error(chrome.i18n.getMessage('notificationClickError'), error);
     }
-}); 
+});
