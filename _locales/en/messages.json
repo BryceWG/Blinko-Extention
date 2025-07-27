@@ -576,5 +576,9 @@
   "notificationClickError": {
     "message": "Error handling notification click:",
     "description": "Error message when handling notification click"
+  },
+  "saveClipboardContent": {
+    "message": "Save Clipboard Content to Blinko",
+    "description": "Context menu for saving clipboard content"
   }
 }

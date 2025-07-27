@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "activeTab",
     "storage",
     "contextMenus",
-    "notifications"
+    "notifications",
+    "clipboardRead"
   ],
   "commands": {
     "summarize-page": {
