@@ -564,5 +564,9 @@
   "notificationClickError": {
     "message": "处理通知点击失败:",
     "description": "处理通知点击失败时的错误消息"
+  },
+  "saveClipboardContent": {
+    "message": "保存剪贴板内容到Blinko",
+    "description": "右键菜单保存剪贴板内容"
   }
 }

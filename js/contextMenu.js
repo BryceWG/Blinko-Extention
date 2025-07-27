@@ -59,6 +59,14 @@ function initializeContextMenu() {
             contexts: ['page'],
             parentId: "blinkoExtension"
         });
+
+        // 创建保存剪贴板内容菜单
+        browser.contextMenus.create({
+            id: 'saveClipboardContent',
+            title: browser.i18n.getMessage("saveClipboardContent") || "保存剪贴板内容到Blinko",
+            contexts: ['page'],
+            parentId: "blinkoExtension"
+        });
 }
 
 // 处理右键菜单点击
@@ -260,6 +268,47 @@ async function handleContextMenuClick(info, tab) {
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
                 title: info.menuItemId === 'summarizePageContent' ? '总结失败' : '提取失败',
+                message: error.message
+            });
+        }
+    }
+
+    // 处理保存剪贴板内容
+    if (info.menuItemId === 'saveClipboardContent') {
+        try {
+            // 读取剪贴板内容
+            const clipboardText = await navigator.clipboard.readText();
+            
+            if (!clipboardText || !clipboardText.trim()) {
+                throw new Error('剪贴板内容为空');
+            }
+
+            // 发送到Blinko，使用quickNote类型
+            const response = await sendToBlinko(
+                clipboardText.trim(),
+                tab.url,
+                tab.title,
+                null,
+                'quickNote'
+            );
+            
+            if (response.success) {
+                showSuccessIcon();
+                browser.notifications.create({
+                    type: 'basic',
+                    iconUrl: 'images/icon128.png',
+                    title: '保存成功',
+                    message: '剪贴板内容已保存到Blinko'
+                });
+            } else {
+                throw new Error(response.error || '保存剪贴板内容失败');
+            }
+        } catch (error) {
+            console.error('保存剪贴板内容失败:', error);
+            browser.notifications.create({
+                type: 'basic',
+                iconUrl: 'images/icon128.png',
+                title: '保存失败',
                 message: error.message
             });
         }
