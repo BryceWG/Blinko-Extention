@@ -169,6 +169,14 @@ body.dark-theme .tab {
     /* margin: 0 4px; -- Removed, using gap on parent now */
 }
 
+.tab button.settings-button {
+    flex: 0 0 auto; /* Don't grow, shrink or have a flex basis */
+    width: 40px; /* Fixed narrow width */
+    padding: 10px 8px; /* Reduced horizontal padding */
+    font-size: 16px; /* Slightly larger icon */
+    text-align: center;
+}
+
 .tab button:hover {
     background-color: var(--tab-button-hover-bg);
     color: var(--tab-button-hover-text);

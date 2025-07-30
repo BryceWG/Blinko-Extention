@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "permissions": [
@@ -9,7 +9,8 @@
     "storage",
     "contextMenus",
     "notifications",
-    "clipboardRead"
+    "clipboardRead",
+    "tabs"
   ],
   "commands": {
     "summarize-page": {
@@ -55,7 +56,10 @@
     "resources": [
       "images/icon128.png",
       "images/icon128_success.png",
-      "images/icon128_success_reverse.png"
+      "images/icon128_success_reverse.png",
+      "settings.html",
+      "css/settings.css",
+      "js/settings-page.js"
     ],
     "matches": ["<all_urls>"],
     "use_dynamic_url": true

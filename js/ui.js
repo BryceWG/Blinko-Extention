@@ -80,19 +80,28 @@ function initializeUIListeners() {
         button.addEventListener('click', (e) => {
             const tabName = e.target.getAttribute('data-tab');
             
-            // 先隐藏所有标签页内容
-            document.querySelectorAll('.tabcontent').forEach(content => {
-                content.style.display = 'none';
-            });
+            // 如果点击的是设置按钮，打开设置页面
+            if (e.target.id === 'openSettings') {
+                chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
+                return;
+            }
             
-            // 移除所有标签的激活状态
-            document.querySelectorAll('.tablinks').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 显示选中的标签页并激活对应的标签
-            document.getElementById(tabName).style.display = 'block';
-            e.target.classList.add('active');
+            // 普通标签页切换逻辑
+            if (tabName) {
+                // 先隐藏所有标签页内容
+                document.querySelectorAll('.tabcontent').forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // 移除所有标签的激活状态
+                document.querySelectorAll('.tablinks').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // 显示选中的标签页并激活对应的标签
+                document.getElementById(tabName).style.display = 'block';
+                e.target.classList.add('active');
+            }
         });
     });
 

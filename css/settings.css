@@ -1,0 +1,547 @@
+/* 设置页面特定样式 */
+
+/* 导入基础CSS变量 */
+:root {
+    --body-bg: #f8f9fa;
+    --text-color-primary: #212529;
+    --text-color-secondary: #495057;
+    --text-color-tertiary: #6c757d;
+    --text-color-inverted: #FFFFFF;
+    --text-color-placeholder: #6c757d;
+    --banner-bg: white;
+    --tab-bg: #fff;
+    --tab-border-color: #e9ecef;
+    --tab-button-bg: #E6E6FA;
+    --tab-button-text: #495057;
+    --tab-button-hover-bg: #D8BFD8;
+    --tab-button-hover-text: #333333;
+    --tab-button-active-bg: #C35AF7;
+    --tab-button-active-text: #FFFFFF;
+    --tab-content-bg: #fff;
+    --button-primary-bg: #FFCC00;
+    --button-primary-text: #000000;
+    --button-primary-hover-bg: #E6B800;
+    --button-secondary-bg: #f1f3f5;
+    --button-secondary-text: #495057;
+    --button-secondary-hover-bg: #e9ecef;
+    --input-bg: #fff;
+    --input-text-color: #495057;
+    --input-border-color: #dee2e6;
+    --input-focus-border-color: #C35AF7;
+    --input-focus-shadow: rgba(195, 90, 247, 0.1);
+    --setting-group-bg: #fff;
+    --setting-group-border-color: #dee2e6;
+    --status-success-bg: #FFF3CC;
+    --status-success-text: #806600;
+    --status-success-border: #FFE680;
+    --status-error-bg: #FCE8FF;
+    --status-error-text: #61157B;
+    --status-error-border: #E9B3F9;
+    --link-color: #C35AF7;
+    --attachment-list-bg: #f8f9fa;
+    --attachment-list-border: #dee2e6;
+    --attachment-item-bg: #fff;
+    --attachment-item-border: #dee2e6;
+    --help-text-color: #6c757d;
+    --domain-rule-list-bg: #f9f9f9;
+    --domain-rule-list-border: #eee;
+    --domain-rule-item-border: #f0f0f0;
+    --domain-rule-form-border: #ccc;
+    --scrollbar-thumb-bg: #c1c1c1;
+    --scrollbar-track-bg: #f1f1f1;
+}
+
+/* Dark theme variables */
+body.dark-theme {
+    --body-bg: #1a1a1a;
+    --text-color-primary: #ffffff;
+    --text-color-secondary: #cccccc;
+    --text-color-tertiary: #999999;
+    --text-color-inverted: #000000;
+    --text-color-placeholder: #888888;
+    --banner-bg: #2d2d2d;
+    --tab-bg: #2d2d2d;
+    --tab-border-color: #404040;
+    --tab-button-bg: #404040;
+    --tab-button-text: #cccccc;
+    --tab-button-hover-bg: #555555;
+    --tab-button-hover-text: #ffffff;
+    --tab-button-active-bg: #C35AF7;
+    --tab-button-active-text: #ffffff;
+    --tab-content-bg: #2d2d2d;
+    --button-primary-bg: #FFCC00;
+    --button-primary-text: #000000;
+    --button-primary-hover-bg: #E6B800;
+    --button-secondary-bg: #404040;
+    --button-secondary-text: #cccccc;
+    --button-secondary-hover-bg: #555555;
+    --input-bg: #404040;
+    --input-text-color: #ffffff;
+    --input-border-color: #555555;
+    --input-focus-border-color: #C35AF7;
+    --input-focus-shadow: rgba(195, 90, 247, 0.3);
+    --setting-group-bg: #333333;
+    --setting-group-border-color: #555555;
+    --status-success-bg: #2D4A2A;
+    --status-success-text: #90EE90;
+    --status-success-border: #4CAF50;
+    --status-error-bg: #4A2D4A;
+    --status-error-text: #FFB6C1;
+    --status-error-border: #E91E63;
+    --link-color: #C35AF7;
+    --attachment-list-bg: #333333;
+    --attachment-list-border: #555555;
+    --attachment-item-bg: #404040;
+    --attachment-item-border: #555555;
+    --help-text-color: #888888;
+    --domain-rule-list-bg: #333333;
+    --domain-rule-list-border: #555555;
+    --domain-rule-item-border: #444444;
+    --domain-rule-form-border: #666666;
+    --scrollbar-thumb-bg: #666666;
+    --scrollbar-track-bg: #333333;
+}
+
+/* 设置页面特定样式 */
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-color-primary);
+    background-color: var(--body-bg);
+    min-height: 100vh;
+}
+
+.settings-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--tab-content-bg);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header {
+    padding: 20px 30px;
+    background: var(--banner-bg);
+    border-bottom: 1px solid var(--tab-border-color);
+    text-align: center;
+}
+
+.header .banner {
+    width: 160px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color-primary);
+}
+
+.settings-content {
+    padding: 30px;
+}
+
+.setting-group {
+    margin-bottom: 20px;
+    padding: 24px;
+    background: var(--setting-group-bg);
+    border: 1px solid var(--setting-group-border-color);
+    border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.setting-group:hover {
+    border-color: var(--input-focus-border-color);
+    box-shadow: 0 2px 8px rgba(195, 90, 247, 0.1);
+}
+
+body.dark-theme .setting-group:hover {
+    box-shadow: 0 2px 8px rgba(195, 90, 247, 0.2);
+}
+
+.setting-group:last-child {
+    margin-bottom: 0;
+}
+
+/* 标签样式优化 */
+.setting-group > label:first-child {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text-color-primary);
+    line-height: 1.4;
+}
+
+/* 复选框容器样式 - 用于开关样式的复选框 */
+.setting-group label.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+    padding: 4px 0;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1.4;
+}
+
+.setting-group label.checkbox-container span {
+    flex: 1;
+    color: var(--text-color-primary);
+}
+
+/* 现代化的开关按钮 - 圆角矩形设计 */
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: var(--button-secondary-bg);
+    border-radius: 6px;
+    border: 2px solid var(--input-border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 20px;
+    height: 18px;
+    background: var(--text-color-secondary);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-switch.checked {
+    background: var(--button-primary-bg);
+    border-color: var(--button-primary-bg);
+}
+
+.toggle-switch.checked::before {
+    transform: translateX(22px);
+    background: var(--button-primary-text);
+}
+
+/* 三选项滑块样式 */
+.triple-slider {
+    position: relative;
+    width: 180px;
+    height: 40px;
+    background: var(--button-secondary-bg);
+    border-radius: 8px;
+    border: 2px solid var(--input-border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.triple-slider::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 56px;
+    height: 36px;
+    background: var(--button-primary-bg);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.triple-slider.position-center::before {
+    transform: translateX(60px);
+}
+
+.triple-slider.position-right::before {
+    transform: translateX(120px);
+}
+
+.triple-slider .option-label {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color-secondary);
+    transition: color 0.3s ease;
+    z-index: 2;
+    position: relative;
+    pointer-events: none;
+}
+
+.triple-slider.position-left .option-label:nth-child(1),
+.triple-slider.position-center .option-label:nth-child(2),
+.triple-slider.position-right .option-label:nth-child(3) {
+    color: var(--button-primary-text);
+    font-weight: 600;
+}
+
+/* 三选项滑块容器 */
+.triple-slider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.slider-option-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.slider-option-group label {
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--text-color-primary);
+    margin: 0;
+}
+
+/* 隐藏原始复选框 */
+.setting-group input[type="checkbox"] {
+    display: none;
+}
+
+/* 单选按钮组容器 */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.radio-option:hover {
+    background: var(--button-secondary-hover-bg);
+}
+
+.radio-option input[type="radio"] {
+    margin: 0 10px 0 0;
+    transform: scale(1.2);
+}
+
+.radio-option label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+    color: var(--text-color-primary);
+}
+
+.text-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--input-border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: var(--input-bg);
+    color: var(--input-text-color);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--input-focus-border-color);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    transform: translateY(-1px);
+}
+
+.text-input:hover:not(:focus) {
+    border-color: var(--text-color-secondary);
+}
+
+.text-input::placeholder {
+    color: var(--text-color-placeholder);
+}
+
+textarea.text-input {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.input-container .text-input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.toggle-visibility {
+    background: var(--button-secondary-bg);
+    border: 1px solid var(--input-border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--button-secondary-text);
+    transition: background-color 0.2s ease;
+}
+
+.toggle-visibility:hover {
+    background: var(--button-secondary-hover-bg);
+}
+
+.fetch-button {
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 8px;
+}
+
+.fetch-button:hover {
+    background: var(--button-primary-hover-bg);
+}
+
+.fetch-button.secondary {
+    background: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.fetch-button.secondary:hover {
+    background: var(--button-secondary-hover-bg);
+}
+
+.help-text {
+    font-size: 12px;
+    color: var(--help-text-color);
+    margin-top: 4px;
+}
+
+.theme-options-container {
+    margin-top: 8px;
+}
+
+.theme-options-container > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.theme-options-container input[type="radio"] {
+    margin: 0 8px 0 0;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--setting-group-border-color);
+}
+
+.settings-actions button {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.settings-actions .secondary {
+    background: var(--button-secondary-bg);
+    color: var(--button-secondary-text);
+}
+
+.settings-actions .secondary:hover {
+    background: var(--button-secondary-hover-bg);
+}
+
+/* 状态消息样式 */
+#status {
+    margin: 0 30px 20px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    display: none;
+}
+
+#status.success {
+    background: var(--status-success-bg);
+    color: var(--status-success-text);
+    border: 1px solid var(--status-success-border);
+}
+
+#status.error {
+    background: var(--status-error-bg);
+    color: var(--status-error-text);
+    border: 1px solid var(--status-error-border);
+}
+
+#status.loading {
+    background: var(--status-success-bg);
+    color: var(--status-success-text);
+    border: 1px solid var(--status-success-border);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .settings-content {
+        padding: 20px;
+    }
+    
+    .header {
+        padding: 15px 20px;
+    }
+    
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .setting-group {
+        padding: 15px;
+        margin-bottom: 16px;
+    }
+}
+
+/* 设置组标题统一字体大小 */
+.setting-group h3 {
+    color: var(--text-color-primary);
+    font-size: 18px !important;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
