@@ -1,6 +1,3 @@
-import { sendToBlinko, uploadFile } from './api.js';
-import { showSuccessIcon } from './ui.js';
-import { handleContentRequest } from './messageHandler.js';
 
 // 初始化右键菜单
 function initializeContextMenu() {

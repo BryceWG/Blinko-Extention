@@ -1,6 +1,3 @@
-import { getSummaryFromModel, sendToBlinko } from './api.js';
-import { getWebContent } from './jinaReader.js';
-import { getSummaryState, updateSummaryState, clearSummaryState, saveSummaryToStorage } from './summaryState.js';
 
 // 处理内容请求
 async function handleContentRequest(request) {

@@ -163,6 +163,10 @@
     "message": "Settings",
     "description": "Settings page title"
   },
+  "settingsPageTitle": {
+    "message": "Blinko Extension Settings",
+    "description": "Settings page browser tab title"
+  },
   "blinkoApiUrlLabel": {
     "message": "Blinko API URL:",
     "description": "Label for Blinko API URL input"
