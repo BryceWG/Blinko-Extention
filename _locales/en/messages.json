@@ -584,5 +584,65 @@
   "saveClipboardContent": {
     "message": "Save Clipboard Content to Blinko",
     "description": "Context menu for saving clipboard content"
+  },
+  "importExportTitle": {
+    "message": "Import/Export Settings",
+    "description": "Import/Export settings group title"
+  },
+  "exportSettingsButton": {
+    "message": "Export Settings",
+    "description": "Export settings button text"
+  },
+  "importSettingsButton": {
+    "message": "Import Settings",
+    "description": "Import settings button text"
+  },
+  "importExportHelp": {
+    "message": "Export: Save current settings as JSON file. Import: Restore settings from JSON file.",
+    "description": "Import/Export functionality help text"
+  },
+  "exportSuccess": {
+    "message": "Settings exported successfully",
+    "description": "Settings export success message"
+  },
+  "exportError": {
+    "message": "Settings export failed: $1",
+    "description": "Settings export error message"
+  },
+  "importSuccess": {
+    "message": "Settings imported successfully",
+    "description": "Settings import success message"
+  },
+  "importError": {
+    "message": "Settings import failed: $1",
+    "description": "Settings import error message"
+  },
+  "importFileInvalid": {
+    "message": "Invalid file format. Please select a valid JSON file.",
+    "description": "Invalid import file format message"
+  },
+  "confirmImportDifferentVersion": {
+    "message": "This settings file was created with version $1, but current version is $2. Continue importing?",
+    "description": "Confirmation message when importing settings from different version"
+  },
+  "confirmImportSettings": {
+    "message": "Importing settings will override all current configurations. Continue?",
+    "description": "Confirm import settings dialog message"
+  },
+  "exportingSettings": {
+    "message": "Exporting settings...",
+    "description": "Status message when exporting settings"
+  },
+  "importingSettings": {
+    "message": "Importing settings...",
+    "description": "Status message when importing settings"
+  },
+  "importFileTooLarge": {
+    "message": "File too large. Please select a file smaller than 1MB.",
+    "description": "Error message when import file is too large"
+  },
+  "importFileTypeInvalid": {
+    "message": "Only .json files are allowed for import.",
+    "description": "Error message when import file type is invalid"
   }
 }
