@@ -572,5 +572,65 @@
   "saveClipboardContent": {
     "message": "保存剪贴板内容到Blinko",
     "description": "右键菜单保存剪贴板内容"
+  },
+  "importExportTitle": {
+    "message": "导入导出设置",
+    "description": "导入导出设置分组标题"
+  },
+  "exportSettingsButton": {
+    "message": "导出设置",
+    "description": "导出设置按钮文本"
+  },
+  "importSettingsButton": {
+    "message": "导入设置",
+    "description": "导入设置按钮文本"
+  },
+  "importExportHelp": {
+    "message": "导出：将当前设置保存为JSON文件。导入：从JSON文件恢复设置。",
+    "description": "导入导出功能帮助文本"
+  },
+  "exportSuccess": {
+    "message": "设置导出成功",
+    "description": "设置导出成功消息"
+  },
+  "exportError": {
+    "message": "设置导出失败: $1",
+    "description": "设置导出失败消息"
+  },
+  "importSuccess": {
+    "message": "设置导入成功",
+    "description": "设置导入成功消息"
+  },
+  "importError": {
+    "message": "设置导入失败: $1",
+    "description": "设置导入失败消息"
+  },
+  "importFileInvalid": {
+    "message": "导入的文件格式无效，请选择有效的JSON文件",
+    "description": "导入文件格式无效消息"
+  },
+  "confirmImportDifferentVersion": {
+    "message": "此设置文件创建于版本 $1，但当前版本为 $2。是否继续导入？",
+    "description": "导入不同版本设置文件时的确认消息"
+  },
+  "confirmImportSettings": {
+    "message": "导入设置将覆盖当前所有配置，是否继续？",
+    "description": "确认导入设置对话框消息"
+  },
+  "exportingSettings": {
+    "message": "正在导出设置...",
+    "description": "设置导出进行中的状态消息"
+  },
+  "importingSettings": {
+    "message": "正在导入设置...",
+    "description": "设置导入进行中的状态消息"
+  },
+  "importFileTooLarge": {
+    "message": "文件过大，请选择小于1MB的文件",
+    "description": "导入文件过大时的错误消息"
+  },
+  "importFileTypeInvalid": {
+    "message": "只能导入.json格式的文件",
+    "description": "导入文件类型无效时的错误消息"
   }
 }

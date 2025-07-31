@@ -1,4 +1,11 @@
 import { loadSettings, resetSettings, fetchAiConfig, defaultSettings } from './settings.js';
+
+// 导入导出配置常量
+const IMPORT_EXPORT_CONFIG = {
+    MAX_FILE_SIZE: 1024 * 1024, // 1MB
+    SUPPORTED_VERSION: "1.0",
+    ALLOWED_FILE_TYPE: ".json"
+};
 import { showStatus, hideStatus } from './ui.js';
 
 let currentLoadedSettings = {};
@@ -73,7 +80,7 @@ function populatePromptTemplateSelector(settings) {
             const option = document.createElement('option');
             option.value = template.id;
             option.textContent = template.name;
-            if (template.id === settings.selectedPromptTemplateId) {
+            if (template.id === settings.activePromptTemplateId) {
                 option.selected = true;
             }
             selector.appendChild(option);
@@ -205,7 +212,7 @@ function handleSettingChange(event) {
     
     if (input.id === 'promptTemplateSelector') {
         const selectedTemplateId = input.value;
-        currentLoadedSettings.selectedPromptTemplateId = selectedTemplateId;
+        currentLoadedSettings.activePromptTemplateId = selectedTemplateId;
         updatePromptTemplateContent(currentLoadedSettings);
         chrome.storage.sync.set({ settings: currentLoadedSettings });
         return;
@@ -494,6 +501,9 @@ function bindEventListeners() {
     
     // 域名规则管理按钮
     bindDomainRuleManagementListeners();
+
+    // 导入导出功能
+    bindImportExportListeners();
 }
 
 // 更新开关按钮状态
@@ -575,7 +585,7 @@ function bindTemplateManagementListeners() {
                 currentLoadedSettings.promptTemplates = [];
             }
             currentLoadedSettings.promptTemplates.push(newTemplate);
-            currentLoadedSettings.selectedPromptTemplateId = newTemplate.id;
+            currentLoadedSettings.activePromptTemplateId = newTemplate.id;
 
             populatePromptTemplateSelector(currentLoadedSettings);
             chrome.storage.sync.set({ settings: currentLoadedSettings }).then(() => {
@@ -601,8 +611,8 @@ function bindTemplateManagementListeners() {
             if (window.confirm(chrome.i18n.getMessage('confirmDeleteTemplate', templateNameToDelete))) {
                 currentLoadedSettings.promptTemplates = currentLoadedSettings.promptTemplates.filter(t => t.id !== templateIdToDelete);
                 
-                if (currentLoadedSettings.selectedPromptTemplateId === templateIdToDelete) {
-                    currentLoadedSettings.selectedPromptTemplateId = currentLoadedSettings.promptTemplates[0]?.id;
+                if (currentLoadedSettings.activePromptTemplateId === templateIdToDelete) {
+                    currentLoadedSettings.activePromptTemplateId = currentLoadedSettings.promptTemplates[0]?.id;
                 }
 
                 populatePromptTemplateSelector(currentLoadedSettings);
@@ -762,3 +772,231 @@ document.addEventListener('DOMContentLoaded', async function() {
     // 然后初始化设置功能
     await initializeSettingsPage();
 });
+
+// 绑定导入导出监听器
+function bindImportExportListeners() {
+    const exportBtn = document.getElementById('exportSettings');
+    const importBtn = document.getElementById('importSettings');
+    const importFileInput = document.getElementById('importFileInput');
+
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportSettings);
+    }
+
+    if (importBtn) {
+        importBtn.addEventListener('click', () => {
+            importFileInput.click();
+        });
+    }
+
+    if (importFileInput) {
+        importFileInput.addEventListener('change', handleImportFile);
+    }
+}
+
+// 导出设置
+async function exportSettings() {
+    try {
+        showStatus(chrome.i18n.getMessage('exportingSettings'), 'loading');
+        
+        // 获取当前设置
+        const settings = await chrome.storage.sync.get('settings');
+        const settingsData = settings.settings || {};
+        
+        // 创建导出数据对象
+        const exportData = {
+            version: "1.0",
+            timestamp: new Date().toISOString(),
+            settings: settingsData
+        };
+        
+        // 创建并下载文件
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        
+        // 生成更详细的文件名
+        const now = new Date();
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').split('T');
+        const dateStr = timestamp[0];
+        const timeStr = timestamp[1].split('.')[0];
+        link.download = `blinko-settings-${dateStr}-${timeStr}.json`;
+        
+        // 触发下载
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // 清理URL对象
+        URL.revokeObjectURL(link.href);
+        
+        showStatus(chrome.i18n.getMessage('exportSuccess'), 'success');
+        setTimeout(hideStatus, 2000);
+        
+    } catch (error) {
+        console.error('导出设置失败:', error);
+        showStatus(chrome.i18n.getMessage('exportError', [error.message]), 'error');
+    }
+}
+
+// 处理导入文件
+async function handleImportFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    try {
+        // 验证文件类型
+        if (!file.name.toLowerCase().endsWith(IMPORT_EXPORT_CONFIG.ALLOWED_FILE_TYPE)) {
+            showStatus(chrome.i18n.getMessage('importFileTypeInvalid'), 'error');
+            event.target.value = '';
+            return;
+        }
+        
+        // 验证文件大小
+        if (file.size > IMPORT_EXPORT_CONFIG.MAX_FILE_SIZE) {
+            showStatus(chrome.i18n.getMessage('importFileTooLarge'), 'error');
+            event.target.value = '';
+            return;
+        }
+        
+        showStatus(chrome.i18n.getMessage('importingSettings'), 'loading');
+        
+        // 读取文件内容
+        const fileContent = await readFileAsText(file);
+        
+        // 解析JSON
+        let importData;
+        try {
+            importData = JSON.parse(fileContent);
+        } catch (parseError) {
+            throw new Error(chrome.i18n.getMessage('importFileInvalid'));
+        }
+        
+        // 验证数据格式和版本
+        if (!importData.settings || typeof importData.settings !== 'object') {
+            throw new Error(chrome.i18n.getMessage('importFileInvalid'));
+        }
+        
+        if (importData.version && importData.version !== IMPORT_EXPORT_CONFIG.SUPPORTED_VERSION) {
+            if (!window.confirm(chrome.i18n.getMessage('confirmImportDifferentVersion', [importData.version, IMPORT_EXPORT_CONFIG.SUPPORTED_VERSION]))) {
+                hideStatus();
+                return;
+            }
+        }
+        
+        // 确认导入
+        if (!window.confirm(chrome.i18n.getMessage('confirmImportSettings'))) {
+            hideStatus();
+            return;
+        }
+        
+        // 导入设置
+        await importSettings(importData.settings);
+        
+        // 等待一下确保数据保存完成
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        showStatus(chrome.i18n.getMessage('importSuccess'), 'success');
+        setTimeout(() => {
+            hideStatus();
+            // 重新加载页面以应用新设置
+            window.location.reload();
+        }, 1500);
+        
+    } catch (error) {
+        console.error('导入设置失败:', error);
+        showStatus(chrome.i18n.getMessage('importError', [error.message]), 'error');
+    } finally {
+        // 清空文件输入
+        event.target.value = '';
+    }
+}
+
+// 读取文件为文本
+function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.readAsText(file);
+    });
+}
+
+// 导入设置
+async function importSettings(importedSettings) {
+    // 验证和清理导入的设置
+    const validatedSettings = validateAndCleanSettings(importedSettings);
+    
+    // 先清除现有的设置，防止冲突
+    await chrome.storage.sync.remove('settings');
+    
+    // 等待一下确保清除完成
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // 保存到存储
+    await chrome.storage.sync.set({ settings: validatedSettings });
+    
+    // 更新当前加载的设置
+    currentLoadedSettings = validatedSettings;
+}
+
+// 验证和清理设置数据
+function validateAndCleanSettings(settings) {
+    // 使用默认设置作为基础，确保所有必需字段都存在
+    const cleanedSettings = { ...JSON.parse(JSON.stringify(defaultSettings)), ...settings };
+    
+    // 特殊验证
+    // 确保 promptTemplates 是有效数组
+    if (!Array.isArray(cleanedSettings.promptTemplates) || cleanedSettings.promptTemplates.length === 0) {
+        cleanedSettings.promptTemplates = JSON.parse(JSON.stringify(defaultSettings.promptTemplates));
+        cleanedSettings.activePromptTemplateId = defaultSettings.activePromptTemplateId;
+    } else {
+        // 确保每个模板都有必需的字段
+        cleanedSettings.promptTemplates = cleanedSettings.promptTemplates.map(template => ({
+            id: template.id || generateUniqueId(),
+            name: template.name || '未命名模板',
+            content: template.content || ''
+        }));
+        
+        // 确保 activePromptTemplateId 有效
+        if (!cleanedSettings.promptTemplates.find(t => t.id === cleanedSettings.activePromptTemplateId)) {
+            cleanedSettings.activePromptTemplateId = cleanedSettings.promptTemplates[0].id;
+        }
+    }
+    
+    // 确保 domainPromptMappings 是有效数组
+    if (!Array.isArray(cleanedSettings.domainPromptMappings)) {
+        cleanedSettings.domainPromptMappings = [];
+    } else {
+        // 清理域名映射，确保引用的模板存在
+        cleanedSettings.domainPromptMappings = cleanedSettings.domainPromptMappings.filter(mapping => {
+            return mapping.domainPattern && 
+                   mapping.templateId && 
+                   cleanedSettings.promptTemplates.find(t => t.id === mapping.templateId);
+        }).map(mapping => ({
+            id: mapping.id || generateUniqueId(),
+            domainPattern: mapping.domainPattern,
+            templateId: mapping.templateId
+        }));
+    }
+    
+    // 验证数值类型
+    if (typeof cleanedSettings.temperature !== 'number' || cleanedSettings.temperature < 0 || cleanedSettings.temperature > 1) {
+        cleanedSettings.temperature = defaultSettings.temperature;
+    }
+    
+    // 验证枚举值
+    const validThemes = ['light', 'dark', 'system'];
+    if (!validThemes.includes(cleanedSettings.theme)) {
+        cleanedSettings.theme = defaultSettings.theme;
+    }
+    
+    const validBallSizes = ['small', 'medium', 'large'];
+    if (!validBallSizes.includes(cleanedSettings.floatingBallSize)) {
+        cleanedSettings.floatingBallSize = defaultSettings.floatingBallSize;
+    }
+    
+    return cleanedSettings;
+}

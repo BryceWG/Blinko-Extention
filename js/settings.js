@@ -120,9 +120,6 @@ async function loadSettings() {
             }
         }
 
-        console.log('加载的设置:', settings);
-        
-        // 更新UI
         // 获取当前激活的模板内容用于UI显示
         const activeTemplate = settings.promptTemplates.find(pt => pt.id === settings.activePromptTemplateId);
         const currentPromptContent = activeTemplate ? activeTemplate.content : (settings.promptTemplates.length > 0 ? settings.promptTemplates[0].content : '');
