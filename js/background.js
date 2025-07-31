@@ -1,4 +1,8 @@
 
+import { initializeContextMenu, handleContextMenuClick } from './contextMenu.js';
+import { handleContentRequest, handleSaveSummary, handleFloatingBallRequest } from './messageHandler.js';
+import { getSummaryState, clearSummaryState } from './summaryState.js';
+
 // 初始化右键菜单
 initializeContextMenu();
 

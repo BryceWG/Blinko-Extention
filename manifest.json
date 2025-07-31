@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "permissions": [
@@ -37,15 +37,8 @@
     "default_icon": "images/icon128.png"
   },
   "background": {
-    "scripts": [
-      "js/jinaReader.js",
-      "js/api.js",
-      "js/summaryState.js", 
-      "js/ui.js",
-      "js/messageHandler.js",
-      "js/contextMenu.js",
-      "js/background.js"
-    ]
+    "scripts": ["js/background.js"],
+    "type": "module"
   },
   "content_scripts": [
     {

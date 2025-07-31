@@ -177,7 +177,7 @@ async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageU
                     role: 'user',
                     content: prompt
                 }],
-                temperature: settings.temperature
+                temperature: typeof settings.temperature === 'number' ? settings.temperature : parseFloat(settings.temperature) || 0.5
             })
         });
 
