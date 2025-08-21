@@ -47,15 +47,11 @@ function getFullApiUrl(baseUrl, endpoint) {
     try {
         const url = new URL(baseUrl);
         // 检查是否已经包含了完整的API路径
-        if (baseUrl.includes('/v1/chat/completions')) {
+        if (baseUrl.includes('/chat/completions')) {
             return baseUrl;
         }
-        // 如果URL中包含/v1，则使用它之前的部分作为基础URL
-        if (baseUrl.includes('/v1')) {
-            return baseUrl.split('/v1')[0] + '/v1' + endpoint;
-        }
-        // 如果URL不包含/v1，则直接添加
-        return baseUrl.replace(/\/+$/, '') + '/v1' + endpoint;
+        // 直接在用户设置的URL后面添加endpoint
+        return baseUrl.replace(/\/+$/, '') + endpoint;
     } catch (error) {
         console.error('解析URL时出错:', error);
         throw new Error('URL格式不正确: ' + error.message);
