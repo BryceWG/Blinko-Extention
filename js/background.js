@@ -41,7 +41,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // 异步处理请求
         handleFloatingBallRequest(request).then(response => {
             // 尝试更新悬浮球状态
-            if (sender.tab && sender.tab.id) {
+            if (sender.tab && sender.tab.id && browser.tabs && browser.tabs.sendMessage) {
                 try {
                     browser.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
@@ -57,7 +57,7 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }).catch(error => {
             console.error(browser.i18n.getMessage('floatingBallRequestError'), error);
             // 尝试更新悬浮球状态
-            if (sender.tab && sender.tab.id) {
+            if (sender.tab && sender.tab.id && browser.tabs && browser.tabs.sendMessage) {
                 try {
                     browser.tabs.sendMessage(sender.tab.id, {
                         action: 'updateFloatingBallState',
@@ -115,40 +115,52 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return false;  // 默认不保持消息通道开放
 });
 
-// 监听右键菜单点击
-browser.contextMenus.onClicked.addListener(handleContextMenuClick);
+// 监听右键菜单点击（仅在支持时）
+if (browser.contextMenus && browser.contextMenus.onClicked) {
+    browser.contextMenus.onClicked.addListener(handleContextMenuClick);
+}
 
-// 监听快捷键命令
-browser.commands.onCommand.addListener(async (command) => {
-    try {
-        // 获取当前活动标签页
-        const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-        if (!tab) {
-            console.error('无法获取当前标签页');
-            return;
+// 监听快捷键命令（仅在支持时）
+if (browser.commands && browser.commands.onCommand) {
+    browser.commands.onCommand.addListener(async (command) => {
+        try {
+            // 获取当前活动标签页
+            if (!browser.tabs || !browser.tabs.query) {
+                console.error('tabs API不支持');
+                return;
+            }
+            const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+            if (!tab) {
+                console.error('无法获取当前标签页');
+                return;
+            }
+
+            // 根据命令类型模拟右键菜单点击
+            const menuItemId = command === 'summarize-page' ? 'summarizePageContent' : 'extractPageContent';
+            
+            // 复用右键菜单的处理逻辑
+            await handleContextMenuClick({ menuItemId }, tab);
+            
+        } catch (error) {
+            console.error('快捷键处理失败:', error);
+            browser.notifications.create({
+                type: 'basic',
+                iconUrl: 'images/icon128.png',
+                title: '快捷键执行失败',
+                message: error.message
+            });
         }
-
-        // 根据命令类型模拟右键菜单点击
-        const menuItemId = command === 'summarize-page' ? 'summarizePageContent' : 'extractPageContent';
-        
-        // 复用右键菜单的处理逻辑
-        await handleContextMenuClick({ menuItemId }, tab);
-        
-    } catch (error) {
-        console.error('快捷键处理失败:', error);
-        browser.notifications.create({
-            type: 'basic',
-            iconUrl: 'images/icon128.png',
-            title: '快捷键执行失败',
-            message: error.message
-        });
-    }
-});
+    });
+}
 
 // 监听通知点击
 browser.notifications.onClicked.addListener(async (notificationId) => {
     try {
         // 获取当前标签页
+        if (!browser.tabs || !browser.tabs.query) {
+            console.error('tabs API不支持');
+            return;
+        }
         const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
         if (tab) {
             // 设置标记

@@ -5,69 +5,78 @@ import { handleContentRequest } from './messageHandler.js';
 
 // 初始化右键菜单
 function initializeContextMenu() {
-    // 移除onInstalled事件监听，直接创建菜单
-    // 创建父级菜单
-    browser.contextMenus.create({
-            id: "blinkoExtension",
-            title: browser.i18n.getMessage("extensionName"),
-            contexts: ["all"]
-        });
+    // 检查是否支持contextMenus API（移动端Firefox不支持）
+    if (!browser.contextMenus) {
+        console.log('contextMenus API不支持，跳过右键菜单初始化');
+        return;
+    }
 
-        // 创建选中文本菜单
+    try {
+        // 创建父级菜单
         browser.contextMenus.create({
-            id: "sendSelectedText",
-            title: browser.i18n.getMessage("sendSelectedText"),
-            contexts: ["selection"],
-            parentId: "blinkoExtension"
-        });
+                id: "blinkoExtension",
+                title: browser.i18n.getMessage("extensionName"),
+                contexts: ["all"]
+            });
 
-        // 添加预存到快捷记录菜单（文本）
-        browser.contextMenus.create({
-            id: "saveToQuickNote",
-            title: browser.i18n.getMessage("saveToQuickNote"),
-            contexts: ["selection"],
-            parentId: "blinkoExtension"
-        });
+            // 创建选中文本菜单
+            browser.contextMenus.create({
+                id: "sendSelectedText",
+                title: browser.i18n.getMessage("sendSelectedText"),
+                contexts: ["selection"],
+                parentId: "blinkoExtension"
+            });
 
-        // 添加预存到快捷记录菜单（图片）
-        browser.contextMenus.create({
-            id: "saveImageToQuickNote",
-            title: browser.i18n.getMessage("saveImageToQuickNote"),
-            contexts: ["image"],
-            parentId: "blinkoExtension"
-        });
+            // 添加预存到快捷记录菜单（文本）
+            browser.contextMenus.create({
+                id: "saveToQuickNote",
+                title: browser.i18n.getMessage("saveToQuickNote"),
+                contexts: ["selection"],
+                parentId: "blinkoExtension"
+            });
 
-        // 创建图片右键菜单
-        browser.contextMenus.create({
-            id: 'saveImageToBlinko',
-            title: browser.i18n.getMessage("saveImageToBlinko"),
-            contexts: ['image'],
-            parentId: "blinkoExtension"
-        });
+            // 添加预存到快捷记录菜单（图片）
+            browser.contextMenus.create({
+                id: "saveImageToQuickNote",
+                title: browser.i18n.getMessage("saveImageToQuickNote"),
+                contexts: ["image"],
+                parentId: "blinkoExtension"
+            });
 
-        // 创建总结网页内容菜单
-        browser.contextMenus.create({
-            id: 'summarizePageContent',
-            title: browser.i18n.getMessage("summarizePageContent"),
-            contexts: ['page'],
-            parentId: "blinkoExtension"
-        });
+            // 创建图片右键菜单
+            browser.contextMenus.create({
+                id: 'saveImageToBlinko',
+                title: browser.i18n.getMessage("saveImageToBlinko"),
+                contexts: ['image'],
+                parentId: "blinkoExtension"
+            });
 
-        // 创建提取网页内容菜单
-        browser.contextMenus.create({
-            id: 'extractPageContent',
-            title: browser.i18n.getMessage("extractPageContent"),
-            contexts: ['page'],
-            parentId: "blinkoExtension"
-        });
+            // 创建总结网页内容菜单
+            browser.contextMenus.create({
+                id: 'summarizePageContent',
+                title: browser.i18n.getMessage("summarizePageContent"),
+                contexts: ['page'],
+                parentId: "blinkoExtension"
+            });
 
-        // 创建保存剪贴板内容菜单
-        browser.contextMenus.create({
-            id: 'saveClipboardContent',
-            title: browser.i18n.getMessage("saveClipboardContent") || "保存剪贴板内容到Blinko",
-            contexts: ['page'],
-            parentId: "blinkoExtension"
-        });
+            // 创建提取网页内容菜单
+            browser.contextMenus.create({
+                id: 'extractPageContent',
+                title: browser.i18n.getMessage("extractPageContent"),
+                contexts: ['page'],
+                parentId: "blinkoExtension"
+            });
+
+            // 创建保存剪贴板内容菜单
+            browser.contextMenus.create({
+                id: 'saveClipboardContent',
+                title: browser.i18n.getMessage("saveClipboardContent") || "保存剪贴板内容到Blinko",
+                contexts: ['page'],
+                parentId: "blinkoExtension"
+            });
+    } catch (error) {
+        console.error('初始化右键菜单失败:', error);
+    }
 }
 
 // 处理右键菜单点击
@@ -277,6 +286,11 @@ async function handleContextMenuClick(info, tab) {
     // 处理保存剪贴板内容
     if (info.menuItemId === 'saveClipboardContent') {
         try {
+            // 检查剪贴板API支持
+            if (!navigator.clipboard || !navigator.clipboard.readText) {
+                throw new Error('剪贴板API不受支持');
+            }
+
             // 读取剪贴板内容
             const clipboardText = await navigator.clipboard.readText();
             

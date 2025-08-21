@@ -322,19 +322,6 @@ async function handleFloatingBallRequest(request) {
             // 保存到storage
             await saveSummaryToStorage(summary, request.url, request.title);
 
-            // 发送成功响应
-            try {
-                await browser.runtime.sendMessage({
-                    action: 'floatingBallResponse',
-                    response: { 
-                        success: true,
-                        isExtractOnly: request.isExtractOnly
-                    }
-                });
-            } catch (error) {
-                console.log('发送响应失败，content script可能已关闭');
-            }
-
             return { success: true };
         } else {
             throw new Error(`服务器返回状态码: ${response.status}`);
@@ -349,20 +336,6 @@ async function handleFloatingBallRequest(request) {
             url: request.url,
             title: request.title
         });
-
-        // 发送错误响应
-        try {
-            await browser.runtime.sendMessage({
-                action: 'floatingBallResponse',
-                response: { 
-                    success: false, 
-                    error: error.message,
-                    isExtractOnly: request.isExtractOnly
-                }
-            });
-        } catch (error) {
-            console.log('发送错误响应失败，content script可能已关闭');
-        }
 
         return { 
             success: false, 

@@ -1,14 +1,16 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "2.5.5",
+  "version": "2.5.6",
   "default_locale": "en",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "activeTab",
     "storage",
-    "contextMenus",
     "notifications",
+    "contextMenus"
+  ],
+  "optional_permissions": [
     "clipboardRead",
     "tabs"
   ],
