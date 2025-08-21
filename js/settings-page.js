@@ -199,6 +199,10 @@ function saveSettingsRealtime() {
 
         const settingKey = input.id;
         if (settingKey && currentLoadedSettings.hasOwnProperty(settingKey)) {
+            // 特殊处理需要数字类型的字段
+            if (settingKey === 'temperature') {
+                value = parseFloat(value) || 0.5; // 默认值0.5
+            }
             currentLoadedSettings[settingKey] = value;
         }
     });
