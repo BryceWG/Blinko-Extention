@@ -585,6 +585,10 @@
     "message": "Save Clipboard Content to Blinko",
     "description": "Context menu for saving clipboard content"
   },
+  "openBlinkoHomepage": {
+    "message": "Open Blinko Homepage",
+    "description": "Context menu for opening Blinko homepage"
+  },
   "importExportTitle": {
     "message": "Import/Export Settings",
     "description": "Import/Export settings group title"
