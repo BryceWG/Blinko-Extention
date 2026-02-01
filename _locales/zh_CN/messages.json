@@ -573,6 +573,10 @@
     "message": "保存剪贴板内容到Blinko",
     "description": "右键菜单保存剪贴板内容"
   },
+  "openBlinkoHomepage": {
+    "message": "跳转到Blinko主页",
+    "description": "右键菜单跳转到Blinko主页"
+  },
   "importExportTitle": {
     "message": "导入导出设置",
     "description": "导入导出设置分组标题"

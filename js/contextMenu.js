@@ -67,6 +67,14 @@ function initializeContextMenu() {
             contexts: ['page'],
             parentId: "blinkoExtension"
         });
+
+        // 创建跳转到Blinko主页菜单
+        chrome.contextMenus.create({
+            id: 'openBlinkoHomepage',
+            title: chrome.i18n.getMessage("openBlinkoHomepage") || "跳转到Blinko主页",
+            contexts: ['all'],
+            parentId: "blinkoExtension"
+        });
     });
 }
 
@@ -310,6 +318,41 @@ async function handleContextMenuClick(info, tab) {
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
                 title: '保存失败',
+                message: error.message
+            });
+        }
+    }
+
+    // 处理跳转到Blinko主页
+    if (info.menuItemId === 'openBlinkoHomepage') {
+        try {
+            const result = await chrome.storage.sync.get('settings');
+            const settings = result.settings;
+            
+            if (!settings || !settings.targetUrl) {
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: 'images/icon128.png',
+                    title: '未配置Blinko地址',
+                    message: '请先在设置中配置Blinko API URL'
+                });
+                return;
+            }
+
+            // 获取纯净的域名URL（移除/api/v1路径）
+            let homepageUrl = settings.targetUrl.trim();
+            if (homepageUrl.includes('/api/v1')) {
+                homepageUrl = homepageUrl.split('/api/v1')[0];
+            }
+
+            // 在新标签页中打开Blinko主页
+            await chrome.tabs.create({ url: homepageUrl });
+        } catch (error) {
+            console.error('跳转到Blinko主页失败:', error);
+            chrome.notifications.create({
+                type: 'basic',
+                iconUrl: 'images/icon128.png',
+                title: '跳转失败',
                 message: error.message
             });
         }
