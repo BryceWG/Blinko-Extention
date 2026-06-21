@@ -688,5 +688,26 @@
   "promptShortSummaryContent": {
     "message": "Fassen Sie den folgenden Webseiteninhalt in einem kurzen deutschen Satz zusammen: {content}",
     "description": "Short prompt content for one-sentence summary"
-  }
+  },
+  "statusLoadingSettingsFailed": { "message": "Einstellungen konnten nicht geladen werden", "description": "Error when settings cannot be loaded" },
+  "statusSettingsReset": { "message": "Einstellungen wurden auf Standardwerte zurückgesetzt", "description": "Confirmation after resetting settings" },
+  "statusPleaseConfigure": { "message": "Bitte geben Sie zuerst die Blinko API-URL und den Authentifizierungsschlüssel ein", "description": "Prompt to configure extension" },
+  "statusFetchingConfig": { "message": "Konfiguration wird abgerufen...", "description": "Shown while fetching remote config" },
+  "statusSendSuccess": { "message": "Erfolgreich gesendet", "description": "Generic send success status" },
+  "statusSaveFailed": { "message": "Speichern fehlgeschlagen", "description": "Generic save failure status" },
+  "statusAddedToQuickNote": { "message": "Zur Kurznotiz hinzugefügt", "description": "Confirmation for quick note" },
+  "statusSummaryFailed": { "message": "Zusammenfassung fehlgeschlagen", "description": "Failure status for summarization" },
+  "statusBlinkoNotConfigured": { "message": "Blinko-Adresse ist nicht konfiguriert", "description": "Error when Blinko URL is missing" },
+  "statusJumpFailed": { "message": "Sprung fehlgeschlagen", "description": "Error when opening a URL failed" },
+  "statusCannotGetCurrentTab": { "message": "Aktueller Tab kann nicht abgerufen werden", "description": "Error when active tab is unavailable" },
+  "statusShortcutFailed": { "message": "Tastenkürzel-Ausführung fehlgeschlagen", "description": "Error when keyboard shortcut fails" },
+  "statusSaveSuccess": { "message": "Erfolgreich gespeichert", "description": "Generic save success status" },
+  "statusExtractSuccess": { "message": "Erfolgreich extrahiert", "description": "Generic extraction success status" },
+  "statusSummarySuccess": { "message": "Erfolgreich zusammengefasst", "description": "Generic summarization success status" },
+  "statusClearSuccess": { "message": "Erfolgreich geleert", "description": "Generic clear success status" },
+  "statusContentRequired": { "message": "Inhalt darf nicht leer sein", "description": "Validation error for empty content" },
+  "statusGeneratingSummary": { "message": "Zusammenfassung wird erstellt...", "description": "Shown while summary is being generated" },
+  "statusPleaseEnterNote": { "message": "Bitte Notizinhalt eingeben", "description": "Validation error for empty quick note" },
+  "statusSending": { "message": "Wird gesendet...", "description": "Shown while sending data" },
+  "statusUnknownError": { "message": "Unbekannter Fehler", "description": "Generic unknown error status" }
 }

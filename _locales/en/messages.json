@@ -682,11 +682,32 @@
     "description": "Default tag for page clips"
   },
   "promptDefaultSummaryContent": {
-    "message": "Please summarize the following web content in concise language, highlighting the key points: {content}",
+    "message": "Please write a structured, focused, and comprehensive summary of the provided web content.\n\nRequirements:\n1. **Summary structure:**\n    *   First line: use '# Title' format for a brief heading.\n    *   One-sentence summary: provide a concise statement that accurately captures the core content of the entire page.\n    *   Following the page's logical order, summarize the core content of each major section.\n\n2. **Highlight key points:** Identify and emphasize key information, topics, important arguments, and conclusions. If the page contains important data or conclusions, make sure they appear in the summary.\n3. **Do not omit important content:** Ensure the summary covers all important aspects of the page and avoids missing key information.\n\nNotes:\n*   The summary should remain objective and neutral, avoiding personal opinions or emotional coloring.\n*   The language should be concise and clear, avoiding overly professional or obscure vocabulary, and summarize in English.\n*   The length should be moderate: comprehensive yet not verbose.\n*   Do not add a final summary at the end; the one-sentence summary replaces it.\nHere is the web content: {content}",
     "description": "Default prompt content for page summarization"
   },
   "promptShortSummaryContent": {
-    "message": "Please summarize the following web content in one short sentence: {content}",
+    "message": "Please summarize the following web content in one sentence: {content}",
     "description": "Short prompt content for one-sentence summary"
-  }
+  },
+  "statusLoadingSettingsFailed": { "message": "Failed to load settings", "description": "Error when settings cannot be loaded" },
+  "statusSettingsReset": { "message": "Settings have been reset to defaults", "description": "Confirmation after resetting settings" },
+  "statusPleaseConfigure": { "message": "Please fill in the Blinko API URL and authentication key first", "description": "Prompt to configure extension" },
+  "statusFetchingConfig": { "message": "Fetching configuration...", "description": "Shown while fetching remote config" },
+  "statusSendSuccess": { "message": "Sent successfully", "description": "Generic send success status" },
+  "statusSaveFailed": { "message": "Save failed", "description": "Generic save failure status" },
+  "statusAddedToQuickNote": { "message": "Added to Quick Note", "description": "Confirmation for quick note" },
+  "statusSummaryFailed": { "message": "Summary failed", "description": "Failure status for summarization" },
+  "statusBlinkoNotConfigured": { "message": "Blinko address is not configured", "description": "Error when Blinko URL is missing" },
+  "statusJumpFailed": { "message": "Jump failed", "description": "Error when opening a URL failed" },
+  "statusCannotGetCurrentTab": { "message": "Cannot get current tab", "description": "Error when active tab is unavailable" },
+  "statusShortcutFailed": { "message": "Shortcut execution failed", "description": "Error when keyboard shortcut fails" },
+  "statusSaveSuccess": { "message": "Saved successfully", "description": "Generic save success status" },
+  "statusExtractSuccess": { "message": "Extracted successfully", "description": "Generic extraction success status" },
+  "statusSummarySuccess": { "message": "Summarized successfully", "description": "Generic summarization success status" },
+  "statusClearSuccess": { "message": "Cleared successfully", "description": "Generic clear success status" },
+  "statusContentRequired": { "message": "Content cannot be empty", "description": "Validation error for empty content" },
+  "statusGeneratingSummary": { "message": "Generating summary...", "description": "Shown while summary is being generated" },
+  "statusPleaseEnterNote": { "message": "Please enter note content", "description": "Validation error for empty quick note" },
+  "statusSending": { "message": "Sending...", "description": "Shown while sending data" },
+  "statusUnknownError": { "message": "Unknown error", "description": "Generic unknown error status" }
 }
