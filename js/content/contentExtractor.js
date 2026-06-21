@@ -1,34 +1,34 @@
-// 原文链接前缀（用于内容中链接去重）
+// Original link prefix (used for link deduplication in content)
 const ORIGINAL_LINK_PREFIX = chrome.i18n.getMessage('labelOriginalLink') || 'Original link:';
 
-// 转义正则表达式特殊字符
+// Escape regular expression special characters
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// 获取原文链接正则表达式
+// Get original link regular expression
 function getOriginalLinkRegExp() {
     return new RegExp(escapeRegExp(ORIGINAL_LINK_PREFIX) + '\\[.*?\\]\\(.*?\\)', 'g');
 }
 
-// 提取页面内容
+// Extract page content
 function extractPageContent() {
     try {
-        // 获取正文内容
+        // Get body content
         const content = document.body.innerText
-            .replace(/[\n\r]+/g, '\n') // 将多个换行符替换为单个
-            .replace(/\s+/g, ' ') // 将多个空格替换为单个
-            .replace(getOriginalLinkRegExp(), '') // 移除可能已存在的原文链接
-            .trim(); // 移除首尾空白
+            .replace(/[\n\r]+/g, '\n') // Replace multiple line breaks with single
+            .replace(/\s+/g, ' ') // Replace multiple spaces with single
+            .replace(getOriginalLinkRegExp(), '') // Remove possibly existing original link
+            .trim(); // Trim leading and trailing whitespace
         
         return content;
     } catch (error) {
-        console.error('提取内容时出错:', error);
+        console.error('Error extracting content:', error);
         throw error;
     }
 }
 
-// 获取页面元数据
+// Get page metadata
 function getPageMetadata() {
     return {
         url: window.location.href,
@@ -36,12 +36,12 @@ function getPageMetadata() {
     };
 }
 
-// 获取选中的文本
+// Get selected text
 function getSelectedText() {
     return window.getSelection().toString();
 }
 
-// 获取图片信息
+// Get image info
 function getImageInfo(img) {
     return {
         src: img.src,
@@ -50,7 +50,7 @@ function getImageInfo(img) {
     };
 }
 
-// 将函数暴露到全局作用域
+// Expose functions to global scope
 window.extractPageContent = extractPageContent;
 window.getPageMetadata = getPageMetadata;
 window.getSelectedText = getSelectedText;

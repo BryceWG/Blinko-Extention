@@ -2,21 +2,21 @@ import { getSummaryFromModel, sendToBlinko, getOriginalLinkRegExp } from './api.
 import { getWebContent } from './jinaReader.js';
 import { getSummaryState, updateSummaryState, clearSummaryState, saveSummaryToStorage } from './summaryState.js';
 
-// 处理内容请求
+// Handle content request
 async function handleContentRequest(request) {
     try {
         if (!request || !request.content) {
             throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
-        // 更新状态为处理中
+        // Update state to processing
         updateSummaryState({
             status: 'processing',
             url: request.url,
             title: request.title
         });
 
-        // 获取存储的设置
+        // Get stored settings
         const result = await chrome.storage.sync.get('settings');
         const settings = result.settings;
         
@@ -26,25 +26,25 @@ async function handleContentRequest(request) {
 
         let summary;
         if (request.isExtractOnly) {
-            // 使用Jina Reader API提取内容
+            // Extract content using Jina Reader API
             const response = await getWebContent(request.url, settings);
             if (!response.success) {
                 throw new Error(response.error);
             }
-            // 移除可能已存在的原文链接
+            // Remove possibly existing original link
             summary = response.content.replace(getOriginalLinkRegExp(), '').trim();
         } else {
-            // 检查必要的设置是否存在
+            // Check required settings exist
             if (!settings.modelUrl || !settings.apiKey || !settings.modelName) {
                 throw new Error(chrome.i18n.getMessage('errorCompleteApiSettings') || 'Please complete API settings first');
             }
-            // 生成总结
+            // Generate summary
             summary = await getSummaryFromModel(request.content, request.url, settings);
         }
 
-        // 如果是直接保存模式
+        // If direct save mode
         if (request.directSave) {
-            // 直接发送到Blinko
+            // Send directly to Blinko
             const response = await sendToBlinko(
                 summary,
                 request.url,
@@ -54,7 +54,7 @@ async function handleContentRequest(request) {
             );
 
             if (response.success) {
-                // 显示成功通知
+                // Show success notification
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: chrome.runtime.getURL('images/icon128.png'),
@@ -66,8 +66,8 @@ async function handleContentRequest(request) {
                 throw new Error(response.error || (chrome.i18n.getMessage('statusSaveFailed') || 'Save failed'));
             }
         } else {
-            // 原有的保存到storage和发送到popup的逻辑
-            // 更新状态为完成
+            // Original save-to-storage and send-to-popup logic
+            // Update state to completed
             updateSummaryState({
                 status: 'completed',
                 summary: summary,
@@ -76,10 +76,10 @@ async function handleContentRequest(request) {
                 isExtractOnly: request.isExtractOnly
             });
 
-            // 保存到storage
+            // Save to storage
             await saveSummaryToStorage(summary, request.url, request.title);
 
-            // 同时保存到临时存储，以便popup可以访问
+            // Also save to temporary storage for popup access
             await chrome.storage.local.set({
                 currentSummary: {
                     summary: summary,
@@ -90,7 +90,7 @@ async function handleContentRequest(request) {
                 }
             });
 
-            // 发送总结结果回popup
+            // Send summary result back to popup
             try {
                 await chrome.runtime.sendMessage({
                     action: 'handleSummaryResponse',
@@ -100,8 +100,8 @@ async function handleContentRequest(request) {
                     title: request.title,
                     isExtractOnly: request.isExtractOnly
                 }).catch(() => {
-                    // 忽略错误，popup可能已关闭
-                    // 如果popup已关闭，显示系统通知
+                    // Ignore error, popup may be closed
+                    // If popup closed, show system notification
                     chrome.notifications.create({
                         type: 'basic',
                         iconUrl: chrome.runtime.getURL('images/icon128.png'),
@@ -111,8 +111,8 @@ async function handleContentRequest(request) {
                     });
                 });
             } catch (error) {
-                console.log('Popup可能已关闭，发送消息失败');
-                // 显示系统通知
+                console.log('Popup may be closed, failed to send message');
+                // Show system notification
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: chrome.runtime.getURL('images/icon128.png'),
@@ -124,9 +124,9 @@ async function handleContentRequest(request) {
         }
 
     } catch (error) {
-        console.error('处理内容请求时出错:', error);
+        console.error('Error handling content request:', error);
         
-        // 更新状态为错误
+        // Update state to error
         updateSummaryState({
             status: 'error',
             error: error.message,
@@ -134,7 +134,7 @@ async function handleContentRequest(request) {
             title: request.title
         });
 
-        // 尝试发送错误消息到popup
+        // Try to send error message to popup
         try {
             await chrome.runtime.sendMessage({
                 action: 'handleSummaryResponse',
@@ -142,13 +142,13 @@ async function handleContentRequest(request) {
                 error: error.message,
                 isExtractOnly: request.isExtractOnly
             }).catch(() => {
-                // 忽略错误，popup可能已关闭
+                // Ignore error, popup may be closed
             });
         } catch (error) {
-            console.log('Popup可能已关闭，发送错误消息失败');
+            console.log('Popup may be closed, failed to send error message');
         }
 
-        // 总是显示错误通知
+        // Always show error notification
         chrome.notifications.create({
             type: 'basic',
             iconUrl: chrome.runtime.getURL('images/icon128.png'),
@@ -162,14 +162,14 @@ async function handleContentRequest(request) {
     }
 }
 
-// 处理保存总结
+// Handle save summary
 async function handleSaveSummary(request) {
     try {
         if (!request || !request.content) {
             throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
-        // 获取存储的设置
+        // Get stored settings
         const result = await chrome.storage.sync.get('settings');
         const settings = result.settings;
         
@@ -181,7 +181,7 @@ async function handleSaveSummary(request) {
         let url = request.url;
         let title = request.title;
         
-        // 如果是快捷记录
+        // If Quick Note
         if (request.type === 'quickNote') {
             if (!request.content || !request.content.trim()) {
                 throw new Error(chrome.i18n.getMessage('statusPleaseEnterNote') || 'Please enter note content');
@@ -193,12 +193,12 @@ async function handleSaveSummary(request) {
                     finalContent,
                     url,
                     title,
-                    request.attachments,  // 传递附件列表
+                    request.attachments,  // Pass attachments list
                     request.type || 'summary'
                 );
                 
                 if (response.success) {
-                    // 如果是总结内容，清除存储
+                    // If summary content, clear storage
                     if (!request.type || request.type !== 'quickNote') {
                         await chrome.storage.local.remove('currentSummary');
                         await clearSummaryState();
@@ -211,13 +211,13 @@ async function handleSaveSummary(request) {
                 throw new Error(chrome.i18n.getMessage('errorSendContentFailed', [error.message]) || `Failed to send content: ${error.message}`);
             }
         } else {
-            // 如果是总结内容或提取内容
+            // If summary or extract content
             if (!request.content || !request.content.trim()) {
                 throw new Error(chrome.i18n.getMessage('errorNoContentToSave') || 'No content to save');
             }
             finalContent = request.content.trim();
 
-            // 如果没有提供URL和标题，尝试从currentSummary获取
+            // If URL and title not provided, try to get from currentSummary
             if (!url || !title) {
                 const currentSummary = await chrome.storage.local.get('currentSummary');
                 if (currentSummary.currentSummary) {
@@ -237,7 +237,7 @@ async function handleSaveSummary(request) {
             );
             
             if (response.success) {
-                // 如果是总结内容，清除存储
+                // If summary content, clear storage
                 if (!request.type || request.type !== 'quickNote') {
                     await chrome.storage.local.remove('currentSummary');
                     await clearSummaryState();
@@ -250,7 +250,7 @@ async function handleSaveSummary(request) {
             throw new Error(chrome.i18n.getMessage('errorSendContentFailed', [error.message]) || `Failed to send content: ${error.message}`);
         }
     } catch (error) {
-        console.error('保存内容时出错:', error);
+        console.error('Error saving content:', error);
         return { 
             success: false, 
             error: error.message 
@@ -258,21 +258,21 @@ async function handleSaveSummary(request) {
     }
 }
 
-// 处理悬浮球请求
+// Handle floating ball request
 async function handleFloatingBallRequest(request) {
     try {
         if (!request || !request.content) {
             throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
-        // 更新状态为处理中
+        // Update state to processing
         updateSummaryState({
             status: 'processing',
             url: request.url,
             title: request.title
         });
 
-        // 获取存储的设置
+        // Get stored settings
         const result = await chrome.storage.sync.get('settings');
         const settings = result.settings;
         
@@ -282,26 +282,26 @@ async function handleFloatingBallRequest(request) {
 
         let summary;
         if (request.isExtractOnly) {
-            // 使用Jina Reader API提取内容
+            // Extract content using Jina Reader API
             const response = await getWebContent(request.url, settings);
             if (!response.success) {
                 throw new Error(response.error);
             }
-            // 移除可能已存在的原文链接
+            // Remove possibly existing original link
             summary = response.content.replace(getOriginalLinkRegExp(), '').trim();
         } else {
-            // 检查必要的设置是否存在
+            // Check required settings exist
             if (!settings.modelUrl || !settings.apiKey || !settings.modelName) {
                 throw new Error(chrome.i18n.getMessage('errorCompleteApiSettings') || 'Please complete API settings first');
             }
-            // 生成总结
+            // Generate summary
             summary = await getSummaryFromModel(request.content, request.url, settings);
         }
 
-        // 准备最终内容
+        // Prepare final content
         let finalContent = summary;
 
-        // 发送到服务器（使用现有的重试机制）
+        // Send to server (using existing retry mechanism)
         const response = await sendToBlinko(
             finalContent, 
             request.url, 
@@ -311,7 +311,7 @@ async function handleFloatingBallRequest(request) {
         );
         
         if (response.success) {
-            // 更新状态为完成
+            // Update state to completed
             updateSummaryState({
                 status: 'completed',
                 summary: summary,
@@ -319,10 +319,10 @@ async function handleFloatingBallRequest(request) {
                 title: request.title
             });
 
-            // 保存到storage
+            // Save to storage
             await saveSummaryToStorage(summary, request.url, request.title);
 
-            // 发送成功响应
+            // Send success response
             try {
                 await chrome.runtime.sendMessage({
                     action: 'floatingBallResponse',
@@ -332,7 +332,7 @@ async function handleFloatingBallRequest(request) {
                     }
                 });
             } catch (error) {
-                console.log('发送响应失败，content script可能已关闭');
+                console.log('Failed to send response, content script may be closed');
             }
 
             return { success: true };
@@ -340,9 +340,9 @@ async function handleFloatingBallRequest(request) {
             throw new Error(chrome.i18n.getMessage('errorServerReturnedStatus', [response.status]) || `Server returned status code: ${response.status}`);
         }
     } catch (error) {
-        console.error('处理悬浮球请求时出错:', error);
+        console.error('Error handling floating ball request:', error);
         
-        // 更新状态为错误
+        // Update state to error
         updateSummaryState({
             status: 'error',
             error: error.message,
@@ -350,7 +350,7 @@ async function handleFloatingBallRequest(request) {
             title: request.title
         });
 
-        // 发送错误响应
+        // Send error response
         try {
             await chrome.runtime.sendMessage({
                 action: 'floatingBallResponse',
@@ -361,7 +361,7 @@ async function handleFloatingBallRequest(request) {
                 }
             });
         } catch (error) {
-            console.log('发送错误响应失败，content script可能已关闭');
+            console.log('Failed to send error response, content script may be closed');
         }
 
         return { 

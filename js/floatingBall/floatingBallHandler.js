@@ -2,7 +2,7 @@ import { getState, updateState, savePosition } from './floatingBallState.js';
 import { showLoadingState, showSuccessState, resetState } from './floatingBallUI.js';
 import { extractPageContent, getPageMetadata } from '../content/contentExtractor.js';
 
-// 处理拖拽开始
+// Handle drag start
 function handleDragStart(e, ball) {
     const state = getState();
     if (state.isProcessing) return;
@@ -22,7 +22,7 @@ function handleDragStart(e, ball) {
     ball.style.transition = 'none';
 }
 
-// 处理拖拽移动
+// Handle drag move
 function handleDragMove(e, ball) {
     const state = getState();
     if (!state.isDragging) return;
@@ -37,7 +37,7 @@ function handleDragMove(e, ball) {
     ball.style.bottom = newBottom + 'px';
 }
 
-// 处理拖拽结束
+// Handle drag end
 function handleDragEnd(ball) {
     const state = getState();
     if (!state.isDragging) return;
@@ -45,7 +45,7 @@ function handleDragEnd(ball) {
     updateState({ isDragging: false });
     ball.style.transition = 'transform 0.5s ease';
     
-    // 保存新位置
+    // Save new position
     const position = {
         right: ball.style.right,
         bottom: ball.style.bottom
@@ -53,7 +53,7 @@ function handleDragEnd(ball) {
     savePosition(position);
 }
 
-// 处理点击事件
+// Handle click event
 async function handleClick(ball) {
     const state = getState();
     if (state.isDragging || state.isProcessing) return;
@@ -62,11 +62,11 @@ async function handleClick(ball) {
     showLoadingState(ball);
 
     try {
-        // 获取页面内容
+        // Get page content
         const content = extractPageContent();
         const metadata = getPageMetadata();
 
-        // 发送消息给background script处理
+        // Send message to background script for processing
         const response = await chrome.runtime.sendMessage({
             action: 'processAndSendContent',
             content: content,
@@ -75,8 +75,8 @@ async function handleClick(ball) {
         });
 
         if (response && response.processing) {
-            // 等待实际的响应
-            return;  // background会处理剩余的流程
+            // Wait for actual response
+            return;  // Background will handle the remaining flow
         } else {
             throw new Error(chrome.i18n.getMessage('requestProcessError') || 'Request processing failed');
         }
@@ -87,14 +87,14 @@ async function handleClick(ball) {
     }
 }
 
-// 初始化事件监听器
+// Initialize event listeners
 function initializeEventListeners(ball) {
-    // 处理拖拽
+    // Handle drag
     ball.addEventListener('mousedown', e => handleDragStart(e, ball));
     document.addEventListener('mousemove', e => handleDragMove(e, ball));
     document.addEventListener('mouseup', () => handleDragEnd(ball));
 
-    // 处理点击
+    // Handle click
     ball.addEventListener('click', () => handleClick(ball));
 }
 

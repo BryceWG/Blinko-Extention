@@ -1,4 +1,4 @@
-// 规范化认证令牌，确保以 "Bearer " 开头且只有一个前缀
+// Normalize auth token to start with a single "Bearer " prefix
 function normalizeAuthToken(tokenString) {
    if (!tokenString) {
        return '';
@@ -15,7 +15,7 @@ function normalizeAuthToken(tokenString) {
    return `Bearer ${trimmedToken}`;
 }
 
-// 规范化Blinko API基础URL，确保以 "/api/v1" 结尾
+// Normalize Blinko API base URL to end with "/api/v1"
 function normalizeBlinkoApiBaseUrl(userInputUrl) {
    if (!userInputUrl) {
        return '';
@@ -29,7 +29,7 @@ function normalizeBlinkoApiBaseUrl(userInputUrl) {
    return `${trimmedUrl}/api/v1`;
 }
 
-// 获取纯净的域名URL，移除末尾的/api/v1路径和所有末尾斜杠
+// Get clean domain URL, removing trailing /api/v1 path and slashes
 function getCleanDomainUrl(userInputUrl) {
    if (!userInputUrl) {
        return '';
@@ -42,125 +42,125 @@ function getCleanDomainUrl(userInputUrl) {
    return cleanUrl;
 }
 
-// 获取原文链接前缀
+// Get original link prefix
 function getOriginalLinkPrefix() {
     return chrome.i18n.getMessage('labelOriginalLink') || 'Original link:';
 }
 
-// 获取图片来源前缀
+// Get image source prefix
 function getImageSourcePrefix() {
     return chrome.i18n.getMessage('labelImageSource') || 'Source:';
 }
 
-// 获取原文链接Markdown
+// Get original link Markdown
 function getOriginalLinkMarkdown(url, title) {
     return `${getOriginalLinkPrefix()}[${title || url}](${url})`;
 }
 
-// 获取图片来源Markdown
+// Get image source Markdown
 function getImageSourceMarkdown(url, title) {
     return `> ${getImageSourcePrefix()}[${title || url}](${url})`;
 }
 
-// 转义正则表达式特殊字符
+// Escape regular expression special characters
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// 获取原文链接正则表达式
+// Get original link regular expression
 function getOriginalLinkRegExp() {
     return new RegExp(escapeRegExp(getOriginalLinkPrefix()) + '\\[.*?\\]\\(.*?\\)', 'g');
 }
 
 
-// 获取完整的API URL
+// Get full API URL
 function getFullApiUrl(baseUrl, endpoint) {
     try {
         const url = new URL(baseUrl);
-        // 检查是否已经包含了完整的API路径
+        // Check if full API path is already included
         if (baseUrl.includes('/chat/completions')) {
             return baseUrl;
         }
-        // 直接在用户设置的URL后面添加endpoint
+        // Append endpoint directly to user-provided URL
         return baseUrl.replace(/\/+$/, '') + endpoint;
     } catch (error) {
-        console.error('解析URL时出错:', error);
+        console.error('Error parsing URL:', error);
         throw new Error(chrome.i18n.getMessage('errorInvalidUrl', [error.message]) || 'Invalid URL: ' + error.message);
     }
 }
 
-// 辅助函数：从URL中提取主机名
+// Helper: extract hostname from URL
 function getHostnameFromUrl(url) {
     try {
         return new URL(url).hostname;
     } catch (e) {
-        console.warn('无法从URL解析主机名:', url, e);
+        console.warn('Failed to parse hostname from URL:', url, e);
         return null;
     }
 }
 
-// 辅助函数：将域名模式转换为正则表达式
-// 支持 *.example.com, example.com, www.example.com
+// Helper: convert domain pattern to regular expression
+// Supports *.example.com, example.com, www.example.com
 function domainPatternToRegex(pattern) {
-    if (typeof pattern !== 'string' || !pattern.trim()) { // 更严格的检查，确保pattern是有效字符串
+    if (typeof pattern !== 'string' || !pattern.trim()) { // Stricter check to ensure pattern is a valid string
         console.warn('Invalid domain pattern provided:', pattern);
         return null;
     }
     let regexString = pattern.trim();
-    // 转义点号
+    // Escape dots
     regexString = regexString.replace(/\./g, '\\.');
-    // 处理通配符 *.
+    // Handle wildcard *.
     if (regexString.startsWith('*\\.')) {
-        // *.example.com 应该匹配 sub.example.com 或 example.com (如果允许)
-        // 为了匹配 sub.example.com 但不匹配 example.com: ^[^.]+(\.[^.]+)*\.(domain\.com)$
-        // 为了匹配 sub.example.com 以及 example.com (如果 *.example.com 意味着 example.com 或其任何子域)
+        // *.example.com should match sub.example.com or example.com (if allowed)
+        // To match sub.example.com but not example.com: ^[^.]+(\.[^.]+)*\.(domain\.com)$
+        // To match sub.example.com as well as example.com (if *.example.com means example.com or any subdomain)
         // regexString = `^([^.]+\\.)*?` + regexString.substring(2) + `$`;
-        // 更严格的 *.example.com (必须有子域)
+        // Stricter *.example.com (subdomain required)
         regexString = `^(.+)\\.` + regexString.substring(3) + `$`; // *.example.com -> ^(.+)\.example\.com$
-                                                                // 也允许 example.com 匹配 *.example.com (如果子域是可选的)
-                                                                // 计划中是 ^.+\.example\.com$ (必须有子域)
-                                                                // 我们采用 ^(.+\.)?example\.com$ 这种更灵活的，能匹配 example.com 和 sub.example.com
+                                                                // Also allow example.com to match *.example.com (if subdomain is optional)
+                                                                // Planned: ^.+\.example\.com$ (subdomain required)
+                                                                // We use flexible ^(.+\.)?example\.com$ to match example.com and sub.example.com
     } else if (!regexString.startsWith('www\\.')) {
-        // example.com 应该匹配 example.com 和 www.example.com
+        // example.com should match example.com and www.example.com
         regexString = `^(www\\.)?` + regexString + `$`;
     } else {
         // www.example.com
         regexString = `^` + regexString + `$`;
     }
     try {
-        return new RegExp(regexString, 'i'); // i 表示不区分大小写
+        return new RegExp(regexString, 'i'); // 'i' means case-insensitive
     } catch (e) {
-        console.error('创建正则表达式失败:', pattern, e);
+        console.error('Failed to create regular expression:', pattern, e);
         return null;
     }
 }
 
 
-// 获取有效的提示词内容，考虑域名特定规则
+// Get effective prompt content considering domain-specific rules
 function getEffectivePromptContent(pageUrl, settings) {
-    const fallbackPromptContent = chrome.i18n.getMessage('promptFallbackContent') || "Please summarize the following content: {content}"; // 系统级最终回退
+    const fallbackPromptContent = chrome.i18n.getMessage('promptFallbackContent') || "Please summarize the following content: {content}"; // System-level final fallback
 
     if (!settings || !settings.promptTemplates || settings.promptTemplates.length === 0) {
-        console.warn('未找到提示词模板设置或模板列表为空，使用最终回退提示词。');
+        console.warn('Prompt template settings not found or template list empty, using final fallback prompt.');
         return fallbackPromptContent;
     }
 
     const hostname = getHostnameFromUrl(pageUrl);
-    let effectiveTemplateId = settings.activePromptTemplateId; // 默认为全局设置的激活模板
+    let effectiveTemplateId = settings.activePromptTemplateId; // Default to globally active template
 
     if (hostname && settings.domainPromptMappings && settings.domainPromptMappings.length > 0) {
         for (const mapping of settings.domainPromptMappings) {
             if (mapping.domainPattern && mapping.templateId) {
                 const regex = domainPatternToRegex(mapping.domainPattern);
                 if (regex && regex.test(hostname)) {
-                    // 检查此 templateId 是否仍然有效
+                    // Check if this templateId is still valid
                     const mappedTemplate = settings.promptTemplates.find(t => t.id === mapping.templateId);
                     if (mappedTemplate) {
                         effectiveTemplateId = mapping.templateId;
-                        console.log(`域名规则匹配: ${hostname} 使用模板ID ${effectiveTemplateId} (来自规则 ${mapping.domainPattern})`);
-                        break; // 找到第一个匹配的规则即停止
+                        console.log(`Domain rule matched: ${hostname} using template ID ${effectiveTemplateId} (from rule ${mapping.domainPattern})`);
+                        break; // Stop at first matching rule
                     } else {
-                        console.warn(`域名规则 ${mapping.domainPattern} 指向的模板ID ${mapping.templateId} 不存在，继续查找。`);
+                        console.warn(`Domain rule ${mapping.domainPattern} points to non-existent template ID ${mapping.templateId}, continuing search.`);
                     }
                 }
             }
@@ -171,25 +171,25 @@ function getEffectivePromptContent(pageUrl, settings) {
     if (finalTemplate && finalTemplate.content) {
         return finalTemplate.content;
     } else {
-        // 如果选中的模板（无论是域名特定还是全局默认）无效或内容为空，尝试用列表中的第一个有效模板
+        // If selected template (domain-specific or global default) is invalid or empty, fall back to first valid template in list
         if (settings.promptTemplates.length > 0 && settings.promptTemplates[0].content) {
-            console.warn(`选定的模板ID ${effectiveTemplateId} 无效或内容为空，回退到第一个可用模板。`);
+            console.warn(`Selected template ID ${effectiveTemplateId} is invalid or empty, falling back to first available template.`);
             return settings.promptTemplates[0].content;
         }
     }
     
-    console.warn('所有模板均无效或内容为空，使用最终回退提示词。');
+    console.warn('All templates invalid or empty, using final fallback prompt.');
     return fallbackPromptContent;
 }
 
 
-// 从模型获取总结
-async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageUrl 参数
+// Get summary from model
+async function getSummaryFromModel(content, pageUrl, settings) { // Added pageUrl parameter
     try {
         const effectivePromptString = getEffectivePromptContent(pageUrl, settings);
         const prompt = effectivePromptString.replace('{content}', content);
         
-        // 获取完整的API URL
+        // Get full API URL
         const fullUrl = getFullApiUrl(settings.modelUrl, '/chat/completions');
         
         const response = await fetch(fullUrl, {
@@ -220,23 +220,23 @@ async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageU
 
         return data.choices[0].message.content.trim();
     } catch (error) {
-        console.error('获取总结时出错:', error);
+        console.error('Error getting summary:', error);
         throw error;
     }
 }
 
-// 上传图片文件到Blinko
+// Upload image file to Blinko
 async function uploadFile(file, settings) {
     try {
         if (!settings.targetUrl || !settings.authKey) {
             throw new Error(chrome.i18n.getMessage('errorConfigureBlinko') || 'Please configure Blinko API URL and auth key first');
         }
 
-        // 构建上传URL - 文件上传接口使用 /api/file/upload 路径
+        // Build upload URL - file upload endpoint uses /api/file/upload path
         const cleanBaseUrl = getCleanDomainUrl(settings.targetUrl);
         const uploadUrl = `${cleanBaseUrl}/api/file/upload`;
 
-        // 创建FormData对象
+        // Create FormData object
         const formData = new FormData();
         formData.append('file', file);
 
@@ -264,15 +264,15 @@ async function uploadFile(file, settings) {
             type: data.type
         };
     } catch (error) {
-        console.error('上传图片失败:', error);
+        console.error('Image upload failed:', error);
         throw error;
     }
 }
 
-// 发送内容到Blinko
+// Send content to Blinko
 async function sendToBlinko(content, url, title, imageAttachment = null, type = 'summary') {
     try {
-        // 获取设置
+        // Get settings
         const result = await chrome.storage.sync.get('settings');
         const settings = result.settings;
         
@@ -280,32 +280,32 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
             throw new Error(chrome.i18n.getMessage('errorConfigureBlinko') || 'Please configure Blinko API URL and auth key first');
         }
 
-        // 构建请求URL，确保不重复添加v1
+        // Build request URL without duplicate v1
         const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(settings.targetUrl);
         const requestUrl = `${normalizedBaseUrl}/note/upsert`;
 
-        // 根据不同类型添加不同的标签和URL
+        // Add different tags and URL based on type
         let finalContent = content;
         
-        // 根据设置和类型决定是否添加URL
+        // Decide whether to add URL based on settings and type
         if (url && (
             (type === 'summary' && settings.includeSummaryUrl) ||
             (type === 'extract' && settings.includeSelectionUrl) ||
             (type === 'image' && settings.includeImageUrl) ||
-            // 对于快捷记录，只有在内容中没有链接时才添加
+            // For Quick Note, only add if content doesn't already contain a link
             (type === 'quickNote' && settings.includeQuickNoteUrl && 
              !finalContent.includes(getOriginalLinkMarkdown(url, title)))
         )) {
-            // 对于图片类型，使用不同的链接格式
+            // For image type, use different link format
             if (type === 'image') {
-                finalContent = finalContent || '';  // 确保finalContent不是undefined
+                finalContent = finalContent || '';  // Ensure finalContent is not undefined
                 finalContent = `${finalContent}${finalContent ? '\n\n' : ''}${getImageSourceMarkdown(url, title)}`;
             } else {
                 finalContent = `${finalContent}\n\n${getOriginalLinkMarkdown(url, title)}`;
             }
         }
 
-        // 添加标签
+        // Add tag
         if (type === 'summary' && settings.summaryTag) {
             finalContent = `${finalContent}\n\n${settings.summaryTag}`;
         } else if (type === 'extract' && settings.extractTag) {
@@ -314,22 +314,22 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
             finalContent = finalContent ? `${finalContent}\n\n${settings.imageTag}` : settings.imageTag;
         }
 
-        // 构建请求体
+        // Build request body
         const requestBody = {
             content: finalContent,
             type: 0
         };
 
-        // 处理附件
+        // Handle attachments
         if (Array.isArray(imageAttachment)) {
-            // 如果是数组，直接使用
+            // If array, use directly
             requestBody.attachments = imageAttachment;
         } else if (imageAttachment) {
-            // 如果是单个附件，转换为数组
+            // If single attachment, convert to array
             requestBody.attachments = [imageAttachment];
         }
 
-        // 发送请求
+        // Send request
         const response = await fetch(requestUrl, {
             method: 'POST',
             headers: {
@@ -341,16 +341,16 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
 
         const data = await response.json();
 
-        // 检查HTTP状态码
+        // Check HTTP status code
         if (!response.ok) {
             throw new Error(chrome.i18n.getMessage('errorHttpFailed', [response.status, data.message || response.statusText]) || `HTTP error: ${response.status} ${data.message || response.statusText}`);
         }
 
-        // 如果能解析响应数据，就认为请求成功了
-        // Blinko API 在成功时可能不会返回特定的状态字段
+        // If response data can be parsed, treat request as successful
+        // Blinko API may not return a specific status field on success
         return { success: true, data };
     } catch (error) {
-        console.error('发送到Blinko失败:', error);
+        console.error('Failed to send to Blinko:', error);
         return { success: false, error: error.message };
     }
 }
