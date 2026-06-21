@@ -31,6 +31,18 @@
     "message": "提取网页内容",
     "description": "右键菜单提取网页内容"
   },
+  "notificationSendSuccessTitle": {
+    "message": "发送成功",
+    "description": "通知标题，发送成功"
+  },
+  "notificationSendSuccessMessage": {
+    "message": "选中文本已成功发送到Blinko",
+    "description": "通知消息，发送成功"
+  },
+  "notificationSendErrorTitle": {
+    "message": "发送失败",
+    "description": "通知标题，发送失败"
+  },
   "notificationExtractSuccessTitle": {
     "message": "提取成功",
     "description": "通知标题，内容提取成功"
@@ -636,5 +648,37 @@
   "importFileTypeInvalid": {
     "message": "只能导入.json格式的文件",
     "description": "导入文件类型无效时的错误消息"
+  },
+  "promptDefaultSummaryName": {
+    "message": "默认摘要模板",
+    "description": "默认页面总结提示词模板名称"
+  },
+  "promptShortSummaryName": {
+    "message": "简短摘要模板",
+    "description": "一句话总结提示词模板名称"
+  },
+  "promptMigratedName": {
+    "message": "迁移模板",
+    "description": "从旧版设置格式迁移的提示词模板名称"
+  },
+  "promptFallbackContent": {
+    "message": "请总结以下内容：{content}",
+    "description": "未配置模板时的回退提示内容"
+  },
+  "tagSummary": {
+    "message": "#网页/总结",
+    "description": "页面总结默认标签"
+  },
+  "tagSelection": {
+    "message": "#网页/摘录",
+    "description": "选中文本默认标签"
+  },
+  "tagImage": {
+    "message": "#网页/图片",
+    "description": "保存图片默认标签"
+  },
+  "tagExtract": {
+    "message": "#网页/剪藏",
+    "description": "网页剪藏默认标签"
   }
 }

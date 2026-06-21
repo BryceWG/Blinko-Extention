@@ -648,5 +648,37 @@
   "importFileTypeInvalid": {
     "message": "Only .json files are allowed for import.",
     "description": "Error message when import file type is invalid"
+  },
+  "promptDefaultSummaryName": {
+    "message": "Default Summary Template",
+    "description": "Default prompt template name for page summarization"
+  },
+  "promptShortSummaryName": {
+    "message": "Short Summary Template",
+    "description": "Short prompt template name for one-sentence summary"
+  },
+  "promptMigratedName": {
+    "message": "Migrated Template",
+    "description": "Name for a prompt template migrated from an older settings format"
+  },
+  "promptFallbackContent": {
+    "message": "Please summarize the following content: {content}",
+    "description": "Fallback prompt content when no template is configured"
+  },
+  "tagSummary": {
+    "message": "#Web/Summary",
+    "description": "Default tag for page summaries"
+  },
+  "tagSelection": {
+    "message": "#Web/Excerpt",
+    "description": "Default tag for selected text"
+  },
+  "tagImage": {
+    "message": "#Web/Image",
+    "description": "Default tag for saved images"
+  },
+  "tagExtract": {
+    "message": "#Web/Clip",
+    "description": "Default tag for page clips"
   }
 }
