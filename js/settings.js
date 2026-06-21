@@ -12,29 +12,13 @@ const defaultSettings = {
     promptTemplates: [
         {
             id: 'default-summary',
-            name: '默认摘要模板',
-            content: `请你根据提供的网页内容，撰写一份结构清晰、重点突出且不遗漏重要内容的摘要。
-    
-要求：
-1. **摘要结构：**
-    *   第一行使用'# 标题'格式取一个简要的大标题。
-    *   一句话总结：请提供一个简洁、精炼的概括性语句，准确概括整个网页的核心内容。
-    *   按照网页内容的逻辑顺序，依次总结各个主要部分的核心内容。
-    
-2. **突出重点：**  请识别并突出显示网页中的关键信息、主题、重要论点和结论。如果网页内容包含重要数据或结论，请务必在摘要中体现。
-3. **不遗漏重要内容：**  在总结时，请确保覆盖网页的所有重要方面，避免关键信息缺失。
-    
-请注意：
-*   摘要应保持客观中立，避免掺杂个人观点或情感色彩。
-*   摘要的语言应简洁明了，避免使用过于专业或晦涩的词汇,并使用中文进行总结。
-*   摘要的长度适中，既要全面覆盖重要内容，又要避免冗长啰嗦。
-*   总结的末尾无需再进行总结，有一句话总结代替。
-以下是网页内容：{content}`
+            name: chrome.i18n.getMessage('promptDefaultSummaryName') || 'Default Summary Template',
+            content: chrome.i18n.getMessage('promptDefaultSummaryContent') || `Please summarize the following content: {content}`
         },
         {
             id: 'short-summary',
-            name: '简洁摘要模板',
-            content: `请用一句话总结以下网页内容：{content}`
+            name: chrome.i18n.getMessage('promptShortSummaryName') || 'Short Summary Template',
+            content: chrome.i18n.getMessage('promptShortSummaryContent') || `Please summarize the following web content in one sentence: {content}`
         }
     ],
     activePromptTemplateId: 'default-summary',
@@ -42,10 +26,10 @@ const defaultSettings = {
     includeSelectionUrl: true,  // 划词保存是否包含URL
     includeImageUrl: true,      // 图片保存是否包含URL
     includeQuickNoteUrl: false, // 快捷记录是否包含URL
-    summaryTag: '#网页/总结',   // 网页总结的标签
-    selectionTag: '#网页/摘录',  // 划词保存的标签
-    imageTag: '#网页/图片',     // 图片保存的标签
-    extractTag: '#网页/剪藏',   // 网页剪藏的标签
+    summaryTag: chrome.i18n.getMessage('tagSummary') || '#Web/Summary',   // 网页总结的标签
+    selectionTag: chrome.i18n.getMessage('tagSelection') || '#Web/Excerpt',  // 划词保存的标签
+    imageTag: chrome.i18n.getMessage('tagImage') || '#Web/Image',     // 图片保存的标签
+    extractTag: chrome.i18n.getMessage('tagExtract') || '#Web/Clip',   // 网页剪藏的标签
     enableFloatingBall: true,   // 是否启用悬浮球
     floatingBallSize: 'medium', // 悬浮球大小: 'small', 'medium', 'large'
     jinaApiKey: '',            // Jina Reader API Key
@@ -74,7 +58,7 @@ async function loadSettings() {
                 settings.promptTemplates = [
                     {
                         id: 'migrated-prompt',
-                        name: '迁移的模板',
+                        name: chrome.i18n.getMessage('promptMigratedName') || 'Migrated Template',
                         content: settings.promptTemplate
                     },
                     ...defaultSettings.promptTemplates.filter(pt => pt.id !== 'default-summary') // 添加其他默认模板，避免重复

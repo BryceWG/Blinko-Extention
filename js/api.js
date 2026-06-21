@@ -107,7 +107,7 @@ function domainPatternToRegex(pattern) {
 
 // 获取有效的提示词内容，考虑域名特定规则
 function getEffectivePromptContent(pageUrl, settings) {
-    const fallbackPromptContent = "请总结以下内容：{content}"; // 系统级最终回退
+    const fallbackPromptContent = chrome.i18n.getMessage('promptFallbackContent') || "Please summarize the following content: {content}"; // 系统级最终回退
 
     if (!settings || !settings.promptTemplates || settings.promptTemplates.length === 0) {
         console.warn('未找到提示词模板设置或模板列表为空，使用最终回退提示词。');
