@@ -60,11 +60,11 @@
     "description": "Notification message for content summarization success"
   },
   "notificationExtractSuccessMessagePopup": {
-    "message": "Inhaltsextraktion für \"%s\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
+    "message": "Inhaltsextraktion für \"$1\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
     "description": "Notification message for content extraction success when popup is closed"
   },
   "notificationSummarySuccessMessagePopup": {
-    "message": "Inhaltszusammenfassung für \"%s\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
+    "message": "Inhaltszusammenfassung für \"$1\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
     "description": "Notification message for content summarization success when popup is closed"
   },
   "notificationExtractErrorTitle": {
@@ -76,7 +76,7 @@
     "description": "Notification title for content summarization failure"
   },
   "notificationErrorMessage": {
-    "message": "Fehler beim %s \"%s\": %s",
+    "message": "Fehler beim $1 \"$2\": $3",
     "description": "Notification error message with action, title, and error description"
   },
   "extractAction": {
@@ -292,7 +292,7 @@
     "description": "Success message when settings are saved"
   },
   "settingsSaveError": {
-    "message": "Einstellungen konnten nicht gespeichert werden: %s",
+    "message": "Einstellungen konnten nicht gespeichert werden: $1",
     "description": "Error message when saving settings fails"
   },
   "settingsReset": {
@@ -300,11 +300,11 @@
     "description": "Success message when settings are reset"
   },
   "settingsResetError": {
-    "message": "Einstellungen konnten nicht zurückgesetzt werden: %s",
+    "message": "Einstellungen konnten nicht zurückgesetzt werden: $1",
     "description": "Error message when resetting settings fails"
   },
   "initializationError": {
-    "message": "Initialisierung fehlgeschlagen: %s",
+    "message": "Initialisierung fehlgeschlagen: $1",
     "description": "Error message when initialization fails"
   },
   "summaryTagPlaceholder": {
@@ -726,5 +726,22 @@
   "errorFetchConfigFailed": { "message": "Konfiguration konnte nicht abgerufen werden", "description": "Fehler beim Abrufen der Remote-Konfiguration" },
   "statusAiConfigSuccess": { "message": "AI-Konfiguration erfolgreich abgerufen", "description": "Erfolgsmeldung beim Abrufen der AI-Konfiguration" },
   "statusUnsupportedAiProvider": { "message": "Nicht unterstützter AI-Anbieter", "description": "Fehler, wenn der AI-Anbieter nicht unterstützt wird" },
-  "statusFetchAiConfigFailed": { "message": "AI-Konfiguration konnte nicht abgerufen werden", "description": "Fehler beim Abrufen der AI-Konfiguration" }
+  "statusFetchAiConfigFailed": { "message": "AI-Konfiguration konnte nicht abgerufen werden", "description": "Fehler beim Abrufen der AI-Konfiguration" },
+  "errorInvalidUrl": {"message": "URL ungültig: $1", "description": "Fehler, wenn das URL-Format ungültig ist"},
+  "errorApiRequestFailed": {"message": "API-Anfrage fehlgeschlagen: $1 $2", "description": "Fehler, wenn eine API-Anfrage fehlschlägt"},
+  "errorApiInvalidResponse": {"message": "Ungültige API-Antwort", "description": "Fehler, wenn das Format der API-Antwort ungültig ist"},
+  "errorConfigureBlinko": {"message": "Bitte konfigurieren Sie zuerst die Blinko-API-URL und den Authentifizierungsschlüssel", "description": "Fehler, wenn Blinko-Einstellungen fehlen"},
+  "errorUploadImageFailed": {"message": "Bildupload fehlgeschlagen: $1", "description": "Fehler, wenn das Hochladen eines Bildes fehlschlägt"},
+  "errorUploadImageResponseFormat": {"message": "Ungültige Bildupload-Antwort", "description": "Fehler, wenn das Format der Bildupload-Antwort ungültig ist"},
+  "errorHttpFailed": {"message": "HTTP-Fehler: $1 $2", "description": "Fehler, wenn eine HTTP-Anfrage fehlschlägt"},
+  "labelOriginalLink": {"message": "Original-Link:", "description": "Bezeichnung für Original-Link in Markdown"},
+  "labelImageSource": {"message": "Quelle:", "description": "Bezeichnung für Bildquelle in Markdown"},
+  "errorInvalidRequestContent": {"message": "Ungültiger Anfrageinhalt", "description": "Fehler, wenn der Anfrageinhalt ungültig ist"},
+  "errorCompleteApiSettings": {"message": "Bitte vervollständigen Sie zuerst die API-Einstellungen", "description": "Fehler, wenn API-Einstellungen unvollständig sind"},
+  "errorSaveFailedWithStatus": {"message": "Speichern fehlgeschlagen: $1", "description": "Fehler, wenn Speichern mit Statuscode fehlschlägt"},
+  "errorSendContentFailed": {"message": "Inhalt konnte nicht gesendet werden: $1", "description": "Fehler, wenn das Senden des Inhalts fehlschlägt"},
+  "errorNoContentToSave": {"message": "Kein Inhalt zum Speichern", "description": "Fehler, wenn kein Inhalt zum Speichern vorhanden ist"},
+  "errorServerReturnedStatus": {"message": "Server hat Statuscode zurückgegeben: $1", "description": "Fehler, wenn der Server einen Fehlerstatuscode zurückgibt"},
+  "errorFileReadFailed": {"message": "Datei konnte nicht gelesen werden", "description": "Fehler, wenn das Lesen einer Importdatei fehlschlägt"},
+  "unnamedTemplate": {"message": "Unbenannte Vorlage", "description": "Ersatzname für eine unbenannte Prompt-Vorlage"}
 }

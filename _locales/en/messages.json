@@ -60,11 +60,11 @@
     "description": "Notification message for content summarization success"
   },
   "notificationExtractSuccessMessagePopup": {
-    "message": "Content extraction for \"%s\" completed. Click on the extension icon to view.",
+    "message": "Content extraction for \"$1\" completed. Click on the extension icon to view.",
     "description": "Notification message for content extraction success when popup is closed"
   },
   "notificationSummarySuccessMessagePopup": {
-    "message": "Content summarization for \"%s\" completed. Click on the extension icon to view.",
+    "message": "Content summarization for \"$1\" completed. Click on the extension icon to view.",
     "description": "Notification message for content summarization success when popup is closed"
   },
   "notificationExtractErrorTitle": {
@@ -76,7 +76,7 @@
     "description": "Notification title for content summarization failure"
   },
   "notificationErrorMessage": {
-    "message": "Error during %s \"%s\": %s",
+    "message": "Error during $1 \"$2\": $3",
     "description": "Notification error message with action, title, and error description"
   },
   "extractAction": {
@@ -292,7 +292,7 @@
     "description": "Success message when settings are saved"
   },
   "settingsSaveError": {
-    "message": "Failed to save settings: %s",
+    "message": "Failed to save settings: $1",
     "description": "Error message when saving settings fails"
   },
   "settingsReset": {
@@ -300,11 +300,11 @@
     "description": "Success message when settings are reset"
   },
   "settingsResetError": {
-    "message": "Failed to reset settings: %s",
+    "message": "Failed to reset settings: $1",
     "description": "Error message when resetting settings fails"
   },
   "initializationError": {
-    "message": "Initialization failed: %s",
+    "message": "Initialization failed: $1",
     "description": "Error message when initialization fails"
   },
   "summaryTagPlaceholder": {
@@ -726,5 +726,22 @@
   "errorFetchConfigFailed": { "message": "Failed to fetch configuration", "description": "Error when fetching remote configuration fails" },
   "statusAiConfigSuccess": { "message": "AI configuration fetched successfully", "description": "Success message when AI config is fetched" },
   "statusUnsupportedAiProvider": { "message": "Unsupported AI provider", "description": "Error when AI provider is not supported" },
-  "statusFetchAiConfigFailed": { "message": "Failed to fetch AI configuration", "description": "Error when fetching AI configuration fails" }
+  "statusFetchAiConfigFailed": { "message": "Failed to fetch AI configuration", "description": "Error when fetching AI configuration fails" },
+  "errorInvalidUrl": {"message": "Invalid URL: $1", "description": "Error when URL format is invalid"},
+  "errorApiRequestFailed": {"message": "API request failed: $1 $2", "description": "Error when an API request fails"},
+  "errorApiInvalidResponse": {"message": "Invalid API response", "description": "Error when API response format is invalid"},
+  "errorConfigureBlinko": {"message": "Please configure Blinko API URL and auth key first", "description": "Error when Blinko settings are missing"},
+  "errorUploadImageFailed": {"message": "Image upload failed: $1", "description": "Error when uploading an image fails"},
+  "errorUploadImageResponseFormat": {"message": "Invalid image upload response", "description": "Error when image upload response format is invalid"},
+  "errorHttpFailed": {"message": "HTTP error: $1 $2", "description": "Error when an HTTP request fails"},
+  "labelOriginalLink": {"message": "Original link:", "description": "Label prefix for original link markdown"},
+  "labelImageSource": {"message": "Source:", "description": "Label prefix for image source markdown"},
+  "errorInvalidRequestContent": {"message": "Invalid request content", "description": "Error when request content is invalid"},
+  "errorCompleteApiSettings": {"message": "Please complete API settings first", "description": "Error when API settings are incomplete"},
+  "errorSaveFailedWithStatus": {"message": "Save failed: $1", "description": "Error when save fails with status code"},
+  "errorSendContentFailed": {"message": "Failed to send content: $1", "description": "Error when sending content fails"},
+  "errorNoContentToSave": {"message": "No content to save", "description": "Error when there is no content to save"},
+  "errorServerReturnedStatus": {"message": "Server returned status code: $1", "description": "Error when server returns an error status code"},
+  "errorFileReadFailed": {"message": "Failed to read file", "description": "Error when reading an import file fails"},
+  "unnamedTemplate": {"message": "Unnamed Template", "description": "Fallback name for an unnamed prompt template"}
 }

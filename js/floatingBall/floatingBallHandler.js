@@ -78,7 +78,7 @@ async function handleClick(ball) {
             // 等待实际的响应
             return;  // background会处理剩余的流程
         } else {
-            throw new Error('请求处理失败');
+            throw new Error(chrome.i18n.getMessage('requestProcessError') || 'Request processing failed');
         }
     } catch (error) {
         console.error('Error processing content:', error);

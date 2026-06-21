@@ -20,13 +20,13 @@ async function getWebContent(url, settings) {
         });
 
         if (!response.ok) {
-            throw new Error(`API请求失败: ${response.status}`);
+            throw new Error(chrome.i18n.getMessage('errorApiRequestFailed', [response.status]) || `API request failed: ${response.status}`);
         }
 
         const data = await response.json();
         
         if (data.code !== 200 || !data.data) {
-            throw new Error('API返回格式错误');
+            throw new Error(chrome.i18n.getMessage('errorApiInvalidResponse') || 'Invalid API response');
         }
 
         // 组织返回内容，不添加链接

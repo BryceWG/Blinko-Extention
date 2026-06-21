@@ -923,7 +923,7 @@ function readFileAsText(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.onerror = () => reject(new Error(chrome.i18n.getMessage('errorFileReadFailed') || 'Failed to read file'));
         reader.readAsText(file);
     });
 }
@@ -960,7 +960,7 @@ function validateAndCleanSettings(settings) {
         // 确保每个模板都有必需的字段
         cleanedSettings.promptTemplates = cleanedSettings.promptTemplates.map(template => ({
             id: template.id || generateUniqueId(),
-            name: template.name || '未命名模板',
+            name: template.name || (chrome.i18n.getMessage('unnamedTemplate') || 'Unnamed Template'),
             content: template.content || ''
         }));
         

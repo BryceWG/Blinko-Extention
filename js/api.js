@@ -42,6 +42,37 @@ function getCleanDomainUrl(userInputUrl) {
    return cleanUrl;
 }
 
+// 获取原文链接前缀
+function getOriginalLinkPrefix() {
+    return chrome.i18n.getMessage('labelOriginalLink') || 'Original link:';
+}
+
+// 获取图片来源前缀
+function getImageSourcePrefix() {
+    return chrome.i18n.getMessage('labelImageSource') || 'Source:';
+}
+
+// 获取原文链接Markdown
+function getOriginalLinkMarkdown(url, title) {
+    return `${getOriginalLinkPrefix()}[${title || url}](${url})`;
+}
+
+// 获取图片来源Markdown
+function getImageSourceMarkdown(url, title) {
+    return `> ${getImageSourcePrefix()}[${title || url}](${url})`;
+}
+
+// 转义正则表达式特殊字符
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// 获取原文链接正则表达式
+function getOriginalLinkRegExp() {
+    return new RegExp(escapeRegExp(getOriginalLinkPrefix()) + '\\[.*?\\]\\(.*?\\)', 'g');
+}
+
+
 // 获取完整的API URL
 function getFullApiUrl(baseUrl, endpoint) {
     try {
@@ -54,7 +85,7 @@ function getFullApiUrl(baseUrl, endpoint) {
         return baseUrl.replace(/\/+$/, '') + endpoint;
     } catch (error) {
         console.error('解析URL时出错:', error);
-        throw new Error('URL格式不正确: ' + error.message);
+        throw new Error(chrome.i18n.getMessage('errorInvalidUrl', [error.message]) || 'Invalid URL: ' + error.message);
     }
 }
 
@@ -179,12 +210,12 @@ async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageU
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            throw new Error(`API请求失败: ${response.status} ${errorData.error?.message || response.statusText}`);
+            throw new Error(chrome.i18n.getMessage('errorApiRequestFailed', [response.status, errorData.error?.message || response.statusText]) || `API request failed: ${response.status} ${errorData.error?.message || response.statusText}`);
         }
 
         const data = await response.json();
         if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-            throw new Error('API返回式错误');
+            throw new Error(chrome.i18n.getMessage('errorApiInvalidResponse') || 'Invalid API response');
         }
 
         return data.choices[0].message.content.trim();
@@ -198,7 +229,7 @@ async function getSummaryFromModel(content, pageUrl, settings) { // 添加 pageU
 async function uploadFile(file, settings) {
     try {
         if (!settings.targetUrl || !settings.authKey) {
-            throw new Error('请先配置Blinko API URL和认证密钥');
+            throw new Error(chrome.i18n.getMessage('errorConfigureBlinko') || 'Please configure Blinko API URL and auth key first');
         }
 
         // 构建上传URL - 文件上传接口使用 /api/file/upload 路径
@@ -218,12 +249,12 @@ async function uploadFile(file, settings) {
         });
 
         if (!response.ok) {
-            throw new Error(`上传图片失败: ${response.status}`);
+            throw new Error(chrome.i18n.getMessage('errorUploadImageFailed', [response.status]) || `Image upload failed: ${response.status}`);
         }
 
         const data = await response.json();
         if (data.status !== 200 || !data.filePath) {
-            throw new Error('上传图片响应格式错误');
+            throw new Error(chrome.i18n.getMessage('errorUploadImageResponseFormat') || 'Invalid image upload response');
         }
 
         return {
@@ -246,7 +277,7 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
         const settings = result.settings;
         
         if (!settings || !settings.targetUrl || !settings.authKey) {
-            throw new Error('请先配置Blinko API URL和认证密钥');
+            throw new Error(chrome.i18n.getMessage('errorConfigureBlinko') || 'Please configure Blinko API URL and auth key first');
         }
 
         // 构建请求URL，确保不重复添加v1
@@ -263,14 +294,14 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
             (type === 'image' && settings.includeImageUrl) ||
             // 对于快捷记录，只有在内容中没有链接时才添加
             (type === 'quickNote' && settings.includeQuickNoteUrl && 
-             !finalContent.includes(`原文链接：[${title || url}](${url})`))
+             !finalContent.includes(getOriginalLinkMarkdown(url, title)))
         )) {
             // 对于图片类型，使用不同的链接格式
             if (type === 'image') {
                 finalContent = finalContent || '';  // 确保finalContent不是undefined
-                finalContent = `${finalContent}${finalContent ? '\n\n' : ''}> 来源：[${title || url}](${url})`;
+                finalContent = `${finalContent}${finalContent ? '\n\n' : ''}${getImageSourceMarkdown(url, title)}`;
             } else {
-                finalContent = `${finalContent}\n\n原文链接：[${title || url}](${url})`;
+                finalContent = `${finalContent}\n\n${getOriginalLinkMarkdown(url, title)}`;
             }
         }
 
@@ -312,7 +343,7 @@ async function sendToBlinko(content, url, title, imageAttachment = null, type = 
 
         // 检查HTTP状态码
         if (!response.ok) {
-            throw new Error(`HTTP错误: ${response.status} ${data.message || response.statusText}`);
+            throw new Error(chrome.i18n.getMessage('errorHttpFailed', [response.status, data.message || response.statusText]) || `HTTP error: ${response.status} ${data.message || response.statusText}`);
         }
 
         // 如果能解析响应数据，就认为请求成功了

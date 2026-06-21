@@ -726,5 +726,22 @@
   "errorFetchConfigFailed": { "message": "获取配置失败", "description": "获取远程配置失败时的错误" },
   "statusAiConfigSuccess": { "message": "AI配置获取成功", "description": "AI配置获取成功后的消息" },
   "statusUnsupportedAiProvider": { "message": "当前不支持的AI提供商", "description": "AI提供商不受支持时的错误" },
-  "statusFetchAiConfigFailed": { "message": "获取AI配置失败", "description": "获取AI配置失败时的错误" }
+  "statusFetchAiConfigFailed": { "message": "获取AI配置失败", "description": "获取AI配置失败时的错误" },
+  "errorInvalidUrl": {"message": "URL格式不正确: $1", "description": "URL格式无效时的错误"},
+  "errorApiRequestFailed": {"message": "API请求失败: $1 $2", "description": "API请求失败时的错误"},
+  "errorApiInvalidResponse": {"message": "API返回格式错误", "description": "API响应格式无效时的错误"},
+  "errorConfigureBlinko": {"message": "请先配置Blinko API URL和认证密钥", "description": "缺少Blinko设置时的错误"},
+  "errorUploadImageFailed": {"message": "上传图片失败: $1", "description": "上传图片失败时的错误"},
+  "errorUploadImageResponseFormat": {"message": "上传图片响应格式错误", "description": "上传图片响应格式无效时的错误"},
+  "errorHttpFailed": {"message": "HTTP错误: $1 $2", "description": "HTTP请求失败时的错误"},
+  "labelOriginalLink": {"message": "原文链接：", "description": "原文链接Markdown前缀"},
+  "labelImageSource": {"message": "来源：", "description": "图片来源Markdown前缀"},
+  "errorInvalidRequestContent": {"message": "无效的请求内容", "description": "请求内容无效时的错误"},
+  "errorCompleteApiSettings": {"message": "请先完成API设置", "description": "API设置不完整时的错误"},
+  "errorSaveFailedWithStatus": {"message": "保存失败: $1", "description": "保存失败并返回状态码时的错误"},
+  "errorSendContentFailed": {"message": "发送内容失败: $1", "description": "发送内容失败时的错误"},
+  "errorNoContentToSave": {"message": "没有可保存的内容", "description": "没有可保存内容时的错误"},
+  "errorServerReturnedStatus": {"message": "服务器返回状态码: $1", "description": "服务器返回错误状态码时的错误"},
+  "errorFileReadFailed": {"message": "文件读取失败", "description": "读取导入文件失败时的错误"},
+  "unnamedTemplate": {"message": "未命名模板", "description": "未命名提示词模板的默认名称"}
 }

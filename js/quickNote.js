@@ -248,10 +248,10 @@ async function sendQuickNote() {
             // 立即更新附件列表显示
             updateAttachmentList([]);
         } else {
-            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Send failed') + ': ' + (response?.error || (chrome.i18n.getMessage('statusUnknownError') || 'Unknown error')), 'error');
+            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Save failed') + ': ' + (response?.error || (chrome.i18n.getMessage('statusUnknownError') || 'Unknown error')), 'error');
         }
     } catch (error) {
-        showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Send failed') + ': ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Save failed') + ': ' + error.message, 'error');
     }
 }
 

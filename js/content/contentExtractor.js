@@ -1,3 +1,16 @@
+// 原文链接前缀（用于内容中链接去重）
+const ORIGINAL_LINK_PREFIX = chrome.i18n.getMessage('labelOriginalLink') || 'Original link:';
+
+// 转义正则表达式特殊字符
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// 获取原文链接正则表达式
+function getOriginalLinkRegExp() {
+    return new RegExp(escapeRegExp(ORIGINAL_LINK_PREFIX) + '\\[.*?\\]\\(.*?\\)', 'g');
+}
+
 // 提取页面内容
 function extractPageContent() {
     try {
@@ -5,7 +18,7 @@ function extractPageContent() {
         const content = document.body.innerText
             .replace(/[\n\r]+/g, '\n') // 将多个换行符替换为单个
             .replace(/\s+/g, ' ') // 将多个空格替换为单个
-            .replace(/原文链接：\[.*?\]\(.*?\)/g, '') // 移除可能已存在的原文链接
+            .replace(getOriginalLinkRegExp(), '') // 移除可能已存在的原文链接
             .trim(); // 移除首尾空白
         
         return content;

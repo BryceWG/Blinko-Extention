@@ -1,4 +1,4 @@
-import { getSummaryFromModel, sendToBlinko } from './api.js';
+import { getSummaryFromModel, sendToBlinko, getOriginalLinkRegExp } from './api.js';
 import { getWebContent } from './jinaReader.js';
 import { getSummaryState, updateSummaryState, clearSummaryState, saveSummaryToStorage } from './summaryState.js';
 
@@ -6,7 +6,7 @@ import { getSummaryState, updateSummaryState, clearSummaryState, saveSummaryToSt
 async function handleContentRequest(request) {
     try {
         if (!request || !request.content) {
-            throw new Error('无效的请求内容');
+            throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
         // 更新状态为处理中
@@ -21,7 +21,7 @@ async function handleContentRequest(request) {
         const settings = result.settings;
         
         if (!settings) {
-            throw new Error('未找到设置信息');
+            throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
         }
 
         let summary;
@@ -32,11 +32,11 @@ async function handleContentRequest(request) {
                 throw new Error(response.error);
             }
             // 移除可能已存在的原文链接
-            summary = response.content.replace(/原文链接：\[.*?\]\(.*?\)/g, '').trim();
+            summary = response.content.replace(getOriginalLinkRegExp(), '').trim();
         } else {
             // 检查必要的设置是否存在
             if (!settings.modelUrl || !settings.apiKey || !settings.modelName) {
-                throw new Error('请先完成API设置');
+                throw new Error(chrome.i18n.getMessage('errorCompleteApiSettings') || 'Please complete API settings first');
             }
             // 生成总结
             summary = await getSummaryFromModel(request.content, request.url, settings);
@@ -63,7 +63,7 @@ async function handleContentRequest(request) {
                     priority: 2
                 });
             } else {
-                throw new Error(response.error || '保存失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('statusSaveFailed') || 'Save failed'));
             }
         } else {
             // 原有的保存到storage和发送到popup的逻辑
@@ -166,7 +166,7 @@ async function handleContentRequest(request) {
 async function handleSaveSummary(request) {
     try {
         if (!request || !request.content) {
-            throw new Error('无效的请求内容');
+            throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
         // 获取存储的设置
@@ -174,7 +174,7 @@ async function handleSaveSummary(request) {
         const settings = result.settings;
         
         if (!settings) {
-            throw new Error('未找到设置信息');
+            throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
         }
 
         let finalContent;
@@ -184,7 +184,7 @@ async function handleSaveSummary(request) {
         // 如果是快捷记录
         if (request.type === 'quickNote') {
             if (!request.content || !request.content.trim()) {
-                throw new Error('请输入笔记内容');
+                throw new Error(chrome.i18n.getMessage('statusPleaseEnterNote') || 'Please enter note content');
             }
             finalContent = request.content.trim();
 
@@ -205,15 +205,15 @@ async function handleSaveSummary(request) {
                     }
                     return { success: true };
                 } else {
-                    throw new Error(`保存失败: ${response.status}`);
+                    throw new Error(chrome.i18n.getMessage('errorSaveFailedWithStatus', [response.status]) || `Save failed: ${response.status}`);
                 }
             } catch (error) {
-                throw new Error(`发送内容失败: ${error.message}`);
+                throw new Error(chrome.i18n.getMessage('errorSendContentFailed', [error.message]) || `Failed to send content: ${error.message}`);
             }
         } else {
             // 如果是总结内容或提取内容
             if (!request.content || !request.content.trim()) {
-                throw new Error('没有可保存的内容');
+                throw new Error(chrome.i18n.getMessage('errorNoContentToSave') || 'No content to save');
             }
             finalContent = request.content.trim();
 
@@ -244,10 +244,10 @@ async function handleSaveSummary(request) {
                 }
                 return { success: true };
             } else {
-                throw new Error(`保存失败: ${response.status}`);
+                throw new Error(chrome.i18n.getMessage('errorSaveFailedWithStatus', [response.status]) || `Save failed: ${response.status}`);
             }
         } catch (error) {
-            throw new Error(`发送内容失败: ${error.message}`);
+            throw new Error(chrome.i18n.getMessage('errorSendContentFailed', [error.message]) || `Failed to send content: ${error.message}`);
         }
     } catch (error) {
         console.error('保存内容时出错:', error);
@@ -262,7 +262,7 @@ async function handleSaveSummary(request) {
 async function handleFloatingBallRequest(request) {
     try {
         if (!request || !request.content) {
-            throw new Error('无效的请求内容');
+            throw new Error(chrome.i18n.getMessage('errorInvalidRequestContent') || 'Invalid request content');
         }
 
         // 更新状态为处理中
@@ -277,7 +277,7 @@ async function handleFloatingBallRequest(request) {
         const settings = result.settings;
         
         if (!settings) {
-            throw new Error('未找到设置信息');
+            throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
         }
 
         let summary;
@@ -288,11 +288,11 @@ async function handleFloatingBallRequest(request) {
                 throw new Error(response.error);
             }
             // 移除可能已存在的原文链接
-            summary = response.content.replace(/原文链接：\[.*?\]\(.*?\)/g, '').trim();
+            summary = response.content.replace(getOriginalLinkRegExp(), '').trim();
         } else {
             // 检查必要的设置是否存在
             if (!settings.modelUrl || !settings.apiKey || !settings.modelName) {
-                throw new Error('请先完成API设置');
+                throw new Error(chrome.i18n.getMessage('errorCompleteApiSettings') || 'Please complete API settings first');
             }
             // 生成总结
             summary = await getSummaryFromModel(request.content, request.url, settings);
@@ -337,7 +337,7 @@ async function handleFloatingBallRequest(request) {
 
             return { success: true };
         } else {
-            throw new Error(`服务器返回状态码: ${response.status}`);
+            throw new Error(chrome.i18n.getMessage('errorServerReturnedStatus', [response.status]) || `Server returned status code: ${response.status}`);
         }
     } catch (error) {
         console.error('处理悬浮球请求时出错:', error);
