@@ -680,5 +680,13 @@
   "tagExtract": {
     "message": "#Web/Clip",
     "description": "Default tag for page clips"
+  },
+  "promptDefaultSummaryContent": {
+    "message": "Please summarize the following web content in concise language, highlighting the key points: {content}",
+    "description": "Default prompt content for page summarization"
+  },
+  "promptShortSummaryContent": {
+    "message": "Please summarize the following web content in one short sentence: {content}",
+    "description": "Short prompt content for one-sentence summary"
   }
 }

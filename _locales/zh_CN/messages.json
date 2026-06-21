@@ -680,5 +680,13 @@
   "tagExtract": {
     "message": "#网页/剪藏",
     "description": "网页剪藏默认标签"
+  },
+  "promptDefaultSummaryContent": {
+    "message": "请用简洁的语言总结以下网页内容，突出重点：{content}",
+    "description": "默认页面总结提示词内容"
+  },
+  "promptShortSummaryContent": {
+    "message": "请用一句话总结以下网页内容：{content}",
+    "description": "一句话总结提示词内容"
   }
 }
