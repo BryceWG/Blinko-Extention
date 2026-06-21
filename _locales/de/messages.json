@@ -1,0 +1,692 @@
+{
+  "popupTitle": {
+    "message": "Blinko-Erweiterung",
+    "description": "Popup panel title"
+  },
+  "extensionName": {
+    "message": "Blinko-Erweiterung",
+    "description": "Extension name for context menu"
+  },
+  "sendSelectedText": {
+    "message": "Ausgewählten Text an Blinko senden",
+    "description": "Context menu for sending selected text"
+  },
+  "saveToQuickNote": {
+    "message": "In Schnellnotiz speichern",
+    "description": "Context menu for saving text to quick note"
+  },
+  "saveImageToQuickNote": {
+    "message": "Bild in Schnellnotiz speichern",
+    "description": "Context menu for saving image to quick note"
+  },
+  "saveImageToBlinko": {
+    "message": "Bild in Blinko speichern",
+    "description": "Context menu for saving image to Blinko"
+  },
+  "summarizePageContent": {
+    "message": "Webseiteninhalt zusammenfassen",
+    "description": "Context menu for summarizing page content"
+  },
+  "extractPageContent": {
+    "message": "Webseiteninhalt extrahieren",
+    "description": "Context menu for extracting page content"
+  },
+  "notificationSendSuccessTitle": {
+    "message": "Senden erfolgreich",
+    "description": "Notification title for successful send"
+  },
+  "notificationSendSuccessMessage": {
+    "message": "Ausgewählter Text wurde erfolgreich an Blinko gesendet.",
+    "description": "Notification message for successful send"
+  },
+  "notificationSendErrorTitle": {
+    "message": "Senden fehlgeschlagen",
+    "description": "Notification title for failed send"
+  },
+  "notificationExtractSuccessTitle": {
+    "message": "Extrahieren erfolgreich",
+    "description": "Notification title for successful content extraction"
+  },
+  "notificationSummarySuccessTitle": {
+    "message": "Zusammenfassen erfolgreich",
+    "description": "Notification title for successful content summarization"
+  },
+  "notificationExtractSuccessMessage": {
+    "message": "Inhalt von \"$1\" erfolgreich extrahiert und in Blinko gespeichert",
+    "description": "Notification message for content extraction success"
+  },
+  "notificationSummarySuccessMessage": {
+    "message": "Inhalt von \"$1\" erfolgreich zusammengefasst und in Blinko gespeichert",
+    "description": "Notification message for content summarization success"
+  },
+  "notificationExtractSuccessMessagePopup": {
+    "message": "Inhaltsextraktion für \"%s\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
+    "description": "Notification message for content extraction success when popup is closed"
+  },
+  "notificationSummarySuccessMessagePopup": {
+    "message": "Inhaltszusammenfassung für \"%s\" abgeschlossen. Klicken Sie auf das Erweiterungssymbol, um sie anzusehen.",
+    "description": "Notification message for content summarization success when popup is closed"
+  },
+  "notificationExtractErrorTitle": {
+    "message": "Extrahieren fehlgeschlagen",
+    "description": "Notification title for content extraction failure"
+  },
+  "notificationSummaryErrorTitle": {
+    "message": "Zusammenfassen fehlgeschlagen",
+    "description": "Notification title for content summarization failure"
+  },
+  "notificationErrorMessage": {
+    "message": "Fehler beim %s \"%s\": %s",
+    "description": "Notification error message with action, title, and error description"
+  },
+  "extractAction": {
+    "message": "Extrahieren",
+    "description": "The action word when extracting content"
+  },
+  "summaryAction": {
+    "message": "Zusammenfassen",
+    "description": "The action word when summarizing content"
+  },
+  "defaultPage": {
+    "message": "Seite",
+    "description": "Default string for page name when none provided"
+  },
+  "tabCommon": {
+    "message": "Allgemein",
+    "description": "Common tab text"
+  },
+  "tabQuickNote": {
+    "message": "Schnellnotiz",
+    "description": "Quick note tab text"
+  },
+  "tabSettings": {
+    "message": "Einstellungen",
+    "description": "Settings tab text"
+  },
+  "webSummaryTitle": {
+    "message": "Web-Zusammenfassung",
+    "description": "Web summary section title"
+  },
+  "extractAndSummarizeButton": {
+    "message": "Webseiteninhalt extrahieren und zusammenfassen",
+    "description": "Button text for extract and summarize"
+  },
+  "extractContentTitle": {
+    "message": "Web-Inhalt extrahieren",
+    "description": "Extract content section title"
+  },
+  "extractContentButton": {
+    "message": "Web-Inhalt extrahieren",
+    "description": "Button text for content extraction"
+  },
+  "quickNoteTitle": {
+    "message": "Schnellnotiz",
+    "description": "Quick note section title"
+  },
+  "quickNotePlaceholder": {
+    "message": "Notizen hier eingeben oder Web-Inhalt über das Rechtsklick-Menü sammeln...",
+    "description": "Placeholder text for quick note input"
+  },
+  "attachmentListTitle": {
+    "message": "Anhänge",
+    "description": "Title for attachment list"
+  },
+  "clearAllButton": {
+    "message": "Alle löschen",
+    "description": "Button text for clearing all"
+  },
+  "sendButton": {
+    "message": "Senden",
+    "description": "Button text for send action"
+  },
+  "clearButton": {
+    "message": "Löschen",
+    "description": "Button text for clear action"
+  },
+  "summaryPreviewTitle": {
+    "message": "Zusammenfassungsvorschau",
+    "description": "Title for summary preview section"
+  },
+  "summaryTextPlaceholder": {
+    "message": "Zusammenfassung wird hier angezeigt...",
+    "description": "Placeholder text for summary content"
+  },
+  "cancelButton": {
+    "message": "Abbrechen",
+    "description": "Button text for cancel action"
+  },
+  "editAndSaveButton": {
+    "message": "Bearbeiten und speichern",
+    "description": "Button text for edit and save action"
+  },
+  "settingsTitle": {
+    "message": "Einstellungen",
+    "description": "Settings page title"
+  },
+  "settingsPageTitle": {
+    "message": "Blinko-Erweiterung – Einstellungen",
+    "description": "Settings page browser tab title"
+  },
+  "blinkoApiUrlLabel": {
+    "message": "Blinko-API-URL:",
+    "description": "Label for Blinko API URL input"
+  },
+  "blinkoApiUrlHelp": {
+    "message": "Geben Sie Ihre Blinko-Domain ein (z. B. https://blinko.example.com)",
+    "description": "Help text for API URL input"
+  },
+  "blinkoAuthKeyLabel": {
+    "message": "Blinko-Authentifizierungsschlüssel:",
+    "description": "Label for Blinko auth key input"
+  },
+  "fetchAiConfigButton": {
+    "message": "AI-Konfiguration aus Blinko abrufen",
+    "description": "Button text for fetching AI configuration"
+  },
+  "openaiApiUrlLabel": {
+    "message": "OpenAI-kompatible API-URL:",
+    "description": "Label for OpenAI API URL input"
+  },
+  "apiKeyLabel": {
+    "message": "API-Schlüssel:",
+    "description": "Label for API key input"
+  },
+  "modelNameLabel": {
+    "message": "Modellname:",
+    "description": "Label for model name input"
+  },
+  "temperatureLabel": {
+    "message": "Temperatur:",
+    "description": "Label for temperature input"
+  },
+  "promptTemplateLabel": {
+    "message": "Prompt-Vorlage:",
+    "description": "Label for prompt template input"
+  },
+  "promptTemplateSelectorLabel": {
+    "message": "Prompt-Vorlage auswählen:",
+    "description": "Label for the prompt template selector dropdown"
+  },
+  "promptTemplateContentLabel": {
+    "message": "Vorlageninhalt:",
+    "description": "Label for the prompt template content input field"
+  },
+  "promptTemplatePlaceholder": {
+    "message": "Fassen Sie den folgenden Inhalt kurz und prägnant zusammen und heben Sie die wichtigsten Punkte hervor: {content}",
+    "description": "Placeholder for prompt template input"
+  },
+  "includeSummaryUrlLabel": {
+    "message": "URL in Zusammenfassungsnotizen einfügen",
+    "description": "Label for include URL in summary checkbox"
+  },
+  "includeSummaryUrlHelp": {
+    "message": "Ob die ursprüngliche URL beim Zusammenfassen von Webseiten eingefügt werden soll",
+    "description": "Help text for include URL in summary"
+  },
+  "includeSelectionUrlLabel": {
+    "message": "URL beim Speichern ausgewählten Texts einfügen",
+    "description": "Label for include URL in selection checkbox"
+  },
+  "includeImageUrlLabel": {
+    "message": "URL beim Speichern von Bildern einfügen",
+    "description": "Label for include URL in image checkbox"
+  },
+  "includeQuickNoteUrlLabel": {
+    "message": "URL in Schnellnotizen einfügen",
+    "description": "Label for include URL in quick note checkbox"
+  },
+  "summaryTagLabel": {
+    "message": "Zusammenfassungs-Tag:",
+    "description": "Label for summary tag input"
+  },
+  "selectionTagLabel": {
+    "message": "Auswahl-Tag:",
+    "description": "Label for selection tag input"
+  },
+  "imageTagLabel": {
+    "message": "Bild-Tag:",
+    "description": "Label for image tag input"
+  },
+  "enableFloatingBallLabel": {
+    "message": "Schwebenden Ball aktivieren",
+    "description": "Label for enable floating ball checkbox"
+  },
+  "jinaApiKeyLabel": {
+    "message": "Jina Reader API-Schlüssel:",
+    "description": "Label for Jina Reader API key input"
+  },
+  "useJinaApiKeyLabel": {
+    "message": "API-Schlüssel zum Beschleunigen der Extraktion verwenden",
+    "description": "Label for use Jina API key checkbox"
+  },
+  "saveWebImagesLabel": {
+    "message": "Web-Bildlinks speichern (einige Bilder werden möglicherweise von Plattformen blockiert, bitte mit Vorsicht verwenden)",
+    "description": "Label for save web images checkbox"
+  },
+  "extractTagLabel": {
+    "message": "Web-Clip-Tag:",
+    "description": "Label for extract tag input"
+  },
+  "saveSettingsButton": {
+    "message": "Einstellungen speichern",
+    "description": "Button text for save settings"
+  },
+  "resetSettingsButton": {
+    "message": "Auf Standard zurücksetzen",
+    "description": "Button text for reset settings"
+  },
+  "showHideButton": {
+    "message": "Anzeigen/Verbergen",
+    "description": "Button text for show/hide password"
+  },
+  "extractingContent": {
+    "message": "Web-Inhalt wird extrahiert...",
+    "description": "Status message when extracting content"
+  },
+  "cannotGetTab": {
+    "message": "Aktueller Tab kann nicht abgerufen werden",
+    "description": "Error message when unable to get current tab"
+  },
+  "settingsSaved": {
+    "message": "Einstellungen gespeichert",
+    "description": "Success message when settings are saved"
+  },
+  "settingsSaveError": {
+    "message": "Einstellungen konnten nicht gespeichert werden: %s",
+    "description": "Error message when saving settings fails"
+  },
+  "settingsReset": {
+    "message": "Einstellungen auf Standard zurückgesetzt",
+    "description": "Success message when settings are reset"
+  },
+  "settingsResetError": {
+    "message": "Einstellungen konnten nicht zurückgesetzt werden: %s",
+    "description": "Error message when resetting settings fails"
+  },
+  "initializationError": {
+    "message": "Initialisierung fehlgeschlagen: %s",
+    "description": "Error message when initialization fails"
+  },
+  "summaryTagPlaceholder": {
+    "message": "#Web/Zusammenfassung",
+    "description": "Placeholder for summary tag input"
+  },
+  "selectionTagPlaceholder": {
+    "message": "#Web/Auszug",
+    "description": "Placeholder for selection tag input"
+  },
+  "imageTagPlaceholder": {
+    "message": "#Web/Bild",
+    "description": "Placeholder for image tag input"
+  },
+  "extractTagPlaceholder": {
+    "message": "#Web/Clip",
+    "description": "Placeholder for extract tag input"
+  },
+  "addTemplateButtonTooltip": {
+    "message": "Neue Prompt-Vorlage hinzufügen",
+    "description": "Tooltip for the add new prompt template button"
+  },
+  "deleteTemplateButtonTooltip": {
+    "message": "Aktuell ausgewählte Prompt-Vorlage löschen",
+    "description": "Tooltip for the delete current prompt template button"
+  },
+  "promptForTemplateName": {
+    "message": "Bitte geben Sie einen Namen für die neue Vorlage ein:",
+    "description": "Prompt message when asking for new template name"
+  },
+  "confirmDeleteTemplate": {
+    "message": "Sind Sie sicher, dass Sie die Vorlage \"{templateName}\" löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "description": "Confirmation message before deleting a template. {templateName} is a placeholder for the template name.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "My Summary Template"
+      }
+    }
+  },
+  "errorMinOneTemplate": {
+    "message": "Vorgang fehlgeschlagen: Mindestens eine Prompt-Vorlage muss erhalten bleiben.",
+    "description": "Error message when trying to delete the last template"
+  },
+  "errorTemplateNameEmpty": {
+    "message": "Vorlagenname darf nicht leer sein.",
+    "description": "Error message when template name is empty during creation"
+  },
+  "templateAddedSuccess": {
+    "message": "Neue Vorlage \"{templateName}\" hinzugefügt und als aktuell festgelegt.",
+    "description": "Success message when a new template is added. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "My Template"
+      }
+    }
+  },
+  "templateDeleteSuccess": {
+    "message": "Vorlage \"{templateName}\" gelöscht.",
+    "description": "Success message when a template is deleted. {templateName} is a placeholder.",
+    "placeholders": {
+      "templateName": {
+        "content": "$1",
+        "example": "Old Template"
+      }
+    }
+  },
+  "templateAddError": {
+    "message": "Neue Vorlage konnte nicht hinzugefügt werden: {error}",
+    "description": "Error message when adding a new template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Storage error"
+      }
+    }
+  },
+  "templateDeleteError": {
+    "message": "Vorlage konnte nicht gelöscht werden: {error}",
+    "description": "Error message when deleting a template fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Unknown error"
+      }
+    }
+  },
+  "domainSpecificTemplatesTitle": {
+    "message": "Domain-spezifische Vorlagen",
+    "description": "Title for the domain-specific templates section"
+  },
+  "addDomainRuleButton": {
+    "message": "Domain-Regel hinzufügen",
+    "description": "Button text to add a new domain-specific rule"
+  },
+  "domainPatternLabel": {
+    "message": "Domain/Muster:",
+    "description": "Label for the domain pattern input field"
+  },
+  "domainPatternPlaceholder": {
+    "message": "z. B. example.com, *.example.com, localhost:3000",
+    "description": "Placeholder text for the domain pattern input"
+  },
+  "selectTemplateForDomainLabel": {
+    "message": "Vorlage auswählen:",
+    "description": "Label for the template selector dropdown for a domain rule"
+  },
+  "deleteDomainRuleButtonTooltip": {
+    "message": "Diese Regel löschen",
+    "description": "Tooltip for the delete button of a domain rule"
+  },
+  "confirmDeleteDomainRule": {
+    "message": "Sind Sie sicher, dass Sie die Vorlagenregel für die Domain \"{domainPattern}\" löschen möchten?",
+    "description": "Confirmation message before deleting a domain rule. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorDomainPatternEmpty": {
+    "message": "Domain-Muster darf nicht leer sein.",
+    "description": "Error message if the domain pattern is empty"
+  },
+  "errorTemplateNotSelected": {
+    "message": "Bitte wählen Sie eine Vorlage für diese Domain-Regel aus.",
+    "description": "Error message if no template is selected for a domain rule"
+  },
+  "domainRuleAddedSuccess": {
+    "message": "Vorlagenregel für \"{domainPattern}\" hinzugefügt.",
+    "description": "Success message when a domain rule is added. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "domainRuleDeletedSuccess": {
+    "message": "Vorlagenregel für \"{domainPattern}\" gelöscht.",
+    "description": "Success message when a domain rule is deleted. {domainPattern} is a placeholder.",
+    "placeholders": {
+      "domainPattern": {
+        "content": "$1",
+        "example": "example.com"
+      }
+    }
+  },
+  "errorSavingDomainRule": {
+    "message": "Domain-Regel konnte nicht gespeichert werden: {error}",
+    "description": "Error message when saving a domain rule fails. {error} is a placeholder.",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Storage error"
+      }
+    }
+  },
+  "columnDomainPattern": {
+    "message": "Domain-Muster",
+    "description": "Table header for domain pattern column"
+  },
+  "columnAssignedTemplate": {
+    "message": "Zugewiesene Vorlage",
+    "description": "Table header for assigned template column"
+  },
+  "columnActions": {
+    "message": "Aktionen",
+    "description": "Table header for actions column"
+  },
+  "noDomainRulesDefined": {
+    "message": "Es wurden noch keine domain-spezifischen Vorlagenregeln konfiguriert.",
+    "description": "Message shown when no domain-specific rules are defined"
+  },
+  "saveRuleButton": {
+    "message": "Regel speichern",
+    "description": "Button text to save a domain rule"
+  },
+  "cancelRuleButton": {
+    "message": "Abbrechen",
+    "description": "Button text to cancel editing/adding a domain rule"
+  },
+  "errorNoTemplatesAvailableForDomainRule": {
+    "message": "Keine Vorlagen verfügbar, um eine Domain-Regel zu erstellen. Bitte fügen Sie zuerst Prompt-Vorlagen hinzu.",
+    "description": "Error message shown in domain rule template selector if no prompt templates exist."
+  },
+  "themeSettingsLabel": {
+    "message": "Theme-Einstellungen",
+    "description": "Label for the theme selection group in settings"
+  },
+  "themeLight": {
+    "message": "Hell",
+    "description": "Label for the light theme option"
+  },
+  "themeDark": {
+    "message": "Dunkel",
+    "description": "Label for the dark theme option"
+  },
+  "themeSystem": {
+    "message": "Systemstandard",
+    "description": "Label for the system default theme option"
+  },
+  "floatingBallSizeLabel": {
+    "message": "Größe des schwebenden Balls",
+    "description": "Label for the floating ball size selection group in settings"
+  },
+  "floatingBallSizeSmall": {
+    "message": "Klein",
+    "description": "Label for the small floating ball size option"
+  },
+  "floatingBallSizeMedium": {
+    "message": "Mittel",
+    "description": "Label for the medium floating ball size option"
+  },
+  "floatingBallSizeLarge": {
+    "message": "Groß",
+    "description": "Label for the large floating ball size option"
+  },
+  "requestProcessError": {
+    "message": "Anfrageverarbeitung fehlgeschlagen",
+    "description": "Error message when request processing fails"
+  },
+  "operationFailed": {
+    "message": "Vorgang fehlgeschlagen",
+    "description": "Title for operation failed notification"
+  },
+  "floatingBallCreateError": {
+    "message": "Fehler beim Erstellen des schwebenden Balls:",
+    "description": "Error message when creating floating ball"
+  },
+  "contentProcessError": {
+    "message": "Fehler bei der Inhaltsverarbeitung:",
+    "description": "Error message when processing content"
+  },
+  "updateBallStateError": {
+    "message": "Zustand des schwebenden Balls kann nicht aktualisiert werden",
+    "description": "Error message when unable to update floating ball state"
+  },
+  "sendStatusUpdateError": {
+    "message": "Statusaktualisierung konnte nicht gesendet werden",
+    "description": "Error message when sending status update fails"
+  },
+  "processingRequestError": {
+    "message": "Anfrage konnte nicht verarbeitet werden",
+    "description": "Error message when processing request fails"
+  },
+  "popupClosedMessage": {
+    "message": "Popup wurde möglicherweise geschlossen",
+    "description": "Message when popup is likely closed"
+  },
+  "summaryFailedError": {
+    "message": "Zusammenfassung fehlgeschlagen:",
+    "description": "Error message when summary fails"
+  },
+  "floatingBallStyleError": {
+    "message": "Fehler beim Aktualisieren des Stils des schwebenden Balls:",
+    "description": "Error message when updating floating ball style"
+  },
+  "extensionDescription": {
+    "message": "Ausgewählten Text speichern, Web-Inhalt extrahieren und Zusammenfassungen erstellen",
+    "description": "Extension description for manifest"
+  },
+  "notification": {
+    "message": "Benachrichtigung",
+    "description": "Generic notification title"
+  },
+  "floatingBallRequestError": {
+    "message": "Fehler bei der Verarbeitung der schwebenden Ball-Anfrage:",
+    "description": "Error message when processing floating ball request"
+  },
+  "notificationClickError": {
+    "message": "Fehler beim Behandeln des Benachrichtigungsklicks:",
+    "description": "Error message when handling notification click"
+  },
+  "saveClipboardContent": {
+    "message": "Zwischenablage-Inhalt in Blinko speichern",
+    "description": "Context menu for saving clipboard content"
+  },
+  "openBlinkoHomepage": {
+    "message": "Blinko-Startseite öffnen",
+    "description": "Context menu for opening Blinko homepage"
+  },
+  "importExportTitle": {
+    "message": "Einstellungen importieren/exportieren",
+    "description": "Import/Export settings group title"
+  },
+  "exportSettingsButton": {
+    "message": "Einstellungen exportieren",
+    "description": "Export settings button text"
+  },
+  "importSettingsButton": {
+    "message": "Einstellungen importieren",
+    "description": "Import settings button text"
+  },
+  "importExportHelp": {
+    "message": "Export: Aktuelle Einstellungen als JSON-Datei speichern. Import: Einstellungen aus JSON-Datei wiederherstellen.",
+    "description": "Import/Export functionality help text"
+  },
+  "exportSuccess": {
+    "message": "Einstellungen erfolgreich exportiert",
+    "description": "Settings export success message"
+  },
+  "exportError": {
+    "message": "Einstellungen konnten nicht exportiert werden: $1",
+    "description": "Settings export error message"
+  },
+  "importSuccess": {
+    "message": "Einstellungen erfolgreich importiert",
+    "description": "Settings import success message"
+  },
+  "importError": {
+    "message": "Einstellungen konnten nicht importiert werden: $1",
+    "description": "Settings import error message"
+  },
+  "importFileInvalid": {
+    "message": "Ungültiges Dateiformat. Bitte wählen Sie eine gültige JSON-Datei aus.",
+    "description": "Invalid import file format message"
+  },
+  "confirmImportDifferentVersion": {
+    "message": "Diese Einstellungsdatei wurde mit Version $1 erstellt, die aktuelle Version ist $2. Möchten Sie den Import fortsetzen?",
+    "description": "Confirmation message when importing settings from different version"
+  },
+  "confirmImportSettings": {
+    "message": "Beim Importieren der Einstellungen werden alle aktuellen Konfigurationen überschrieben. Fortfahren?",
+    "description": "Confirm import settings dialog message"
+  },
+  "exportingSettings": {
+    "message": "Einstellungen werden exportiert...",
+    "description": "Status message when exporting settings"
+  },
+  "importingSettings": {
+    "message": "Einstellungen werden importiert...",
+    "description": "Status message when importing settings"
+  },
+  "importFileTooLarge": {
+    "message": "Datei zu groß. Bitte wählen Sie eine Datei kleiner als 1 MB aus.",
+    "description": "Error message when import file is too large"
+  },
+  "importFileTypeInvalid": {
+    "message": "Für den Import sind nur .json-Dateien zulässig.",
+    "description": "Error message when import file type is invalid"
+  },
+  "promptDefaultSummaryName": {
+    "message": "Standard-Zusammenfassungsvorlage",
+    "description": "Default prompt template name for page summarization"
+  },
+  "promptShortSummaryName": {
+    "message": "Kurze Zusammenfassungsvorlage",
+    "description": "Short prompt template name for one-sentence summary"
+  },
+  "promptMigratedName": {
+    "message": "Migrierte Vorlage",
+    "description": "Name for a prompt template migrated from an older settings format"
+  },
+  "promptFallbackContent": {
+    "message": "Fassen Sie den folgenden Inhalt zusammen: {content}",
+    "description": "Fallback prompt content when no template is configured"
+  },
+  "tagSummary": {
+    "message": "#Web/Zusammenfassung",
+    "description": "Default tag for page summaries"
+  },
+  "tagSelection": {
+    "message": "#Web/Auszug",
+    "description": "Default tag for selected text"
+  },
+  "tagImage": {
+    "message": "#Web/Bild",
+    "description": "Default tag for saved images"
+  },
+  "tagExtract": {
+    "message": "#Web/Clip",
+    "description": "Default tag for page clips"
+  },
+  "promptDefaultSummaryContent": {
+    "message": "Fassen Sie den folgenden Webseiteninhalt auf Deutsch kurz und prägnant zusammen und heben Sie die wichtigsten Punkte hervor: {content}",
+    "description": "Default prompt content for page summarization"
+  },
+  "promptShortSummaryContent": {
+    "message": "Fassen Sie den folgenden Webseiteninhalt in einem kurzen deutschen Satz zusammen: {content}",
+    "description": "Short prompt content for one-sentence summary"
+  }
+}
