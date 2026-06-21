@@ -146,7 +146,7 @@ async function loadSettings() {
         return settings;
     } catch (error) {
         console.error('加载设置时出错:', error);
-        showStatus('加载设置失败: ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusLoadingSettingsFailed') || 'Failed to load settings') + ': ' + error.message, 'error');
         return defaultSettings;
     }
 }
@@ -195,10 +195,10 @@ async function resetSettings() {
         document.getElementById('extractTag').value = settings.extractTag;
         
         console.log('设置已重置为默认值:', settings);
-        showStatus('设置已重置为默认值', 'success');
+        showStatus(chrome.i18n.getMessage('settingsReset') || 'Settings have been reset to defaults', 'success');
     } catch (error) {
         console.error('重置设置时出错:', error);
-        showStatus('重置设置失败: ' + error.message, 'error');
+        showStatus(chrome.i18n.getMessage('settingsResetError', [error.message]) || 'Failed to reset settings: ' + error.message, 'error');
     }
 }
 
@@ -209,7 +209,7 @@ async function fetchAiConfig() {
         const authKey = document.getElementById('authKey').value.trim();
 
         if (!targetUrl || !authKey) {
-            showStatus('请先填写Blinko API URL和认证密钥', 'error');
+            showStatus(chrome.i18n.getMessage('statusPleaseConfigure') || 'Please fill in the Blinko API URL and authentication key first', 'error');
             return;
         }
 
@@ -217,7 +217,7 @@ async function fetchAiConfig() {
         const normalizedBaseUrl = normalizeBlinkoApiBaseUrl(targetUrl);
         const configUrl = `${normalizedBaseUrl}/config/list`;
 
-        showStatus('正在获取配置...', 'loading');
+        showStatus(chrome.i18n.getMessage('statusFetchingConfig') || 'Fetching configuration...', 'loading');
         
         const response = await fetch(configUrl, {
             method: 'GET',
@@ -227,7 +227,7 @@ async function fetchAiConfig() {
         });
 
         if (!response.ok) {
-            throw new Error(`获取配置失败: ${response.status}`);
+            throw new Error((chrome.i18n.getMessage('errorFetchConfigFailed') || 'Failed to fetch configuration') + ': ' + response.status);
         }
 
         const config = await response.json();
@@ -238,13 +238,13 @@ async function fetchAiConfig() {
             document.getElementById('apiKey').value = config.aiApiKey || '';
             document.getElementById('modelName').value = config.aiModel || '';
             
-            showStatus('AI配置获取成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusAiConfigSuccess') || 'AI configuration fetched successfully', 'success');
         } else {
-            showStatus('当前不支持的AI提供商: ' + config.aiModelProvider, 'error');
+            showStatus((chrome.i18n.getMessage('statusUnsupportedAiProvider') || 'Unsupported AI provider') + ': ' + config.aiModelProvider, 'error');
         }
     } catch (error) {
         console.error('获取AI配置时出错:', error);
-        showStatus('获取AI配置失败: ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusFetchAiConfigFailed') || 'Failed to fetch AI configuration') + ': ' + error.message, 'error');
     }
 }
 

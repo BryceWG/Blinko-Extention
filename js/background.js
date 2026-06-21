@@ -124,7 +124,7 @@ chrome.commands.onCommand.addListener(async (command) => {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         
         if (!tab) {
-            console.error('无法获取当前标签页');
+            console.error(chrome.i18n.getMessage('cannotGetTab') || 'Cannot get current tab');
             return;
         }
 
@@ -139,7 +139,7 @@ chrome.commands.onCommand.addListener(async (command) => {
         chrome.notifications.create({
             type: 'basic',
             iconUrl: 'images/icon128.png',
-            title: '快捷键执行失败',
+            title: chrome.i18n.getMessage('statusShortcutFailed') || 'Shortcut execution failed',
             message: error.message
         });
     }

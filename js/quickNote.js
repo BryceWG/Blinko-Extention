@@ -83,12 +83,12 @@ async function updateAttachmentList(attachments) {
             img.src = cleanDomain + path;
         }
         
-        img.alt = attachment.name || '附件图片';
+        img.alt = attachment.name || (chrome.i18n.getMessage('attachmentImageAlt') || 'Attachment image');
         img.onerror = () => {
             // 如果图片加载失败，显示文件名
             img.style.display = 'none';
             const textSpan = document.createElement('span');
-            textSpan.textContent = attachment.name || '图片';
+            textSpan.textContent = attachment.name || (chrome.i18n.getMessage('attachmentImageLabel') || 'Image');
             textSpan.style.display = 'block';
             textSpan.style.padding = '8px';
             textSpan.style.textAlign = 'center';
@@ -100,7 +100,7 @@ async function updateAttachmentList(attachments) {
         const removeBtn = document.createElement('button');
         removeBtn.className = 'remove-button';
         removeBtn.innerHTML = '×';
-        removeBtn.title = '移除附件';
+        removeBtn.title = chrome.i18n.getMessage('removeAttachmentTooltip') || 'Remove attachment';
         removeBtn.onclick = () => removeAttachment(index);
         item.appendChild(removeBtn);
         
@@ -131,7 +131,7 @@ async function clearAttachments() {
         updateAttachmentList([]);
     } catch (error) {
         console.error('清除附件失败:', error);
-        showStatus('清除附件失败: ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusClearAttachmentsFailed') || 'Failed to clear attachments') + ': ' + error.message, 'error');
     }
 }
 
@@ -156,7 +156,7 @@ async function removeAttachment(index) {
         updateAttachmentList(attachments);
     } catch (error) {
         console.error('移除附件失败:', error);
-        showStatus('移除附件失败: ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusRemoveAttachmentFailed') || 'Failed to remove attachment') + ': ' + error.message, 'error');
     }
 }
 
@@ -184,7 +184,7 @@ async function sendQuickNote() {
         const input = document.getElementById('quickNoteInput');
         const content = input.value;
         if (!content.trim()) {
-            showStatus('请输入笔记内容', 'error');
+            showStatus(chrome.i18n.getMessage('statusPleaseEnterNote') || 'Please enter note content', 'error');
             return;
         }
 
@@ -192,10 +192,10 @@ async function sendQuickNote() {
         const settings = result.settings;
         
         if (!settings) {
-            throw new Error('未找到设置信息');
+            throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
         }
 
-        showStatus('正在发送...', 'loading');
+        showStatus(chrome.i18n.getMessage('statusSending') || 'Sending...', 'loading');
 
         // 获取当前标签页信息
         let url = '';
@@ -239,7 +239,7 @@ async function sendQuickNote() {
         const response = await responsePromise;
 
         if (response && response.success) {
-            showStatus('发送成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusSendSuccess') || 'Sent successfully', 'success');
             // 发送成功后清理图片缓存
             clearImageCache(attachments);
             // 清除内容和存储
@@ -248,10 +248,10 @@ async function sendQuickNote() {
             // 立即更新附件列表显示
             updateAttachmentList([]);
         } else {
-            showStatus('发送失败: ' + (response?.error || '未知错误'), 'error');
+            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Send failed') + ': ' + (response?.error || (chrome.i18n.getMessage('statusUnknownError') || 'Unknown error')), 'error');
         }
     } catch (error) {
-        showStatus('发送失败: ' + error.message, 'error');
+        showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Send failed') + ': ' + error.message, 'error');
     }
 }
 

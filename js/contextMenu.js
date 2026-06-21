@@ -63,7 +63,7 @@ function initializeContextMenu() {
         // 创建保存剪贴板内容菜单
         chrome.contextMenus.create({
             id: 'saveClipboardContent',
-            title: chrome.i18n.getMessage("saveClipboardContent") || "保存剪贴板内容到Blinko",
+            title: chrome.i18n.getMessage("saveClipboardContent") || "Save Clipboard Content to Blinko",
             contexts: ['page'],
             parentId: "blinkoExtension"
         });
@@ -71,7 +71,7 @@ function initializeContextMenu() {
         // 创建跳转到Blinko主页菜单
         chrome.contextMenus.create({
             id: 'openBlinkoHomepage',
-            title: chrome.i18n.getMessage("openBlinkoHomepage") || "跳转到Blinko主页",
+            title: chrome.i18n.getMessage("openBlinkoHomepage") || "Open Blinko Homepage",
             contexts: ['all'],
             parentId: "blinkoExtension"
         });
@@ -86,7 +86,7 @@ async function handleContextMenuClick(info, tab) {
             const settings = result.settings;
             
             if (!settings) {
-                throw new Error('未找到设置信息');
+                throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
             }
 
             // 准备内容
@@ -106,18 +106,18 @@ async function handleContextMenuClick(info, tab) {
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: 'images/icon128.png',
-                    title: '发送成功',
-                    message: '已成功发送选中文本到Blinko'
+                    title: chrome.i18n.getMessage('statusSendSuccess') || 'Sent successfully',
+                    message: chrome.i18n.getMessage('notificationSendSuccessMessage') || 'Selected text has been sent to Blinko successfully.'
                 });
             } else {
-                throw new Error(response.error || '发送选中文本失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('notificationSendErrorTitle') || 'Send failed'));
             }
         } catch (error) {
             console.error('发送选中文本失败:', error);
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '发送失败',
+                title: chrome.i18n.getMessage('notificationSendErrorTitle') || 'Send failed',
                 message: error.message
             });
         }
@@ -142,15 +142,15 @@ async function handleContextMenuClick(info, tab) {
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '已添加到快捷记录',
-                message: '选中的文本已添加到快捷记录中'
+                title: chrome.i18n.getMessage('statusAddedToQuickNote') || 'Added to Quick Note',
+                message: chrome.i18n.getMessage('messageTextAddedToQuickNote') || 'Selected text has been added to Quick Note.'
             });
         } catch (error) {
             console.error('保存到快捷记录失败:', error);
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '保存失败',
+                title: chrome.i18n.getMessage('statusSaveFailed') || 'Save failed',
                 message: error.message
             });
         }
@@ -163,7 +163,7 @@ async function handleContextMenuClick(info, tab) {
             const settings = result.settings;
             
             if (!settings) {
-                throw new Error('未找到设置信息');
+                throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
             }
 
             // 获取图片文件
@@ -191,15 +191,15 @@ async function handleContextMenuClick(info, tab) {
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '已添加到快捷记录',
-                message: '图片已添加到快捷记录中'
+                title: chrome.i18n.getMessage('statusAddedToQuickNote') || 'Added to Quick Note',
+                message: chrome.i18n.getMessage('messageImageAddedToQuickNote') || 'Image has been added to Quick Note.'
             });
         } catch (error) {
             console.error('保存图片到快捷记录失败:', error);
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '保存失败',
+                title: chrome.i18n.getMessage('statusSaveFailed') || 'Save failed',
                 message: error.message
             });
         }
@@ -212,7 +212,7 @@ async function handleContextMenuClick(info, tab) {
             const settings = result.settings;
             
             if (!settings) {
-                throw new Error('未找到设置信息');
+                throw new Error(chrome.i18n.getMessage('errorSettingsNotFound') || 'Settings not found');
             }
 
             // 获取图片文件
@@ -232,18 +232,18 @@ async function handleContextMenuClick(info, tab) {
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: 'images/icon128.png',
-                    title: '保存成功',
-                    message: '已成功保存图片到Blinko'
+                    title: chrome.i18n.getMessage('statusSaveSuccess') || 'Saved successfully',
+                    message: chrome.i18n.getMessage('messageImageSaved') || 'Image has been saved to Blinko successfully.'
                 });
             } else {
-                throw new Error(response.error || '保存失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('statusSaveFailed') || 'Save failed'));
             }
         } catch (error) {
             console.error('保存图片失败:', error);
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '保存失败',
+                title: chrome.i18n.getMessage('statusSaveFailed') || 'Save failed',
                 message: error.message
             });
         }
@@ -258,7 +258,7 @@ async function handleContextMenuClick(info, tab) {
             });
 
             if (!response || !response.success) {
-                throw new Error(response.error || '获取内容失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('errorGetContentFailed') || 'Failed to get content'));
             }
 
             // 直接处理并保存内容
@@ -276,7 +276,7 @@ async function handleContextMenuClick(info, tab) {
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: info.menuItemId === 'summarizePageContent' ? '总结失败' : '提取失败',
+                title: info.menuItemId === 'summarizePageContent' ? (chrome.i18n.getMessage('statusSummaryFailed') || 'Summary failed') : (chrome.i18n.getMessage('notificationExtractErrorTitle') || 'Extract failed'),
                 message: error.message
             });
         }
@@ -289,7 +289,7 @@ async function handleContextMenuClick(info, tab) {
             const clipboardText = await navigator.clipboard.readText();
             
             if (!clipboardText || !clipboardText.trim()) {
-                throw new Error('剪贴板内容为空');
+                throw new Error(chrome.i18n.getMessage('errorClipboardEmpty') || 'Clipboard is empty');
             }
 
             // 发送到Blinko，使用quickNote类型
@@ -306,18 +306,18 @@ async function handleContextMenuClick(info, tab) {
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: 'images/icon128.png',
-                    title: '保存成功',
-                    message: '剪贴板内容已保存到Blinko'
+                    title: chrome.i18n.getMessage('statusSaveSuccess') || 'Saved successfully',
+                    message: chrome.i18n.getMessage('messageClipboardSaved') || 'Clipboard content has been saved to Blinko.'
                 });
             } else {
-                throw new Error(response.error || '保存剪贴板内容失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('errorSaveClipboardFailed') || 'Failed to save clipboard content'));
             }
         } catch (error) {
             console.error('保存剪贴板内容失败:', error);
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '保存失败',
+                title: chrome.i18n.getMessage('statusSaveFailed') || 'Save failed',
                 message: error.message
             });
         }
@@ -333,8 +333,8 @@ async function handleContextMenuClick(info, tab) {
                 chrome.notifications.create({
                     type: 'basic',
                     iconUrl: 'images/icon128.png',
-                    title: '未配置Blinko地址',
-                    message: '请先在设置中配置Blinko API URL'
+                    title: chrome.i18n.getMessage('statusBlinkoNotConfigured') || 'Blinko address is not configured',
+                    message: chrome.i18n.getMessage('statusPleaseConfigure') || 'Please fill in the Blinko API URL and authentication key first'
                 });
                 return;
             }
@@ -352,7 +352,7 @@ async function handleContextMenuClick(info, tab) {
             chrome.notifications.create({
                 type: 'basic',
                 iconUrl: 'images/icon128.png',
-                title: '跳转失败',
+                title: chrome.i18n.getMessage('statusJumpFailed') || 'Jump failed',
                 message: error.message
             });
         }

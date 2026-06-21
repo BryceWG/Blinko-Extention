@@ -173,23 +173,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ received: true });
     } else if (request && request.action === 'saveSummaryResponse') {
         if (request.response.success) {
-            showStatus('保存成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusSaveSuccess') || 'Saved successfully', 'success');
             setTimeout(hideStatus, 2000);
         } else {
-            showStatus('保存失败: ' + request.response.error, 'error');
+            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Save failed') + ': ' + request.response.error, 'error');
         }
         sendResponse({ received: true });
     } else if (request && request.action === 'floatingBallResponse') {
         if (request.response.success) {
-            showStatus(request.response.isExtractOnly ? '提取成功' : '总结成功', 'success');
+            showStatus(request.response.isExtractOnly ? (chrome.i18n.getMessage('statusExtractSuccess') || 'Extracted successfully') : (chrome.i18n.getMessage('statusSummarySuccess') || 'Summarized successfully'), 'success');
             setTimeout(hideStatus, 2000);
         } else {
-            showStatus((request.response.isExtractOnly ? '提取' : '总结') + '失败: ' + request.response.error, 'error');
+            showStatus((request.response.isExtractOnly ? (chrome.i18n.getMessage('notificationExtractErrorTitle') || 'Extract failed') : (chrome.i18n.getMessage('statusSummaryFailed') || 'Summary failed')) + ': ' + request.response.error, 'error');
         }
         sendResponse({ received: true });
     } else if (request && request.action === 'clearSummaryResponse') {
         if (request.success) {
-            showStatus('清除成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusClearSuccess') || 'Cleared successfully', 'success');
             setTimeout(hideStatus, 2000);
         }
         sendResponse({ received: true });
