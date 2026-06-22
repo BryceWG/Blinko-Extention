@@ -362,5 +362,6 @@ export {
     uploadFile,
     normalizeAuthToken,
     normalizeBlinkoApiBaseUrl,
-    getCleanDomainUrl
+    getCleanDomainUrl,
+    getOriginalLinkRegExp
 };
