@@ -514,7 +514,7 @@
     "description": "Label for the dark theme option"
   },
   "themeSystem": {
-    "message": "Systemstandard",
+    "message": "System",
     "description": "Label for the system default theme option"
   },
   "floatingBallSizeLabel": {
