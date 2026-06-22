@@ -287,6 +287,10 @@
     "message": "Cannot get current tab",
     "description": "Error message when unable to get current tab"
   },
+  "statusCannotGetCurrentTab": {
+    "message": "Cannot get current tab",
+    "description": "Status message when unable to get current tab"
+  },
   "settingsSaved": {
     "message": "Settings saved",
     "description": "Success message when settings are saved"
@@ -298,6 +302,10 @@
   "settingsReset": {
     "message": "Settings reset to default",
     "description": "Success message when settings are reset"
+  },
+  "statusSettingsReset": {
+    "message": "Settings have been reset to defaults",
+    "description": "Status message when settings are reset"
   },
   "settingsResetError": {
     "message": "Failed to reset settings: $1",

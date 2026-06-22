@@ -287,6 +287,10 @@
     "message": "Aktueller Tab kann nicht abgerufen werden",
     "description": "Error message when unable to get current tab"
   },
+  "statusCannotGetCurrentTab": {
+    "message": "Aktueller Tab kann nicht abgerufen werden",
+    "description": "Status message when unable to get current tab"
+  },
   "settingsSaved": {
     "message": "Einstellungen gespeichert",
     "description": "Success message when settings are saved"
@@ -298,6 +302,10 @@
   "settingsReset": {
     "message": "Einstellungen auf Standard zurückgesetzt",
     "description": "Success message when settings are reset"
+  },
+  "statusSettingsReset": {
+    "message": "Einstellungen wurden auf Standardwerte zurückgesetzt",
+    "description": "Status message when settings are reset"
   },
   "settingsResetError": {
     "message": "Einstellungen konnten nicht zurückgesetzt werden: $1",

@@ -287,6 +287,10 @@
     "message": "无法获取当前标签页",
     "description": "无法获取当前标签页时的错误消息"
   },
+  "statusCannotGetCurrentTab": {
+    "message": "无法获取当前标签页",
+    "description": "无法获取当前标签页时的状态消息"
+  },
   "settingsSaved": {
     "message": "设置已保存",
     "description": "设置保存成功时的消息"
@@ -298,6 +302,10 @@
   "settingsReset": {
     "message": "设置已重置为默认值",
     "description": "设置重置成功时的消息"
+  },
+  "statusSettingsReset": {
+    "message": "设置已重置为默认值",
+    "description": "设置重置成功时的状态消息"
   },
   "settingsResetError": {
     "message": "重置设置失败: $1",

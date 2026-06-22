@@ -36,7 +36,7 @@ function initializeSummaryListeners() {
             showStatus(chrome.i18n.getMessage('statusGeneratingSummary') || 'Generating summary...', 'loading');
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                throw new Error(chrome.i18n.getMessage('cannotGetTab') || 'Cannot get current tab');
+                throw new Error(chrome.i18n.getMessage('statusCannotGetCurrentTab') || 'Cannot get current tab');
             }
 
             // Send message to content script to get content

@@ -124,7 +124,7 @@ chrome.commands.onCommand.addListener(async (command) => {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         
         if (!tab) {
-            console.error(chrome.i18n.getMessage('cannotGetTab') || 'Cannot get current tab');
+            console.error(chrome.i18n.getMessage('statusCannotGetCurrentTab') || 'Cannot get current tab');
             return;
         }
 

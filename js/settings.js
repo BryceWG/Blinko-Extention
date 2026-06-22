@@ -195,7 +195,7 @@ async function resetSettings() {
         document.getElementById('extractTag').value = settings.extractTag;
         
         console.log('Settings reset to defaults:', settings);
-        showStatus(chrome.i18n.getMessage('settingsReset') || 'Settings have been reset to defaults', 'success');
+        showStatus(chrome.i18n.getMessage('statusSettingsReset') || 'Settings have been reset to defaults', 'success');
     } catch (error) {
         console.error('Error resetting settings:', error);
         showStatus(chrome.i18n.getMessage('settingsResetError', [error.message]) || 'Failed to reset settings: ' + error.message, 'error');
