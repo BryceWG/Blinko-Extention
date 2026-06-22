@@ -1,6 +1,6 @@
 import { loadSettings, resetSettings, fetchAiConfig, defaultSettings } from './settings.js';
 
-// 导入导出配置常量
+// Import/export config constants
 const IMPORT_EXPORT_CONFIG = {
     MAX_FILE_SIZE: 1024 * 1024, // 1MB
     SUPPORTED_VERSION: "1.0",
@@ -12,7 +12,7 @@ let currentLoadedSettings = {};
 let debouncedRealtimeSave;
 const DEBOUNCE_DELAY = 750;
 
-// 防抖函数
+// Debounce function
 function debounce(func, delay) {
     let timeout;
     return function(...args) {
@@ -23,7 +23,7 @@ function debounce(func, delay) {
 
 let prefersColorSchemeWatcher = null;
 
-// 应用主题
+// Apply theme
 function applyTheme(theme) {
     document.body.classList.remove('dark-theme', 'light-theme');
     const themeRadios = document.querySelectorAll('input[name="theme"]');
@@ -45,7 +45,7 @@ function applyTheme(theme) {
     });
 }
 
-// 监听系统主题变化
+// Watch system theme changes
 function watchSystemTheme() {
     if (prefersColorSchemeWatcher) {
         prefersColorSchemeWatcher.removeEventListener('change', handleSystemThemeChange);
@@ -63,12 +63,12 @@ function handleSystemThemeChange() {
     }
 }
 
-// 生成唯一ID
+// Generate unique ID
 function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// 填充提示模板选择器  
+// Populate prompt template selector
 function populatePromptTemplateSelector(settings) {
     const selector = document.getElementById('promptTemplateSelector');
     if (!selector) return;
@@ -90,7 +90,7 @@ function populatePromptTemplateSelector(settings) {
     updatePromptTemplateContent(settings);
 }
 
-// 更新提示模板内容
+// Update prompt template content
 function updatePromptTemplateContent(settings) {
     const selector = document.getElementById('promptTemplateSelector');
     const textarea = document.getElementById('promptTemplate');
@@ -105,7 +105,7 @@ function updatePromptTemplateContent(settings) {
     }
 }
 
-// 填充域名规则列表
+// Populate domain rules list
 function populateDomainMappingsList(settings) {
     const container = document.getElementById('domainMappingsListContainer');
     if (!container) return;
@@ -178,7 +178,7 @@ function populateDomainMappingsList(settings) {
     });
 }
 
-// 实时保存设置
+// Real-time save settings
 function saveSettingsRealtime() {
     if (!currentLoadedSettings || Object.keys(currentLoadedSettings).length === 0) return;
 
@@ -199,9 +199,9 @@ function saveSettingsRealtime() {
 
         const settingKey = input.id;
         if (settingKey && currentLoadedSettings.hasOwnProperty(settingKey)) {
-            // 特殊处理需要数字类型的字段
+            // Special handling for fields requiring numeric type
             if (settingKey === 'temperature') {
-                value = parseFloat(value) || 0.5; // 默认值0.5
+                value = parseFloat(value) || 0.5; // Default value 0.5
             }
             currentLoadedSettings[settingKey] = value;
         }
@@ -210,7 +210,7 @@ function saveSettingsRealtime() {
     chrome.storage.sync.set({ settings: currentLoadedSettings });
 }
 
-// 处理设置变更
+// Handle setting change
 function handleSettingChange(event) {
     const input = event.target;
     
@@ -248,18 +248,18 @@ function handleSettingChange(event) {
     debouncedRealtimeSave();
 }
 
-// 初始化设置页面
+// Initialize settings page
 async function initializeSettingsPage() {
     try {
         currentLoadedSettings = await loadSettings();
         
-        // 填充表单
+        // Populate form
         Object.keys(currentLoadedSettings).forEach(key => {
             const element = document.getElementById(key);
             if (element) {
                 if (element.type === 'checkbox') {
                     element.checked = currentLoadedSettings[key];
-                    // 更新对应的开关按钮状态
+                    // Update corresponding toggle switch state
                     const toggleSwitch = document.querySelector(`[data-checkbox="${key}"]`);
                     if (toggleSwitch) {
                         updateToggleSwitch(toggleSwitch, element.checked);
@@ -274,12 +274,12 @@ async function initializeSettingsPage() {
             }
         });
 
-        // 处理特殊的单选按钮组
+        // Handle special radio button groups
         if (currentLoadedSettings.theme) {
             const themeRadio = document.querySelector(`input[name="theme"][value="${currentLoadedSettings.theme}"]`);
             if (themeRadio) {
                 themeRadio.checked = true;
-                // 更新三选项滑块
+                // Update triple-option slider
                 const themeSlider = document.querySelector('[data-slider="theme"]');
                 if (themeSlider) {
                     updateTripleSliderPosition(themeSlider, currentLoadedSettings.theme);
@@ -291,7 +291,7 @@ async function initializeSettingsPage() {
             const ballSizeRadio = document.querySelector(`input[name="floatingBallSize"][value="${currentLoadedSettings.floatingBallSize}"]`);
             if (ballSizeRadio) {
                 ballSizeRadio.checked = true;
-                // 更新三选项滑块
+                // Update triple-option slider
                 const ballSizeSlider = document.querySelector('[data-slider="floatingBallSize"]');
                 if (ballSizeSlider) {
                     updateTripleSliderPosition(ballSizeSlider, currentLoadedSettings.floatingBallSize);
@@ -299,29 +299,29 @@ async function initializeSettingsPage() {
             }
         }
 
-        // 填充模板相关UI
+        // Populate template-related UI
         populatePromptTemplateSelector(currentLoadedSettings);
         populateDomainMappingsList(currentLoadedSettings);
         
-        // 应用主题
+        // Apply theme
         applyTheme(currentLoadedSettings.theme || 'system');
         watchSystemTheme();
 
-        // 初始化防抖保存
+        // Initialize debounced save
         debouncedRealtimeSave = debounce(saveSettingsRealtime, DEBOUNCE_DELAY);
 
-        // 绑定事件监听器
+        // Bind event listeners
         bindEventListeners();
 
     } catch (error) {
-        console.error('初始化设置页面失败:', error);
+        console.error('Failed to initialize settings page:', error);
         showStatus(chrome.i18n.getMessage('settingsLoadError', [error.message]), 'error');
     }
 }
 
-// 绑定事件监听器
+// Bind event listeners
 function bindEventListeners() {
-    // 基本输入事件
+    // Basic input events
     const inputs = document.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), textarea, select');
     inputs.forEach(input => {
         if (input.id === 'promptTemplate' || input.id === 'promptTemplateSelector') {
@@ -332,7 +332,7 @@ function bindEventListeners() {
         }
     });
 
-    // 复选框和单选按钮
+    // Checkboxes and radio buttons
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', handleSettingChange);
@@ -343,43 +343,43 @@ function bindEventListeners() {
         radio.addEventListener('change', handleSettingChange);
     });
 
-    // 开关按钮交互
+    // Toggle switch interactions
     const toggleSwitches = document.querySelectorAll('.toggle-switch');
     toggleSwitches.forEach(toggleSwitch => {
         const checkboxId = toggleSwitch.getAttribute('data-checkbox');
         const checkbox = document.getElementById(checkboxId);
         
         if (checkbox) {
-            // 初始状态
+            // Initial state
             updateToggleSwitch(toggleSwitch, checkbox.checked);
             
-            // 点击开关切换状态
+            // Click toggle to switch state
             toggleSwitch.addEventListener('click', () => {
                 checkbox.checked = !checkbox.checked;
                 updateToggleSwitch(toggleSwitch, checkbox.checked);
                 
-                // 触发change事件
+                // Trigger change event
                 const event = new Event('change');
                 checkbox.dispatchEvent(event);
             });
             
-            // 监听复选框状态变化
+            // Listen for checkbox state changes
             checkbox.addEventListener('change', () => {
                 updateToggleSwitch(toggleSwitch, checkbox.checked);
             });
         }
     });
 
-    // 三选项滑块交互
+    // Triple-option slider interactions
     const tripleSliders = document.querySelectorAll('.triple-slider');
     tripleSliders.forEach(slider => {
         const sliderType = slider.getAttribute('data-slider');
         const radios = slider.querySelectorAll(`input[name="${sliderType}"]`);
         
-        // 初始化滑块位置
+        // Initialize slider position
         updateTripleSliderPosition(slider, getCurrentRadioValue(radios));
         
-        // 点击滑块切换选项
+        // Click slider to switch option
         slider.addEventListener('click', (e) => {
             const rect = slider.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
@@ -387,23 +387,23 @@ function bindEventListeners() {
             
             let selectedIndex = 0;
             if (clickX > sliderWidth * 2/3) {
-                selectedIndex = 2; // 右侧
+                selectedIndex = 2; // Right
             } else if (clickX > sliderWidth * 1/3) {
-                selectedIndex = 1; // 中间
+                selectedIndex = 1; // Center
             } else {
-                selectedIndex = 0; // 左侧
+                selectedIndex = 0; // Left
             }
             
-            // 选中对应的单选按钮
+            // Select corresponding radio button
             radios[selectedIndex].checked = true;
             updateTripleSliderPosition(slider, radios[selectedIndex].value);
             
-            // 触发change事件
+            // Trigger change event
             const event = new Event('change');
             radios[selectedIndex].dispatchEvent(event);
         });
         
-        // 监听单选按钮状态变化
+        // Listen for radio button state changes
         radios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.checked) {
@@ -413,7 +413,7 @@ function bindEventListeners() {
         });
     });
 
-    // 密码可见性切换
+    // Password visibility toggle
     const toggleButtons = document.querySelectorAll('.toggle-visibility');
     toggleButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -430,14 +430,14 @@ function bindEventListeners() {
         });
     });
 
-    // 获取AI配置按钮
+    // Fetch AI config button
     const fetchAiConfigBtn = document.getElementById('fetchAiConfig');
     if (fetchAiConfigBtn) {
         fetchAiConfigBtn.addEventListener('click', async () => {
             try {
                 await fetchAiConfig();
                 
-                // 更新当前设置并同步到存储
+                // Update current settings and sync to storage
                 const modelUrlInput = document.getElementById('modelUrl');
                 const apiKeyInput = document.getElementById('apiKey');
                 const modelNameInput = document.getElementById('modelName');
@@ -450,12 +450,12 @@ function bindEventListeners() {
                     chrome.storage.sync.set({ settings: currentLoadedSettings });
                 }
             } catch (error) {
-                console.error('获取AI配置失败:', error);
+                console.error('Failed to fetch AI config:', error);
             }
         });
     }
 
-    // 重置设置按钮
+    // Reset settings button
     const resetBtn = document.getElementById('resetSettings');
     if (resetBtn) {
         resetBtn.addEventListener('click', async () => {
@@ -468,13 +468,13 @@ function bindEventListeners() {
                 showStatus(chrome.i18n.getMessage('settingsReset'), 'success');
                 setTimeout(hideStatus, 2000);
                 
-                // 重新填充表单
+                // Repopulate form
                 Object.keys(currentLoadedSettings).forEach(key => {
                     const element = document.getElementById(key);
                     if (element) {
                         if (element.type === 'checkbox') {
                             element.checked = currentLoadedSettings[key];
-                            // 更新对应的开关按钮状态
+                            // Update corresponding toggle switch state
                             const toggleSwitch = document.querySelector(`[data-checkbox="${key}"]`);
                             if (toggleSwitch) {
                                 updateToggleSwitch(toggleSwitch, element.checked);
@@ -482,7 +482,7 @@ function bindEventListeners() {
                         } else if (element.type === 'radio') {
                             if (element.value === currentLoadedSettings[key]) {
                                 element.checked = true;
-                                // 更新对应的三选项滑块
+                                // Update corresponding triple-option slider
                                 const sliderType = element.getAttribute('name');
                                 const slider = document.querySelector(`[data-slider="${sliderType}"]`);
                                 if (slider) {
@@ -500,17 +500,17 @@ function bindEventListeners() {
         });
     }
 
-    // 模板管理按钮
+    // Template management buttons
     bindTemplateManagementListeners();
     
-    // 域名规则管理按钮
+    // Domain rule management buttons
     bindDomainRuleManagementListeners();
 
-    // 导入导出功能
+    // Import/export functionality
     bindImportExportListeners();
 }
 
-// 更新开关按钮状态
+// Update toggle switch state
 function updateToggleSwitch(toggleSwitch, checked) {
     if (checked) {
         toggleSwitch.classList.add('checked');
@@ -519,12 +519,12 @@ function updateToggleSwitch(toggleSwitch, checked) {
     }
 }
 
-// 更新三选项滑块位置
+// Update triple-option slider position
 function updateTripleSliderPosition(slider, value) {
-    // 移除所有位置类
+    // Remove all position classes
     slider.classList.remove('position-left', 'position-center', 'position-right');
     
-    // 根据滑块类型和值设置位置
+    // Set position based on slider type and value
     const sliderType = slider.getAttribute('data-slider');
     
     if (sliderType === 'floatingBallSize') {
@@ -554,7 +554,7 @@ function updateTripleSliderPosition(slider, value) {
     }
 }
 
-// 获取当前选中的单选按钮值
+// Get currently selected radio button value
 function getCurrentRadioValue(radios) {
     for (let radio of radios) {
         if (radio.checked) {
@@ -564,7 +564,7 @@ function getCurrentRadioValue(radios) {
     return radios[0]?.value || '';
 }
 
-// 绑定模板管理监听器
+// Bind template management listeners
 function bindTemplateManagementListeners() {
     const addTemplateBtn = document.getElementById('addPromptTemplateBtn');
     const deleteTemplateBtn = document.getElementById('deletePromptTemplateBtn');
@@ -631,7 +631,7 @@ function bindTemplateManagementListeners() {
     }
 }
 
-// 绑定域名规则管理监听器
+// Bind domain rule management listeners
 function bindDomainRuleManagementListeners() {
     const addDomainRuleBtn = document.getElementById('addDomainRuleBtn');
     const addDomainRuleFormContainer = document.getElementById('addDomainRuleFormContainer');
@@ -712,9 +712,9 @@ function bindDomainRuleManagementListeners() {
     }
 }
 
-// 初始化国际化文本
+// Initialize i18n text
 function initializeI18n() {
-    // 处理标题属性（title）
+    // Handle title attributes
     document.querySelectorAll('[title]').forEach(element => {
         const messageKey = element.getAttribute('title');
         if (messageKey.startsWith('__MSG_') && messageKey.endsWith('__')) {
@@ -723,9 +723,9 @@ function initializeI18n() {
         }
     });
 
-    // 处理文本内容
+    // Handle text content
     document.querySelectorAll('*').forEach(element => {
-        // 创建一个NodeIterator来遍历所有文本节点
+        // Create a NodeIterator to traverse all text nodes
         const walker = document.createTreeWalker(
             element,
             NodeFilter.SHOW_TEXT,
@@ -750,7 +750,7 @@ function initializeI18n() {
         });
     });
 
-    // 处理占位符文本（placeholder）
+    // Handle placeholder text
     document.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(element => {
         const placeholderKey = element.getAttribute('placeholder');
         if (placeholderKey.startsWith('__MSG_') && placeholderKey.endsWith('__')) {
@@ -759,7 +759,7 @@ function initializeI18n() {
         }
     });
 
-    // 处理页面标题
+    // Handle page title
     const title = document.title;
     if (title.includes('__MSG_') && title.includes('__')) {
         document.title = title.replace(/__MSG_(\w+)__/g, (match, key) => {
@@ -768,16 +768,16 @@ function initializeI18n() {
     }
 }
 
-// 页面加载完成后初始化
+// Initialize after page load
 document.addEventListener('DOMContentLoaded', async function() {
-    // 首先初始化国际化文本
+    // First initialize i18n text
     initializeI18n();
     
-    // 然后初始化设置功能
+    // Then initialize settings functionality
     await initializeSettingsPage();
 });
 
-// 绑定导入导出监听器
+// Bind import/export listeners
 function bindImportExportListeners() {
     const exportBtn = document.getElementById('exportSettings');
     const importBtn = document.getElementById('importSettings');
@@ -798,67 +798,67 @@ function bindImportExportListeners() {
     }
 }
 
-// 导出设置
+// Export settings
 async function exportSettings() {
     try {
         showStatus(chrome.i18n.getMessage('exportingSettings'), 'loading');
         
-        // 获取当前设置
+        // Get current settings
         const settings = await chrome.storage.sync.get('settings');
         const settingsData = settings.settings || {};
         
-        // 创建导出数据对象
+        // Create export data object
         const exportData = {
             version: "1.0",
             timestamp: new Date().toISOString(),
             settings: settingsData
         };
         
-        // 创建并下载文件
+        // Create and download file
         const dataStr = JSON.stringify(exportData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         
         const link = document.createElement('a');
         link.href = URL.createObjectURL(dataBlob);
         
-        // 生成更详细的文件名
+        // Generate more detailed file name
         const now = new Date();
         const timestamp = now.toISOString().replace(/[:.]/g, '-').split('T');
         const dateStr = timestamp[0];
         const timeStr = timestamp[1].split('.')[0];
         link.download = `blinko-settings-${dateStr}-${timeStr}.json`;
         
-        // 触发下载
+        // Trigger download
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         
-        // 清理URL对象
+        // Clean up URL object
         URL.revokeObjectURL(link.href);
         
         showStatus(chrome.i18n.getMessage('exportSuccess'), 'success');
         setTimeout(hideStatus, 2000);
         
     } catch (error) {
-        console.error('导出设置失败:', error);
+        console.error('Failed to export settings:', error);
         showStatus(chrome.i18n.getMessage('exportError', [error.message]), 'error');
     }
 }
 
-// 处理导入文件
+// Handle import file
 async function handleImportFile(event) {
     const file = event.target.files[0];
     if (!file) return;
     
     try {
-        // 验证文件类型
+        // Validate file type
         if (!file.name.toLowerCase().endsWith(IMPORT_EXPORT_CONFIG.ALLOWED_FILE_TYPE)) {
             showStatus(chrome.i18n.getMessage('importFileTypeInvalid'), 'error');
             event.target.value = '';
             return;
         }
         
-        // 验证文件大小
+        // Validate file size
         if (file.size > IMPORT_EXPORT_CONFIG.MAX_FILE_SIZE) {
             showStatus(chrome.i18n.getMessage('importFileTooLarge'), 'error');
             event.target.value = '';
@@ -867,10 +867,10 @@ async function handleImportFile(event) {
         
         showStatus(chrome.i18n.getMessage('importingSettings'), 'loading');
         
-        // 读取文件内容
+        // Read file content
         const fileContent = await readFileAsText(file);
         
-        // 解析JSON
+        // Parse JSON
         let importData;
         try {
             importData = JSON.parse(fileContent);
@@ -878,7 +878,7 @@ async function handleImportFile(event) {
             throw new Error(chrome.i18n.getMessage('importFileInvalid'));
         }
         
-        // 验证数据格式和版本
+        // Validate data format and version
         if (!importData.settings || typeof importData.settings !== 'object') {
             throw new Error(chrome.i18n.getMessage('importFileInvalid'));
         }
@@ -890,91 +890,91 @@ async function handleImportFile(event) {
             }
         }
         
-        // 确认导入
+        // Confirm import
         if (!window.confirm(chrome.i18n.getMessage('confirmImportSettings'))) {
             hideStatus();
             return;
         }
         
-        // 导入设置
+        // Import settings
         await importSettings(importData.settings);
         
-        // 等待一下确保数据保存完成
+        // Wait briefly to ensure data is saved
         await new Promise(resolve => setTimeout(resolve, 500));
         
         showStatus(chrome.i18n.getMessage('importSuccess'), 'success');
         setTimeout(() => {
             hideStatus();
-            // 重新加载页面以应用新设置
+            // Reload page to apply new settings
             window.location.reload();
         }, 1500);
         
     } catch (error) {
-        console.error('导入设置失败:', error);
+        console.error('Failed to import settings:', error);
         showStatus(chrome.i18n.getMessage('importError', [error.message]), 'error');
     } finally {
-        // 清空文件输入
+        // Clear file input
         event.target.value = '';
     }
 }
 
-// 读取文件为文本
+// Read file as text
 function readFileAsText(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
-        reader.onerror = () => reject(new Error('文件读取失败'));
+        reader.onerror = () => reject(new Error(chrome.i18n.getMessage('errorFileReadFailed') || 'Failed to read file'));
         reader.readAsText(file);
     });
 }
 
-// 导入设置
+// Import settings
 async function importSettings(importedSettings) {
-    // 验证和清理导入的设置
+    // Validate and clean imported settings
     const validatedSettings = validateAndCleanSettings(importedSettings);
     
-    // 先清除现有的设置，防止冲突
+    // Clear existing settings first to prevent conflicts
     await chrome.storage.sync.remove('settings');
     
-    // 等待一下确保清除完成
+    // Wait briefly to ensure clearing is complete
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // 保存到存储
+    // Save to storage
     await chrome.storage.sync.set({ settings: validatedSettings });
     
-    // 更新当前加载的设置
+    // Update currently loaded settings
     currentLoadedSettings = validatedSettings;
 }
 
-// 验证和清理设置数据
+// Validate and clean settings data
 function validateAndCleanSettings(settings) {
-    // 使用默认设置作为基础，确保所有必需字段都存在
+    // Use default settings as base to ensure all required fields exist
     const cleanedSettings = { ...JSON.parse(JSON.stringify(defaultSettings)), ...settings };
     
-    // 特殊验证
-    // 确保 promptTemplates 是有效数组
+    // Special validation
+    // Ensure promptTemplates is a valid array
     if (!Array.isArray(cleanedSettings.promptTemplates) || cleanedSettings.promptTemplates.length === 0) {
         cleanedSettings.promptTemplates = JSON.parse(JSON.stringify(defaultSettings.promptTemplates));
         cleanedSettings.activePromptTemplateId = defaultSettings.activePromptTemplateId;
     } else {
-        // 确保每个模板都有必需的字段
+        // Ensure each template has required fields
         cleanedSettings.promptTemplates = cleanedSettings.promptTemplates.map(template => ({
             id: template.id || generateUniqueId(),
-            name: template.name || '未命名模板',
+            name: template.name || (chrome.i18n.getMessage('unnamedTemplate') || 'Unnamed Template'),
             content: template.content || ''
         }));
         
-        // 确保 activePromptTemplateId 有效
+        // Ensure activePromptTemplateId is valid
         if (!cleanedSettings.promptTemplates.find(t => t.id === cleanedSettings.activePromptTemplateId)) {
             cleanedSettings.activePromptTemplateId = cleanedSettings.promptTemplates[0].id;
         }
     }
     
-    // 确保 domainPromptMappings 是有效数组
+    // Ensure domainPromptMappings is a valid array
     if (!Array.isArray(cleanedSettings.domainPromptMappings)) {
         cleanedSettings.domainPromptMappings = [];
     } else {
-        // 清理域名映射，确保引用的模板存在
+        // Clean domain mappings ensuring referenced templates exist
         cleanedSettings.domainPromptMappings = cleanedSettings.domainPromptMappings.filter(mapping => {
             return mapping.domainPattern && 
                    mapping.templateId && 
@@ -986,12 +986,12 @@ function validateAndCleanSettings(settings) {
         }));
     }
     
-    // 验证数值类型
+    // Validate numeric types
     if (typeof cleanedSettings.temperature !== 'number' || cleanedSettings.temperature < 0 || cleanedSettings.temperature > 1) {
         cleanedSettings.temperature = defaultSettings.temperature;
     }
     
-    // 验证枚举值
+    // Validate enum values
     const validThemes = ['light', 'dark', 'system'];
     if (!validThemes.includes(cleanedSettings.theme)) {
         cleanedSettings.theme = defaultSettings.theme;

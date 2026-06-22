@@ -31,6 +31,18 @@
     "message": "提取网页内容",
     "description": "右键菜单提取网页内容"
   },
+  "notificationSendSuccessTitle": {
+    "message": "发送成功",
+    "description": "通知标题，发送成功"
+  },
+  "notificationSendSuccessMessage": {
+    "message": "选中文本已成功发送到Blinko",
+    "description": "通知消息，发送成功"
+  },
+  "notificationSendErrorTitle": {
+    "message": "发送失败",
+    "description": "通知标题，发送失败"
+  },
   "notificationExtractSuccessTitle": {
     "message": "提取成功",
     "description": "通知标题，内容提取成功"
@@ -275,6 +287,10 @@
     "message": "无法获取当前标签页",
     "description": "无法获取当前标签页时的错误消息"
   },
+  "statusCannotGetCurrentTab": {
+    "message": "无法获取当前标签页",
+    "description": "无法获取当前标签页时的状态消息"
+  },
   "settingsSaved": {
     "message": "设置已保存",
     "description": "设置保存成功时的消息"
@@ -286,6 +302,10 @@
   "settingsReset": {
     "message": "设置已重置为默认值",
     "description": "设置重置成功时的消息"
+  },
+  "statusSettingsReset": {
+    "message": "设置已重置为默认值",
+    "description": "设置重置成功时的状态消息"
   },
   "settingsResetError": {
     "message": "重置设置失败: $1",
@@ -636,5 +656,100 @@
   "importFileTypeInvalid": {
     "message": "只能导入.json格式的文件",
     "description": "导入文件类型无效时的错误消息"
-  }
+  },
+  "promptDefaultSummaryName": {
+    "message": "默认摘要模板",
+    "description": "默认页面总结提示词模板名称"
+  },
+  "promptShortSummaryName": {
+    "message": "简短摘要模板",
+    "description": "一句话总结提示词模板名称"
+  },
+  "promptMigratedName": {
+    "message": "迁移模板",
+    "description": "从旧版设置格式迁移的提示词模板名称"
+  },
+  "promptFallbackContent": {
+    "message": "请总结以下内容：{content}",
+    "description": "未配置模板时的回退提示内容"
+  },
+  "tagSummary": {
+    "message": "#网页/总结",
+    "description": "页面总结默认标签"
+  },
+  "tagSelection": {
+    "message": "#网页/摘录",
+    "description": "选中文本默认标签"
+  },
+  "tagImage": {
+    "message": "#网页/图片",
+    "description": "保存图片默认标签"
+  },
+  "tagExtract": {
+    "message": "#网页/剪藏",
+    "description": "网页剪藏默认标签"
+  },
+  "promptDefaultSummaryContent": {
+    "message": "请用简洁的语言总结以下网页内容，突出重点：{content}",
+    "description": "默认页面总结提示词内容"
+  },
+  "promptShortSummaryContent": {
+    "message": "请用一句话总结以下网页内容：{content}",
+    "description": "一句话总结提示词内容"
+  },
+  "statusLoadingSettingsFailed": { "message": "加载设置失败", "description": "Error when settings cannot be loaded" },
+  "statusPleaseConfigure": { "message": "请先填写 Blinko API URL 和认证密钥", "description": "Prompt to configure extension" },
+  "statusFetchingConfig": { "message": "正在获取配置...", "description": "Shown while fetching remote config" },
+  "statusSendSuccess": { "message": "发送成功", "description": "Generic send success status" },
+  "statusSaveFailed": { "message": "保存失败", "description": "Generic save failure status" },
+  "statusAddedToQuickNote": { "message": "已添加到快捷记录", "description": "Confirmation for quick note" },
+  "statusSummaryFailed": { "message": "总结失败", "description": "Failure status for summarization" },
+  "statusBlinkoNotConfigured": { "message": "Blinko 地址未配置", "description": "Error when Blinko URL is missing" },
+  "statusJumpFailed": { "message": "跳转失败", "description": "Error when opening a URL failed" },
+  "statusShortcutFailed": { "message": "快捷键执行失败", "description": "Error when keyboard shortcut fails" },
+  "statusSaveSuccess": { "message": "保存成功", "description": "Generic save success status" },
+  "statusExtractSuccess": { "message": "提取成功", "description": "Generic extraction success status" },
+  "statusSummarySuccess": { "message": "总结成功", "description": "Generic summarization success status" },
+  "statusClearSuccess": { "message": "清除成功", "description": "Generic clear success status" },
+  "statusContentRequired": { "message": "内容不能为空", "description": "Validation error for empty content" },
+  "statusGeneratingSummary": { "message": "正在生成总结...", "description": "Shown while summary is being generated" },
+  "statusPleaseEnterNote": { "message": "请输入笔记内容", "description": "Validation error for empty quick note" },
+  "statusSending": { "message": "正在发送...", "description": "Shown while sending data" },
+  "statusUnknownError": { "message": "未知错误", "description": "Generic unknown error status" },
+  "errorSettingsNotFound": { "message": "未找到设置信息", "description": "未找到设置信息时的错误" },
+  "messageTextAddedToQuickNote": { "message": "选中的文本已添加到快捷记录中", "description": "文本添加到快捷记录后的通知消息" },
+  "messageImageAddedToQuickNote": { "message": "图片已添加到快捷记录中", "description": "图片添加到快捷记录后的通知消息" },
+  "messageImageSaved": { "message": "已成功保存图片到Blinko", "description": "图片保存到Blinko后的通知消息" },
+  "errorGetContentFailed": { "message": "获取内容失败", "description": "获取页面内容失败时的错误" },
+  "errorClipboardEmpty": { "message": "剪贴板内容为空", "description": "剪贴板内容为空时的错误" },
+  "messageClipboardSaved": { "message": "剪贴板内容已保存到Blinko", "description": "剪贴板内容保存后的通知消息" },
+  "errorSaveClipboardFailed": { "message": "保存剪贴板内容失败", "description": "保存剪贴板内容失败时的错误" },
+  "attachmentImageAlt": { "message": "附件图片", "description": "附件图片的替代文本" },
+  "attachmentImageLabel": { "message": "图片", "description": "附件图片加载失败时显示的标签" },
+  "removeAttachmentTooltip": { "message": "移除附件", "description": "移除附件按钮的提示" },
+  "statusClearAttachmentsFailed": { "message": "清除附件失败", "description": "清除附件失败时的错误" },
+  "statusRemoveAttachmentFailed": { "message": "移除附件失败", "description": "移除附件失败时的错误" },
+  "statusCancelled": { "message": "已取消", "description": "操作取消后的状态消息" },
+  "statusCancelFailed": { "message": "取消失败", "description": "取消操作失败时的错误" },
+  "errorFetchConfigFailed": { "message": "获取配置失败", "description": "获取远程配置失败时的错误" },
+  "statusAiConfigSuccess": { "message": "AI配置获取成功", "description": "AI配置获取成功后的消息" },
+  "statusUnsupportedAiProvider": { "message": "当前不支持的AI提供商", "description": "AI提供商不受支持时的错误" },
+  "statusFetchAiConfigFailed": { "message": "获取AI配置失败", "description": "获取AI配置失败时的错误" },
+  "errorInvalidUrl": {"message": "URL格式不正确: $1", "description": "URL格式无效时的错误"},
+  "errorApiRequestFailed": {"message": "API请求失败: $1 $2", "description": "API请求失败时的错误"},
+  "errorApiInvalidResponse": {"message": "API返回格式错误", "description": "API响应格式无效时的错误"},
+  "errorConfigureBlinko": {"message": "请先配置Blinko API URL和认证密钥", "description": "缺少Blinko设置时的错误"},
+  "errorUploadImageFailed": {"message": "上传图片失败: $1", "description": "上传图片失败时的错误"},
+  "errorUploadImageResponseFormat": {"message": "上传图片响应格式错误", "description": "上传图片响应格式无效时的错误"},
+  "errorHttpFailed": {"message": "HTTP错误: $1 $2", "description": "HTTP请求失败时的错误"},
+  "labelOriginalLink": {"message": "原文链接：", "description": "原文链接Markdown前缀"},
+  "labelImageSource": {"message": "来源：", "description": "图片来源Markdown前缀"},
+  "errorInvalidRequestContent": {"message": "无效的请求内容", "description": "请求内容无效时的错误"},
+  "errorCompleteApiSettings": {"message": "请先完成API设置", "description": "API设置不完整时的错误"},
+  "errorSaveFailedWithStatus": {"message": "保存失败: $1", "description": "保存失败并返回状态码时的错误"},
+  "errorSendContentFailed": {"message": "发送内容失败: $1", "description": "发送内容失败时的错误"},
+  "errorNoContentToSave": {"message": "没有可保存的内容", "description": "没有可保存内容时的错误"},
+  "errorServerReturnedStatus": {"message": "服务器返回状态码: $1", "description": "服务器返回错误状态码时的错误"},
+  "errorFileReadFailed": {"message": "文件读取失败", "description": "读取导入文件失败时的错误"},
+  "unnamedTemplate": {"message": "未命名模板", "description": "未命名提示词模板的默认名称"}
 }

@@ -5,7 +5,7 @@ import { checkSummaryState, initializeSummaryListeners, handleSummaryResponse } 
 
 let prefersColorSchemeWatcher = null;
 
-// 应用主题
+// Apply theme
 function applyTheme(theme) {
     document.body.classList.remove('dark-theme', 'light-theme');
     
@@ -22,7 +22,7 @@ function applyTheme(theme) {
     }
 }
 
-// 监听系统主题变化
+// Watch system theme changes
 function watchSystemTheme(currentTheme) {
     if (prefersColorSchemeWatcher) {
         prefersColorSchemeWatcher.removeEventListener('change', handleSystemThemeChange);
@@ -40,7 +40,7 @@ function handleSystemThemeChange(currentTheme) {
     }
 }
 
-// 初始化国际化文本
+// Initialize i18n text
 function initializeI18n() {
     document.querySelectorAll('[title]').forEach(element => {
         const messageKey = element.getAttribute('title');
@@ -86,42 +86,42 @@ function initializeI18n() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     try {
-        // 初始化国际化文本
+        // Initialize i18n text
         initializeI18n();
 
-        // 加载设置并应用主题
+        // Load settings and apply theme
         const settings = await loadSettings();
         const theme = settings.theme || 'system';
         applyTheme(theme);
         watchSystemTheme(theme);
 
-        // 检查是否是通过通知点击打开的
+        // Check if opened via notification click
         const urlParams = new URLSearchParams(window.location.search);
         const defaultTab = urlParams.get('tab') || 'common';
 
-        // 隐藏所有标签页内容
+        // Hide all tab contents
         document.querySelectorAll('.tabcontent').forEach(content => {
             content.style.display = 'none';
         });
 
-        // 移除所有标签的激活状态
+        // Remove active state from all tabs
         document.querySelectorAll('.tablinks').forEach(btn => {
             btn.classList.remove('active');
         });
 
-        // 显示默认标签页并激活对应的标签
+        // Show default tab and activate corresponding tab
         document.getElementById(defaultTab).style.display = 'block';
         const defaultTabButton = document.querySelector(`.tablinks[data-tab="${defaultTab}"]`);
         if (defaultTabButton) {
             defaultTabButton.classList.add('active');
         }
 
-        // 初始化所有事件监听器
+        // Initialize all event listeners
         initializeUIListeners();
         initializeQuickNoteListeners();
         initializeSummaryListeners();
 
-        // 绑定提取网页正文按钮事件
+        // Bind extract page content button event
         document.getElementById('extractContent').addEventListener('click', async () => {
             try {
                 showStatus(chrome.i18n.getMessage('extractingContent'), 'loading');
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     throw new Error(chrome.i18n.getMessage('cannotGetTab'));
                 }
 
-                // 发送消息到content script获取内容
+                // Send message to content script to get content
                 const response = await chrome.tabs.sendMessage(tab.id, {
                     action: 'getContent'
                 });
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     throw new Error(response?.error || chrome.i18n.getMessage('contentExtractionFailed'));
                 }
 
-                // 发送到background处理
+                // Send to background for processing
                 chrome.runtime.sendMessage({
                     action: 'processContent',
                     content: response.content,
@@ -149,72 +149,72 @@ document.addEventListener('DOMContentLoaded', async function() {
                 });
 
             } catch (error) {
-                console.error('提取网页内容失败:', error);
+                console.error('Failed to extract page content:', error);
                 showStatus(chrome.i18n.getMessage('settingsSaveError', [error.message]), 'error');
             }
         });
 
-        // 加载快速笔记
+        // Load Quick Note
         await loadQuickNote();
 
-        // 检查是否有待显示的摘要
+        // Check for pending summary to display
         await checkSummaryState();
 
     } catch (error) {
-        console.error('初始化失败:', error);
+        console.error('Initialization failed:', error);
         showStatus(chrome.i18n.getMessage('initializationError', [error.message]), 'error');
     }
 });
 
-// 监听来自background的消息
+// Listen for messages from background
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request && request.action === 'handleSummaryResponse') {
         handleSummaryResponse(request);
         sendResponse({ received: true });
     } else if (request && request.action === 'saveSummaryResponse') {
         if (request.response.success) {
-            showStatus('保存成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusSaveSuccess') || 'Saved successfully', 'success');
             setTimeout(hideStatus, 2000);
         } else {
-            showStatus('保存失败: ' + request.response.error, 'error');
+            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Save failed') + ': ' + request.response.error, 'error');
         }
         sendResponse({ received: true });
     } else if (request && request.action === 'floatingBallResponse') {
         if (request.response.success) {
-            showStatus(request.response.isExtractOnly ? '提取成功' : '总结成功', 'success');
+            showStatus(request.response.isExtractOnly ? (chrome.i18n.getMessage('statusExtractSuccess') || 'Extracted successfully') : (chrome.i18n.getMessage('statusSummarySuccess') || 'Summarized successfully'), 'success');
             setTimeout(hideStatus, 2000);
         } else {
-            showStatus((request.response.isExtractOnly ? '提取' : '总结') + '失败: ' + request.response.error, 'error');
+            showStatus((request.response.isExtractOnly ? (chrome.i18n.getMessage('notificationExtractErrorTitle') || 'Extract failed') : (chrome.i18n.getMessage('statusSummaryFailed') || 'Summary failed')) + ': ' + request.response.error, 'error');
         }
         sendResponse({ received: true });
     } else if (request && request.action === 'clearSummaryResponse') {
         if (request.success) {
-            showStatus('清除成功', 'success');
+            showStatus(chrome.i18n.getMessage('statusClearSuccess') || 'Cleared successfully', 'success');
             setTimeout(hideStatus, 2000);
         }
         sendResponse({ received: true });
     }
-    return false;  // 不保持消息通道开放
+    return false;  // Do not keep message channel open
 });
 
-// 在popup关闭时通知background
+// Notify background when popup closes
 window.addEventListener('unload', async () => {
     try {
-        // 如果summaryPreview是隐藏的，说明用户已经取消或保存了内容，这时我们需要清理存储
+        // If summaryPreview is hidden, user cancelled or saved content; clean up storage
         const summaryPreview = document.getElementById('summaryPreview');
         if (summaryPreview && summaryPreview.style.display === 'none') {
             await chrome.storage.local.remove('currentSummary');
         }
         
         chrome.runtime.sendMessage({ action: "popupClosed" }).catch(() => {
-            // 忽略错误，popup关闭时可能会出现连接错误
+            // Ignore error, connection error may occur when popup closes
         });
 
-        // 清理主题监听器
+        // Clean up theme listener
         if (prefersColorSchemeWatcher) {
             prefersColorSchemeWatcher.removeEventListener('change', handleSystemThemeChange);
         }
     } catch (error) {
-        // 忽略错误
+        // Ignore error
     }
 });

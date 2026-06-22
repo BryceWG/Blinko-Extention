@@ -1,11 +1,11 @@
-// 从Jina Reader API获取网页内容
+// Fetch web content via Jina Reader API
 async function getWebContent(url, settings) {
     try {
         const headers = {
             "Accept": "application/json"
         };
 
-        // 根据设置决定是否添加图片和API key相关header
+        // Decide whether to include image retention and API key headers based on settings
         if (!settings.saveWebImages) {
             headers["X-Retain-Images"] = "none";
         }
@@ -20,16 +20,16 @@ async function getWebContent(url, settings) {
         });
 
         if (!response.ok) {
-            throw new Error(`API请求失败: ${response.status}`);
+            throw new Error(chrome.i18n.getMessage('errorApiRequestFailed', [response.status]) || `API request failed: ${response.status}`);
         }
 
         const data = await response.json();
         
         if (data.code !== 200 || !data.data) {
-            throw new Error('API返回格式错误');
+            throw new Error(chrome.i18n.getMessage('errorApiInvalidResponse') || 'Invalid API response');
         }
 
-        // 组织返回内容，不添加链接
+        // Assemble returned content without appending a link
         let content = `# ${data.data.title}\n\n`;
         content += data.data.content;
 
@@ -40,7 +40,7 @@ async function getWebContent(url, settings) {
             url: data.data.url
         };
     } catch (error) {
-        console.error('获取网页内容失败:', error);
+        console.error('Failed to fetch web content:', error);
         return {
             success: false,
             error: error.message

@@ -2,44 +2,44 @@ import { initializeContextMenu, handleContextMenuClick } from './contextMenu.js'
 import { handleContentRequest, handleSaveSummary, handleFloatingBallRequest } from './messageHandler.js';
 import { getSummaryState, clearSummaryState } from './summaryState.js';
 
-// 初始化右键菜单
+// Initialize context menu
 initializeContextMenu();
 
-// 监听来自popup和content script的消息
+// Listen for messages from popup and content script
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "getContent") {
-        // 直接处理，不需要响应
+        // Process directly, no response needed
         handleContentRequest(request);
         sendResponse({ received: true });
-        return false;  // 不需要保持消息通道开放
+        return false;  // No need to keep message channel open
     }
     
     if (request.action === "saveSummary") {
-        // 立即处理并返回响应
+        // Process immediately and return response
         handleSaveSummary(request).then(response => {
             try {
                 chrome.runtime.sendMessage({
                     action: 'saveSummaryResponse',
                     response: response
                 }).catch(() => {
-                    // 忽略错误，popup可能已关闭
+                    // Ignore error, popup may be closed
                 });
             } catch (error) {
                 console.log(chrome.i18n.getMessage('popupClosedMessage'));
             }
         });
-        // 返回一个初始响应
+        // Return an initial response
         sendResponse({ success: true });
         return false;
     }
 
     if (request.action === "processAndSendContent") {
-        // 立即发送处理中的响应
+        // Send processing response immediately
         sendResponse({ processing: true });
         
-        // 异步处理请求
+        // Process request asynchronously
         handleFloatingBallRequest(request).then(response => {
-            // 尝试更新悬浮球状态
+            // Try to update floating ball state
             if (sender.tab && sender.tab.id) {
                 try {
                     chrome.tabs.sendMessage(sender.tab.id, {
@@ -55,7 +55,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         }).catch(error => {
             console.error(chrome.i18n.getMessage('floatingBallRequestError'), error);
-            // 尝试更新悬浮球状态
+            // Try to update floating ball state
             if (sender.tab && sender.tab.id) {
                 try {
                     chrome.tabs.sendMessage(sender.tab.id, {
@@ -71,11 +71,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             }
         });
         
-        return true; // 保持消息通道开放
+        return true; // Keep message channel open
     }
 
     if (request.action === "showNotification") {
-        // 显示系统通知
+        // Show system notification
         chrome.notifications.create({
             type: 'basic',
             iconUrl: chrome.runtime.getURL('images/icon128.png'),
@@ -88,20 +88,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     if (request.action === "getSummaryState") {
-        // 同步响应
+        // Synchronous response
         sendResponse(getSummaryState());
         return false;
     }
 
     if (request.action === "clearSummary") {
-        // 立即发送响应，避免通道关闭
+        // Send response immediately to avoid channel closing
         clearSummaryState().then(() => {
             try {
                 chrome.runtime.sendMessage({
                     action: 'clearSummaryResponse',
                     success: true
                 }).catch(() => {
-                    // 忽略错误，popup可能已关闭
+                    // Ignore error, popup may be closed
                 });
             } catch (error) {
                 console.log(chrome.i18n.getMessage('popupClosedMessage'));
@@ -111,52 +111,52 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return false;
     }
 
-    return false;  // 默认不保持消息通道开放
+    return false;  // Default: do not keep message channel open
 });
 
-// 监听右键菜单点击
+// Listen for context menu clicks
 chrome.contextMenus.onClicked.addListener(handleContextMenuClick);
 
-// 监听快捷键命令
+// Listen for keyboard shortcut commands
 chrome.commands.onCommand.addListener(async (command) => {
     try {
-        // 获取当前活动标签页
+        // Get current active tab
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         
         if (!tab) {
-            console.error('无法获取当前标签页');
+            console.error(chrome.i18n.getMessage('statusCannotGetCurrentTab') || 'Cannot get current tab');
             return;
         }
 
-        // 根据命令类型模拟右键菜单点击
+        // Simulate context menu click based on command type
         const menuItemId = command === 'summarize-page' ? 'summarizePageContent' : 'extractPageContent';
         
-        // 复用右键菜单的处理逻辑
+        // Reuse context menu handling logic
         await handleContextMenuClick({ menuItemId }, tab);
         
     } catch (error) {
-        console.error('快捷键处理失败:', error);
+        console.error('Shortcut handling failed:', error);
         chrome.notifications.create({
             type: 'basic',
             iconUrl: 'images/icon128.png',
-            title: '快捷键执行失败',
+            title: chrome.i18n.getMessage('statusShortcutFailed') || 'Shortcut execution failed',
             message: error.message
         });
     }
 });
 
-// 监听通知点击
+// Listen for notification clicks
 chrome.notifications.onClicked.addListener(async (notificationId) => {
     try {
-        // 获取当前标签页
+        // Get current tab
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (tab) {
-            // 设置标记
+            // Set flag
             await chrome.storage.local.set({ 
                 notificationClicked: true,
                 notificationTabId: tab.id
             });
-            // 清除通知
+            // Clear notification
             chrome.notifications.clear(notificationId);
         }
     } catch (error) {

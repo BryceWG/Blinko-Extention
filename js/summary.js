@@ -1,7 +1,7 @@
 import { showStatus, hideStatus, showSummaryPreview, clearSummaryPreview } from './ui.js';
 import { saveTempSummaryData, clearTempSummaryData } from './storage.js';
 
-// 检查总结状态
+// Check summary state
 async function checkSummaryState() {
     try {
         const currentSummary = await chrome.storage.local.get('currentSummary');
@@ -9,14 +9,14 @@ async function checkSummaryState() {
             await showSummaryPreview(currentSummary.currentSummary);
         }
     } catch (error) {
-        console.error('检查总结状态失败:', error);
+        console.error('Failed to check summary state:', error);
     }
 }
 
-// 处理总结响应
+// Handle summary response
 function handleSummaryResponse(response) {
     if (response.success) {
-        showStatus(response.isExtractOnly ? '提取成功' : '总结生成成功', 'success');
+        showStatus(response.isExtractOnly ? (chrome.i18n.getMessage('statusExtractSuccess') || 'Extracted successfully') : (chrome.i18n.getMessage('statusSummarySuccess') || 'Summarized successfully'), 'success');
         setTimeout(hideStatus, 2000);
         showSummaryPreview({
             summary: response.summary,
@@ -24,31 +24,31 @@ function handleSummaryResponse(response) {
             url: response.url
         });
     } else {
-        showStatus((response.isExtractOnly ? '提取' : '总结') + '失败: ' + response.error, 'error');
+        showStatus((response.isExtractOnly ? (chrome.i18n.getMessage('notificationExtractErrorTitle') || 'Extract failed') : (chrome.i18n.getMessage('statusSummaryFailed') || 'Summary failed')) + ': ' + response.error, 'error');
     }
 }
 
-// 初始化总结相关事件监听器
+// Initialize summary event listeners
 function initializeSummaryListeners() {
-    // 绑定总结按钮事件
+    // Bind summarize button event
     document.getElementById('extract').addEventListener('click', async () => {
         try {
-            showStatus('正在生成总结...', 'loading');
+            showStatus(chrome.i18n.getMessage('statusGeneratingSummary') || 'Generating summary...', 'loading');
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (!tab) {
-                throw new Error('无法获取当前标签页');
+                throw new Error(chrome.i18n.getMessage('statusCannotGetCurrentTab') || 'Cannot get current tab');
             }
 
-            // 发送消息到content script获取内容
+            // Send message to content script to get content
             const response = await chrome.tabs.sendMessage(tab.id, {
                 action: 'getContent'
             });
 
             if (!response || !response.success) {
-                throw new Error(response.error || '获取内容失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('errorGetContentFailed') || 'Failed to get content'));
             }
 
-            // 发送到background处理
+            // Send to background for processing
             await chrome.runtime.sendMessage({
                 action: 'getContent',
                 content: response.content,
@@ -58,40 +58,40 @@ function initializeSummaryListeners() {
             });
 
         } catch (error) {
-            console.error('生成总结失败:', error);
-            showStatus('总结失败: ' + error.message, 'error');
+            console.error('Failed to generate summary:', error);
+            showStatus((chrome.i18n.getMessage('statusSummaryFailed') || 'Summary failed') + ': ' + error.message, 'error');
         }
     });
 
-    // 绑定取消按钮事件
+    // Bind cancel button event
     document.getElementById('cancelEdit').addEventListener('click', async () => {
         try {
             await clearTempSummaryData();
             await chrome.storage.local.remove('currentSummary');
             clearSummaryPreview();
-            showStatus('已取消', 'success');
+            showStatus(chrome.i18n.getMessage('statusCancelled') || 'Cancelled', 'success');
             setTimeout(hideStatus, 2000);
         } catch (error) {
-            console.error('取消编辑失败:', error);
-            showStatus('取消失败: ' + error.message, 'error');
+            console.error('Failed to cancel edit:', error);
+            showStatus((chrome.i18n.getMessage('statusCancelFailed') || 'Cancel failed') + ': ' + error.message, 'error');
         }
     });
 
-    // 绑定保存按钮事件
+    // Bind save button event
     document.getElementById('editSummary').addEventListener('click', async () => {
         try {
             const summaryText = document.getElementById('summaryText').value;
             if (!summaryText.trim()) {
-                throw new Error('内容不能为空');
+                throw new Error(chrome.i18n.getMessage('statusContentRequired') || 'Content cannot be empty');
             }
 
-            // 获取当前总结数据，判断是否是提取场景
+            // Get current summary data and determine if extract scenario
             const currentSummary = await chrome.storage.local.get('currentSummary');
             const isExtractOnly = currentSummary.currentSummary?.isExtractOnly;
             const url = currentSummary.currentSummary?.url;
             const title = currentSummary.currentSummary?.title;
 
-            // 发送到background处理
+            // Send to background for processing
             const response = await chrome.runtime.sendMessage({
                 action: 'saveSummary',
                 content: summaryText,
@@ -102,14 +102,14 @@ function initializeSummaryListeners() {
 
             if (response && response.success) {
                 clearSummaryPreview();
-                showStatus('保存成功', 'success');
+                showStatus(chrome.i18n.getMessage('statusSaveSuccess') || 'Saved successfully', 'success');
                 setTimeout(hideStatus, 2000);
             } else {
-                throw new Error(response.error || '保存失败');
+                throw new Error(response.error || (chrome.i18n.getMessage('statusSaveFailed') || 'Save failed'));
             }
         } catch (error) {
-            console.error('保存总结失败:', error);
-            showStatus('保存失败: ' + error.message, 'error');
+            console.error('Failed to save summary:', error);
+            showStatus((chrome.i18n.getMessage('statusSaveFailed') || 'Save failed') + ': ' + error.message, 'error');
         }
     });
 }
